@@ -271,19 +271,23 @@ check('sitemap lists all 22 pages',
 
 
 const worksHtml = fs.readFileSync(path.join(ROOT, 'works.html'), 'utf8');
-check('works.html: filter chips + 20 cards + 14 videos + canonical on real domain',
+check('works.html: filter chips + 22 cards + 14 videos + canonical on real domain',
   worksHtml.includes('id="worksFilter"') && worksHtml.includes('data-filter="corporate"') &&
   worksHtml.includes('data-filter="ads"') && worksHtml.includes('data-filter="design"') &&
-  (worksHtml.match(/<article class="work"/g) || []).length === 20 &&
+  worksHtml.includes('data-filter="annual"') && worksHtml.includes('data-filter="ppt"') &&
+  (worksHtml.match(/<article class="work"/g) || []).length === 22 &&
   (worksHtml.match(/<video /g) || []).length === 14 &&
   worksHtml.includes('rel="canonical" href="https://dreamforgestudio.xyz/works.html"'));
 ['works.html', 'works-zh.html', 'works-ja.html', 'works-ko.html', 'works-fr.html'].forEach(f => {
   const w = fs.readFileSync(path.join(ROOT, f), 'utf8');
-  check(f + ': 20 cards + 14 videos + filter js',
-    (w.match(/<article class="work"/g) || []).length === 20 &&
+  check(f + ': 22 cards + 14 videos + filter js',
+    (w.match(/<article class="work"/g) || []).length === 22 &&
     (w.match(/<video /g) || []).length === 14 &&
     w.includes("querySelectorAll('#worksFilter .chip')"));
 });
+check('works gala PPTX files + posters exist',
+  ['annual-gala-cn.pptx', 'annual-gala-en.pptx', 'poster-gala-cn.jpg', 'poster-gala-en.jpg']
+    .every(v => fs.existsSync(path.join(ROOT, 'works', v))));
 ['works.html', 'works-zh.html', 'works-ja.html', 'works-ko.html', 'works-fr.html'].forEach(f => {
   check(f + ' video + poster files exist',
     ['xinglan-enterprise.mp4', 'the-last-train.mp4', 'coldopen-v13.mp4', 'pawjoy-pet.mp4',

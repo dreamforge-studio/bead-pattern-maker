@@ -150,9 +150,11 @@
     <button class="chip" type="button" data-filter="explainer" aria-pressed="false">Explication</button>
     <button class="chip" type="button" data-filter="animation" aria-pressed="false">Animation</button>
     <button class="chip" type="button" data-filter="design" aria-pressed="false">Design</button>
+    <button class="chip" type="button" data-filter="annual" aria-pressed="false">Gala annuel</button>
+    <button class="chip" type="button" data-filter="ppt" aria-pressed="false">PPT</button>
     <button class="chip" type="button" data-filter="tools" aria-pressed="false">Outils</button>
   </nav>
-  <p class="work-count"><span id="workCount">20</span> / 20 œuvres</p>
+  <p class="work-count"><span id="workCount">22</span> / 22 œuvres</p>
 
   <section class="work-grid" id="workGrid">
     <article class="work" data-cat="corporate">
@@ -345,6 +347,28 @@
       </div>
     </article>
 
+    <article class="work" data-cat="annual ppt">
+      <span class="thumb"><img src="works/poster-gala-cn.jpg" alt="Couverture d’une présentation de gala annuel d’entreprise en chinois, rouge et or" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">Gala annuel · PPT</span>
+        <h3>Xinglan Group — Gala annuel 2026 (édition chinoise)</h3>
+        <p>Un deck de gala de fin d’année en chinois, rouge et or, en 14 diapositives : programme, mot de la direction, bilan de l’année, graphiques de résultats, récompenses, tombola et spectacle. PPTX entièrement modifiable (échantillon de démonstration, entreprise fictive).</p>
+        <span class="spec">14 diapositives · 16:9 · PPTX</span>
+        <a class="card-link" href="works/annual-gala-cn.pptx" download>Télécharger le PPTX →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="annual ppt">
+      <span class="thumb"><img src="works/poster-gala-en.jpg" alt="Couverture d’une présentation de gala annuel d’entreprise en anglais, bleu nuit et or" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">Gala annuel · PPT</span>
+        <h3>Northbeam — Annual Celebration 2026 (édition anglaise)</h3>
+        <p>Un deck de gala de fin d’année en anglais, bleu nuit et or, en 12 diapositives : mot d’accueil, programme, bilan de l’année, graphiques clés, cérémonie de récompenses, tombola et perspectives 2027. PPTX entièrement modifiable (échantillon de démonstration).</p>
+        <span class="spec">12 diapositives · 16:9 · PPTX</span>
+        <a class="card-link" href="works/annual-gala-en.pptx" download>Télécharger le PPTX →</a>
+      </div>
+    </article>
+
     <article class="work" data-cat="tools">
       <span class="thumb"><img src="assets/bead-before-after.jpg" alt="A landscape photo turned into a fuse-bead pattern by Bead Pattern Maker" loading="lazy"></span>
       <div class="body">
@@ -414,7 +438,7 @@
   function apply(f){
     var n=0;
     cards.forEach(function(c){
-      var show=f==='all'||c.getAttribute('data-cat')===f;
+      var show=f==='all'||(' '+c.getAttribute('data-cat')+' ').indexOf(' '+f+' ')>-1;
       if(!show){var v=c.querySelector('video');if(v&&!v.paused){v.pause();}}
       c.hidden=!show; if(show){n++;}
     });
