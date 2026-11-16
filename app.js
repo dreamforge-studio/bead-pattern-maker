@@ -110,8 +110,8 @@
     var req = Core.getTier(Core.requiredTierFor(featureKey));
     showUpgrade('🔒 ' + featureLabel + ' is a ' + req.name + ' feature',
       featureLabel + ' is included in the ' + req.name + ' plan ($' + req.priceMonthly.toFixed(2) +
-      '/month). You are on the ' + tier.name + ' plan. Subscriptions are coming soon — ' +
-      'if you already have a license key, enter it in the Pricing section below.');
+      '/month). You are on the ' + tier.name + ' plan. Subscribe on Gumroad to get a license key, ' +
+      'then enter it in the Pricing section below to activate.');
   }
   els.modalClose.addEventListener('click', function () { els.modal.classList.add('hidden'); });
   document.getElementById('upgradeGo').addEventListener('click', function () { els.modal.classList.add('hidden'); });
@@ -166,12 +166,9 @@
   });
   document.querySelectorAll('.plan-btn').forEach(function (btn) {
     btn.addEventListener('click', function (e) {
-      e.preventDefault();
       var target = Core.getTier(btn.closest('.price-card').getAttribute('data-tier'));
-      if (target.id === tier.id) return;
-      showUpgrade('Subscriptions coming soon',
-        'The ' + target.name + ' plan ($' + target.priceMonthly.toFixed(2) + '/month) is not on sale yet. ' +
-        'If you already have a ' + target.name + ' license key, enter it below to activate it on this device.');
+      if (target.id === tier.id) { e.preventDefault(); return; }
+      /* otherwise the button is a live Gumroad checkout link — let it open */
     });
   });
 
