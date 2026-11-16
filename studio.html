@@ -12,14 +12,127 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="stylesheet" href="styles.css">
 <style>
-  .service { border-bottom: 1px solid var(--line); padding: 14px 0; }
-  .service:last-child { border-bottom: none; }
-  .service h3 { margin: 0 0 4px; font-size: 1rem; }
-  .service p { margin: 0 0 4px; font-size: .95rem; }
-  .service .price { color: var(--green-dark); font-weight: 700; }
-  .service .delivery { color: var(--muted); font-size: .9rem; }
-  .contact-list { margin: 0 0 10px; padding-left: 20px; font-size: .95rem; }
-  .contact-list li { margin-bottom: 6px; }
+  /* --- studio page --- */
+  .hero { padding: 34px 6px 8px; text-align: center; }
+  .eyebrow {
+    margin: 0 0 10px; font-size: .78rem; font-weight: 700;
+    letter-spacing: .22em; text-transform: uppercase; color: var(--green);
+  }
+  .hero h2 {
+    margin: 0 auto 12px; max-width: 640px;
+    font-size: 2rem; line-height: 1.2; font-weight: 700; color: var(--ink);
+  }
+  .hero .lead {
+    margin: 0 auto 22px; max-width: 600px;
+    color: var(--muted); font-size: 1.02rem; line-height: 1.6;
+  }
+  .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-outline {
+    background: #fff; color: var(--green-dark); border: 1px solid var(--green);
+    transition: background .15s ease, color .15s ease;
+  }
+  .btn-outline:hover { background: #eef6f1; border-color: var(--green); }
+  .section-head { margin: 38px 0 16px; padding: 0 6px; }
+  .section-head .eyebrow { margin-bottom: 6px; }
+  .section-head h2 { margin: 0; font-size: 1.45rem; line-height: 1.25; }
+  .section-head p { margin: 6px 0 0; color: var(--muted); font-size: .95rem; max-width: 620px; line-height: 1.55; }
+
+  /* services grid */
+  .svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .svc {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 20px; display: flex; flex-direction: column;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .svc:hover {
+    transform: translateY(-3px); border-color: #bcd8c6;
+    box-shadow: 0 10px 24px rgba(20, 102, 60, .10);
+  }
+  .svc .icon {
+    width: 42px; height: 42px; border-radius: 12px; margin-bottom: 14px;
+    background: #eef6f1; color: var(--green);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .svc .icon svg { width: 22px; height: 22px; }
+  .svc h3 { margin: 0 0 8px; font-size: 1.05rem; line-height: 1.35; }
+  .svc p { margin: 0 0 14px; font-size: .94rem; line-height: 1.6; color: #3c4145; flex: 1; }
+  .svc .foot {
+    border-top: 1px solid var(--line); padding-top: 12px;
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .svc .price { color: var(--green-dark); font-weight: 700; font-size: .98rem; }
+  .svc .delivery { color: var(--muted); font-size: .86rem; line-height: 1.5; }
+  .svc a.tool-link { color: var(--green); font-weight: 600; text-decoration: none; }
+  .svc a.tool-link:hover { text-decoration: underline; }
+
+  /* portfolio */
+  .work-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .work {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .work:hover {
+    transform: translateY(-3px); border-color: #bcd8c6;
+    box-shadow: 0 10px 24px rgba(20, 102, 60, .10);
+  }
+  .work .thumb { background: #f0f3f0; display: block; }
+  .work .thumb img { width: 100%; height: 210px; object-fit: contain; display: block; }
+  .work .thumb.cover img { object-fit: cover; }
+  .work .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .work h3 { margin: 0; font-size: 1rem; line-height: 1.4; }
+  .work p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.55; flex: 1; }
+  .tag {
+    align-self: flex-start; font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--green-dark);
+    background: #eef6f1; border-radius: 999px; padding: 3px 10px;
+  }
+  .work.video .thumb {
+    height: 120px; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #17573a, #0e4d2c); color: #fff; text-decoration: none;
+  }
+  .work.video .thumb .play {
+    width: 52px; height: 52px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,.85);
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: transform .18s ease, background .18s ease;
+  }
+  .work.video:hover .thumb .play { transform: scale(1.08); background: rgba(255,255,255,.14); }
+  .work.video .thumb svg { width: 20px; height: 20px; margin-left: 3px; }
+  .work a.card-link { color: var(--green); font-weight: 600; font-size: .9rem; text-decoration: none; }
+  .work a.card-link:hover { text-decoration: underline; }
+  .fineprint { margin: 12px 6px 0; color: var(--muted); font-size: .84rem; line-height: 1.55; }
+
+  /* contact */
+  .contact-card { padding: 24px; }
+  .contact-card h2 { margin: 0 0 8px; font-size: 1.3rem; }
+  .contact-card > p { margin: 0 0 18px; color: var(--muted); line-height: 1.6; max-width: 560px; }
+  .contact-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .contact-row {
+    display: flex; gap: 12px; align-items: center;
+    border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+    text-decoration: none; color: var(--ink);
+    transition: border-color .15s ease, background .15s ease, transform .15s ease;
+  }
+  .contact-row:hover { border-color: #bcd8c6; background: #f4f9f5; transform: translateY(-2px); }
+  .contact-row .icon {
+    width: 38px; height: 38px; border-radius: 10px; flex: none;
+    background: #eef6f1; color: var(--green);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .contact-row .icon svg { width: 20px; height: 20px; }
+  .contact-row .label { display: block; font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .contact-row .value { display: block; font-weight: 600; font-size: .94rem; color: var(--green-dark); word-break: break-all; }
+
+  footer p a { color: var(--green); text-decoration: none; }
+  footer p a:hover { text-decoration: underline; }
+
+  @media (max-width: 680px) {
+    .hero { padding-top: 24px; }
+    .hero h2 { font-size: 1.55rem; }
+    .svc-grid, .work-grid, .contact-rows { grid-template-columns: 1fr; }
+    .work .thumb img { height: 190px; }
+  }
 </style>
 </head>
 <body>
@@ -31,96 +144,252 @@
       <p>AI Media &amp; Tools Studio</p>
     </div>
   </div>
-  <p class="privacy">AI video, design and tools — made to order, delivered digitally.</p>
+  <p class="privacy">AI video · design · tools — delivered digitally, worldwide</p>
 </header>
 
 <main>
-  <section class="card legal">
-    <h2>What we do</h2>
-    <p>Dreamforge Studio produces AI-assisted media and practical creator tools:
-    short-form video, vertical dramas, corporate films, product imagery and brand
-    design — plus small browser tools that anyone can use right away. Every service
-    below is delivered digitally; tell us what you need by email and we reply with a
-    fixed quote before any work starts.</p>
-
-    <div class="service">
-      <h3>AI Short Videos &amp; Product Ads</h3>
-      <p>Scroll-stopping vertical and horizontal short videos for products, apps and
-      social campaigns. <span class="price">From $35</span></p>
-      <p class="delivery">Delivered as ready-to-post MP4 files, sized for your platform.</p>
-    </div>
-
-    <div class="service">
-      <h3>AI Short Dramas / Vertical Series</h3>
-      <p>Scripted vertical drama episodes with consistent characters, voice-over and
-      subtitles, produced as a series. <span class="price">From $120 per episode</span></p>
-      <p class="delivery">Delivered episode by episode as finished MP4 files with subtitles.</p>
-    </div>
-
-    <div class="service">
-      <h3>Corporate Films &amp; Brand Videos</h3>
-      <p>Company profiles, brand stories and promotional films with a cinematic
-      structure — opening, story, closing brand card. <span class="price">From $250</span></p>
-      <p class="delivery">Delivered as a finished master file in 16:9, plus a vertical cut on request.</p>
-    </div>
-
-    <div class="service">
-      <h3>AI Product Images &amp; E-commerce Sets</h3>
-      <p>Product photos, scene shots and full listing image sets for online stores.
-      <span class="price">From $25</span></p>
-      <p class="delivery">Delivered as high-resolution images sized for your marketplace.</p>
-    </div>
-
-    <div class="service">
-      <h3>Logo &amp; Brand Identity Design</h3>
-      <p>Logo concepts developed in three directions, refined with you and finished
-      as clean vector artwork. <span class="price">From $45</span></p>
-      <p class="delivery">Delivered as SVG/PDF vector files plus PNG exports, with two revision rounds included.</p>
-    </div>
-
-    <div class="service">
-      <h3>Gift Card &amp; QR Design</h3>
-      <p>Print-ready gift cards and QR-code cards for shops, cafés and events —
-      the QR code is generated from your own link and scan-tested before delivery.
-      <span class="price">From $35</span></p>
-      <p class="delivery">Delivered as a print-ready PDF (with bleed, CMYK) plus a screen version, with two revision rounds included.</p>
-    </div>
-
-    <div class="service">
-      <h3>AI Tools — Bead Pattern Maker</h3>
-      <p>Our browser tool that turns any photo into a Perler / Hama bead pattern with
-      a per-color bead shopping list. It runs 100% in your browser — your photos never
-      leave your device. <span class="price">Free · Pro $4.99/mo · Studio $9.99/mo</span></p>
-      <p class="delivery"><a href="index.html">Open Bead Pattern Maker →</a></p>
-    </div>
-
-    <div class="service">
-      <h3>Creator Skill Packs</h3>
-      <p>Downloadable workflow packs for creators — video clipping, animation,
-      subtitle and audio quality checks, and publishing checklists — sold through the
-      WorkBuddy skill marketplace under the Dreamforge Studio name.</p>
-      <p class="delivery">Delivered as digital downloads through the marketplace; email us for the current catalogue.</p>
+  <section class="hero">
+    <p class="eyebrow">Dreamforge Studio</p>
+    <h2>AI media &amp; tools, made to order</h2>
+    <p class="lead">We produce short-form video, vertical dramas, corporate films,
+    product imagery and brand design — and build small browser tools anyone can use.
+    Every engagement starts with a fixed quote by email, before any work begins.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#services">Browse services</a>
+      <a class="btn btn-outline" href="#work">See selected work</a>
     </div>
   </section>
 
-  <section class="card legal">
+  <div class="section-head" id="services">
+    <p class="eyebrow">Services</p>
+    <h2>What we do</h2>
+    <p>Eight lines of work, one studio. Prices are starting points — the final quote
+    depends on scope and is always confirmed in writing first.</p>
+  </div>
+
+  <section class="svc-grid">
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor" stroke="none"/></svg></span>
+      <h3>AI Short Videos &amp; Product Ads</h3>
+      <p>Scroll-stopping vertical and horizontal short videos for products, apps and social campaigns.</p>
+      <div class="foot">
+        <span class="price">From $35</span>
+        <span class="delivery">Ready-to-post MP4 files, sized for your platform.</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M10.8 9.8v4.4L14.5 12z" fill="currentColor" stroke="none"/></svg></span>
+      <h3>AI Short Dramas / Vertical Series</h3>
+      <p>Scripted vertical drama episodes with consistent characters, voice-over and subtitles, produced as a series.</p>
+      <div class="foot">
+        <span class="price">From $120 per episode</span>
+        <span class="delivery">Finished episodes as MP4 files with subtitles, delivered episode by episode.</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9.5 21v-5h5v5"/></svg></span>
+      <h3>Corporate Films &amp; Brand Videos</h3>
+      <p>Company profiles, brand stories and promotional films with a cinematic structure — opening, story, closing brand card.</p>
+      <div class="foot">
+        <span class="price">From $250</span>
+        <span class="delivery">Finished master file in 16:9; a vertical cut on request.</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M4.5 18.5 10 13l3.5 3.5L17 13l2.5 2.5"/></svg></span>
+      <h3>AI Product Images &amp; E-commerce Sets</h3>
+      <p>Product photos, scene shots and full listing image sets for online stores.</p>
+      <div class="foot">
+        <span class="price">From $25</span>
+        <span class="delivery">High-resolution images, sized for your marketplace.</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7a4.6 4.6 0 0 0-6.5-6.5L5 13v6z"/><path d="M14.5 6.5l3 3"/><path d="M5 19l-1.5 1.5"/></svg></span>
+      <h3>Logo &amp; Brand Identity Design</h3>
+      <p>Logo concepts developed in three directions, refined with you and finished as clean vector artwork.</p>
+      <div class="foot">
+        <span class="price">From $45</span>
+        <span class="delivery">SVG/PDF vector files plus PNG exports; two revision rounds included.</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19"/><path d="M6 15h4"/></svg></span>
+      <h3>Gift Card &amp; QR Design</h3>
+      <p>Print-ready gift cards and QR-code cards for shops, cafés and events. The QR code is generated from your own link and scan-tested before delivery.</p>
+      <div class="foot">
+        <span class="price">From $35</span>
+        <span class="delivery">Print-ready PDF with bleed (CMYK) plus a screen version; two revision rounds included.</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/></svg></span>
+      <h3>AI Tools — Bead Pattern Maker</h3>
+      <p>Our browser tool turns any photo into a Perler / Hama bead pattern with a per-color bead shopping list. It runs 100% in your browser — your photos never leave your device.</p>
+      <div class="foot">
+        <span class="price">Free · Pro $4.99/mo · Studio $9.99/mo</span>
+        <span class="delivery"><a class="tool-link" href="index.html">Open Bead Pattern Maker →</a></span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>
+      <h3>Creator Skill Packs</h3>
+      <p>Downloadable workflow packs for creators — video clipping, animation, subtitle and audio quality checks, and publishing checklists — sold through the WorkBuddy skill marketplace under the Dreamforge Studio name.</p>
+      <div class="foot">
+        <span class="price">Digital downloads</span>
+        <span class="delivery">Sold via the WorkBuddy marketplace; email us for the current catalogue.</span>
+      </div>
+    </article>
+  </section>
+
+  <div class="section-head" id="work">
+    <p class="eyebrow">Portfolio</p>
+    <h2>Selected work</h2>
+    <p>A few representative pieces. Full video portfolio is hosted on our Contra page.</p>
+  </div>
+
+  <section class="work-grid">
+    <article class="work video">
+      <a class="thumb" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener" aria-label="Watch on Contra">
+        <span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+      </a>
+      <div class="body">
+        <span class="tag">Vertical Drama · English</span>
+        <h3>The Last Train — Vertical Drama (English)</h3>
+        <p>An English-language vertical short drama sample: scripted episodes with AI performance, English voice-over and burned-in subtitles.</p>
+        <a class="card-link" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener">View on Contra →</a>
+      </div>
+    </article>
+
+    <article class="work video">
+      <a class="thumb" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener" aria-label="Watch on Contra">
+        <span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+      </a>
+      <div class="body">
+        <span class="tag">Script Sample · English</span>
+        <h3>English Short Drama — Script Sample</h3>
+        <p>An original English short-drama script sample written for overseas platforms, with episode hooks and dialogue written for vertical viewing.</p>
+        <a class="card-link" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener">View on Contra →</a>
+      </div>
+    </article>
+
+    <article class="work video">
+      <a class="thumb" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener" aria-label="Watch on Contra">
+        <span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+      </a>
+      <div class="body">
+        <span class="tag">Corporate Film</span>
+        <h3>Xinglan Group — Corporate Brand Film</h3>
+        <p>A two-minute 16:9 corporate image film: aerial-style opening, brand story in the middle, closing brand card — our reference piece for company films.</p>
+        <a class="card-link" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener">View on Contra →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb cover"><img src="assets/bead-before-after.jpg" alt="A landscape photo turned into a fuse-bead pattern by Bead Pattern Maker" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">AI Tool</span>
+        <h3>Bead Pattern Maker — Photo to Pattern</h3>
+        <p>Left: an original photo. Right: the bead pattern our tool generates from it, with a per-color shopping list.</p>
+        <a class="card-link" href="index.html">Try the tool →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb"><img src="assets/logo-novapulse.jpg" alt="NOVAPULSE technology logo design presentation board" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">Logo Design</span>
+        <h3>NOVAPULSE — Technology Logo</h3>
+        <p>A geometric hexagon-and-pulse mark for a tech brand, shown on light and dark backgrounds with its colour palette.</p>
+        <a class="card-link" href="#contact">Order a logo →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb"><img src="assets/logo-shanwai.jpg" alt="Shanwai Shan Chinese tea brand logo design presentation board" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">Logo Design</span>
+        <h3>Shanwai Shan — Chinese Tea Brand Logo</h3>
+        <p>Layered mountain ridges with a tea leaf, paired with calligraphic lettering in ink green and gold.</p>
+        <a class="card-link" href="#contact">Order a logo →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb"><img src="assets/logo-maixiang.jpg" alt="Maixiang Diary bakery logo design presentation board" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">Logo Design</span>
+        <h3>Maixiang Diary — Bakery Logo</h3>
+        <p>A round badge of wheat ears around a loaf, in terracotta and wheat gold — warm, shelf-friendly branding for a bakery.</p>
+        <a class="card-link" href="#contact">Order a logo →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb"><img src="assets/giftcard-sunbeam.jpg" alt="Sunbeam Coffee gift card design, front and back" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">Gift Card Design</span>
+        <h3>Sunbeam Coffee — Gift Card</h3>
+        <p>Front and back of a print-ready gift card with a scan-tested QR code, produced to print spec (85 × 55 mm, 300 dpi, with bleed).</p>
+        <a class="card-link" href="#contact">Order a gift card →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb"><img src="assets/giftcard-leafpage.jpg" alt="Leaf and Page Books gift card design, front and back" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">Gift Card Design</span>
+        <h3>Leaf &amp; Page Books — Gift Card</h3>
+        <p>A quiet, bookish gift card design for an independent bookshop, front and back, with QR code and print-ready files.</p>
+        <a class="card-link" href="#contact">Order a gift card →</a>
+      </div>
+    </article>
+  </section>
+  <p class="fineprint">Design pieces above are studio demonstration samples created to show style and
+  production quality. Video samples are hosted on Contra, where full pieces can be viewed.</p>
+
+  <div class="section-head" id="contact">
+    <p class="eyebrow">Contact</p>
     <h2>Order &amp; contact</h2>
-    <p>For service orders and business enquiries, email us — we reply with scope,
-    a fixed quote and a delivery date before you pay anything.</p>
-    <ul class="contact-list">
-      <li>Support &amp; orders: <a href="mailto:a13259605262@gmail.com">a13259605262@gmail.com</a></li>
-      <li>Tool subscriptions on Gumroad: <a href="https://dreamforgestudioshop.gumroad.com/" target="_blank" rel="noopener">dreamforgestudioshop.gumroad.com</a></li>
-      <li>Download editions on itch.io: <a href="https://dreamforge-lab.itch.io/" target="_blank" rel="noopener">dreamforge-lab.itch.io</a></li>
-      <li>Telegram shop bot: <a href="https://t.me/DreamforgeBeadBot" target="_blank" rel="noopener">t.me/DreamforgeBeadBot</a></li>
-    </ul>
-    <p><a href="index.html">← Back to Bead Pattern Maker</a></p>
+  </div>
+
+  <section class="card contact-card">
+    <h2>Start with an email</h2>
+    <p>Tell us what you need — format, length, deadline — and we reply with scope, a
+    fixed quote and a delivery date before you pay anything.</p>
+    <div class="contact-rows">
+      <a class="contact-row" href="mailto:a13259605262@gmail.com">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg></span>
+        <span><span class="label">Support &amp; orders</span><span class="value">a13259605262@gmail.com</span></span>
+      </a>
+      <a class="contact-row" href="https://dreamforgestudioshop.gumroad.com/" target="_blank" rel="noopener">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16l-1.3 11a2 2 0 0 1-2 1.8H7.3a2 2 0 0 1-2-1.8z"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/></svg></span>
+        <span><span class="label">Gumroad store</span><span class="value">dreamforgestudioshop.gumroad.com</span></span>
+      </a>
+      <a class="contact-row" href="https://dreamforge-lab.itch.io/" target="_blank" rel="noopener">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m7.5 9.5 4.5 4.5 4.5-4.5"/><path d="M4 19.5h16"/></svg></span>
+        <span><span class="label">itch.io downloads</span><span class="value">dreamforge-lab.itch.io</span></span>
+      </a>
+      <a class="contact-row" href="https://t.me/DreamforgeBeadBot" target="_blank" rel="noopener">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3.5 3 10.8l6.5 2.7L12 20l3.2-4.3 4.3 3z"/><path d="M9.5 13.5 21 3.5"/></svg></span>
+        <span><span class="label">Telegram shop bot</span><span class="value">t.me/DreamforgeBeadBot</span></span>
+      </a>
+    </div>
   </section>
 </main>
 
 <footer>
   <nav class="footer-nav" aria-label="Site links">
-    <a href="index.html">Bead Pattern Maker</a> · <a href="privacy.html">Privacy Policy</a> ·
-    <a href="terms.html">Terms of Service</a> · <a href="index.html#pricing">Pricing</a> ·
+    <a href="index.html">Bead Pattern Maker</a> · <a href="studio.html">All Services</a> ·
+    <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Service</a> ·
+    <a href="index.html#pricing">Pricing</a> ·
     <a href="mailto:a13259605262@gmail.com">Support: a13259605262@gmail.com</a>
   </nav>
   <p>Business enquiries by email: <a href="mailto:a13259605262@gmail.com">a13259605262@gmail.com</a></p>
