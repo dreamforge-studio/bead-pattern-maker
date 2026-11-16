@@ -1,5 +1,5 @@
 /* Bead Pattern Maker — service worker: cache the app shell for offline use. */
-var CACHE = 'bead-pattern-maker-v1';
+var CACHE = 'bead-pattern-maker-v2';
 var ASSETS = [
   './',
   './index.html',
