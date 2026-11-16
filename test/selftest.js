@@ -251,6 +251,7 @@ check('buildXlsx: contains workbook + sheet with TOTAL row',
     a.includes('selectEditColor') && a.includes('undoEdit') && a.includes('EDIT_I18N'));
 });
 ['guide.html', 'guide-zh.html', 'guide-ja.html', 'guide-ko.html', 'guide-fr.html',
+ 'works.html', 'works-zh.html', 'works-ja.html', 'works-ko.html', 'works-fr.html',
  '404.html', 'sitemap.xml', 'robots.txt'].forEach(f => {
   check(f + ' exists', fs.existsSync(path.join(ROOT, f)));
 });
@@ -259,13 +260,45 @@ check('guide.html: steps + formats table + faq + canonical on the real domain',
   guideHtml.includes('id="s6"') && guideHtml.includes('id="s7"') && guideHtml.includes('id="faq"') &&
   guideHtml.includes('rel="canonical" href="https://dreamforgestudio.xyz/guide.html"'));
 const sitemap = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
-check('sitemap lists all 17 pages',
+check('sitemap lists all 22 pages',
   ['index.html', 'studio.html', 'guide.html', 'privacy.html', 'terms.html',
    'index-zh.html', 'studio-zh.html', 'guide-zh.html',
    'index-ja.html', 'studio-ja.html', 'guide-ja.html',
    'index-ko.html', 'studio-ko.html', 'guide-ko.html',
-   'index-fr.html', 'studio-fr.html', 'guide-fr.html']
+   'index-fr.html', 'studio-fr.html', 'guide-fr.html',
+   'works.html', 'works-zh.html', 'works-ja.html', 'works-ko.html', 'works-fr.html']
     .every(f => sitemap.includes('https://dreamforgestudio.xyz/' + f)));
+
+
+const worksHtml = fs.readFileSync(path.join(ROOT, 'works.html'), 'utf8');
+check('works.html: filter chips + 20 cards + 14 videos + canonical on real domain',
+  worksHtml.includes('id="worksFilter"') && worksHtml.includes('data-filter="corporate"') &&
+  worksHtml.includes('data-filter="ads"') && worksHtml.includes('data-filter="design"') &&
+  (worksHtml.match(/<article class="work"/g) || []).length === 20 &&
+  (worksHtml.match(/<video /g) || []).length === 14 &&
+  worksHtml.includes('rel="canonical" href="https://dreamforgestudio.xyz/works.html"'));
+['works.html', 'works-zh.html', 'works-ja.html', 'works-ko.html', 'works-fr.html'].forEach(f => {
+  const w = fs.readFileSync(path.join(ROOT, f), 'utf8');
+  check(f + ': 20 cards + 14 videos + filter js',
+    (w.match(/<article class="work"/g) || []).length === 20 &&
+    (w.match(/<video /g) || []).length === 14 &&
+    w.includes("querySelectorAll('#worksFilter .chip')"));
+});
+['works.html', 'works-zh.html', 'works-ja.html', 'works-ko.html', 'works-fr.html'].forEach(f => {
+  check(f + ' video + poster files exist',
+    ['xinglan-enterprise.mp4', 'the-last-train.mp4', 'coldopen-v13.mp4', 'pawjoy-pet.mp4',
+     'mornclean-daily.mp4', 'soundclear-tvc.mp4', 'blood-orange-15s.mp4', 'blood-orange-30s.mp4',
+     'thermos-cup-15s.mp4', 'thermos-cup-30s.mp4', 'qinling-map.mp4', 'commentary-1140.mp4',
+     'mg-yiwangtongban.mp4', 'frame-cat-butterfly.mp4'].every(v => fs.existsSync(path.join(ROOT, 'works', v))) &&
+    ['poster-xinglan.jpg', 'poster-lasttrain.jpg', 'poster-coldopen.jpg', 'poster-pet.jpg',
+     'poster-daily.jpg', 'poster-tvc.jpg', 'poster-bloodorange-15s.jpg', 'poster-bloodorange-30s.jpg',
+     'poster-thermos-15s.jpg', 'poster-thermos-30s.jpg', 'poster-map.jpg', 'poster-commentary.jpg',
+     'poster-mg.jpg', 'poster-frame.jpg'].every(v => fs.existsSync(path.join(ROOT, 'works', v))));
+});
+const sitemap2 = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
+check('sitemap lists all 5 works pages',
+  ['works.html', 'works-zh.html', 'works-ja.html', 'works-ko.html', 'works-fr.html']
+    .every(f => sitemap2.includes('https://dreamforgestudio.xyz/' + f)));
 
 console.log('\nResult: ' + passed + ' passed, ' + failed + ' failed');
 process.exit(failed ? 1 : 0);

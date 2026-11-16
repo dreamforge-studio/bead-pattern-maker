@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>作品 — Dreamforge Studio</title>
+<meta name="description" content="Dreamforge Studio の作品集：企業映像、縦型ショートドラマ、商品広告、旅行動画、ナレーション短編、アニメーション、ロゴ＆ギフトカードデザイン——完成した作品をブラウザでそのまま再生できます。">
+<link rel="canonical" href="https://dreamforgestudio.xyz/works-ja.html">
+<meta name="theme-color" content="#0e4d2c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* --- works page --- */
+  .hero { padding: 34px 6px 8px; text-align: center; }
+  .eyebrow {
+    margin: 0 0 10px; font-size: .78rem; font-weight: 700;
+    letter-spacing: .22em; text-transform: uppercase; color: var(--green);
+  }
+  .hero h2 {
+    margin: 0 auto 12px; max-width: 640px;
+    font-size: 2rem; line-height: 1.2; font-weight: 700; color: var(--ink);
+  }
+  .hero .lead {
+    margin: 0 auto 22px; max-width: 600px;
+    color: var(--muted); font-size: 1.02rem; line-height: 1.6;
+  }
+  .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-outline {
+    background: #fff; color: var(--green-dark); border: 1px solid var(--green);
+    transition: background .15s ease, color .15s ease;
+  }
+  .btn-outline:hover { background: #eef6f1; border-color: var(--green); }
+
+  /* category filter */
+  .works-filter {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    margin: 26px 0 8px; padding: 0 6px;
+  }
+  .chip {
+    min-height: 44px; padding: 10px 18px; border-radius: 999px;
+    border: 1px solid var(--line); background: #fff;
+    font: inherit; font-size: .92rem; font-weight: 600; color: var(--ink);
+    cursor: pointer; transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .chip:hover { border-color: var(--green); color: var(--green-dark); }
+  .chip[aria-pressed="true"] { background: var(--green); border-color: var(--green); color: #fff; }
+  .work-count { text-align: center; color: var(--muted); font-size: .88rem; margin: 0 0 20px; }
+
+  /* gallery grid (3 cols desktop, 2 tablet, 1 phone) */
+  .work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .work {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .work:hover {
+    transform: translateY(-3px); border-color: #bcd8c6;
+    box-shadow: 0 10px 24px rgba(20, 102, 60, .10);
+  }
+  .work[hidden] { display: none; }
+  .work-media {
+    aspect-ratio: 16 / 9; display: block;
+    background: linear-gradient(135deg, #0e2e1f, #17573a);
+  }
+  .work-media video { width: 100%; height: 100%; display: block; object-fit: contain; background: #101613; }
+  .work .thumb { background: #f0f3f0; display: block; }
+  .work .thumb img { width: 100%; height: 210px; object-fit: contain; display: block; }
+  .work .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .work h3 { margin: 0; font-size: 1rem; line-height: 1.4; }
+  .work p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.55; flex: 1; }
+  .work .spec { color: var(--muted); font-size: .84rem; }
+  .tag {
+    align-self: flex-start; font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--green-dark);
+    background: #eef6f1; border-radius: 999px; padding: 3px 10px;
+  }
+  .work a.card-link { color: var(--green); font-weight: 600; font-size: .9rem; text-decoration: none; display: inline-block; padding: 11px 2px; margin: 3px -2px -7px; }
+  .work a.card-link:hover { text-decoration: underline; }
+  .fineprint { margin: 12px 6px 0; color: var(--muted); font-size: .84rem; line-height: 1.55; }
+  .works-more { text-align: center; margin: 26px 0 4px; }
+
+  footer p a { color: var(--green); text-decoration: none; }
+  footer p a:hover { text-decoration: underline; }
+
+  @media (max-width: 1100px) { .work-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 680px) {
+    .hero { padding-top: 24px; }
+    .hero h2 { font-size: 1.55rem; }
+    .work-grid { grid-template-columns: 1fr; }
+    .work .thumb img { height: 190px; }
+  }
+</style>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dreamforge Studio">
+<meta property="og:title" content="作品 — Dreamforge Studio">
+<meta property="og:description" content="Dreamforge Studio の作品集：企業映像、縦型ショートドラマ、商品広告、旅行動画、ナレーション短編、アニメーション、ロゴ＆ギフトカードデザイン——完成した作品をブラウザでそのまま再生できます。">
+<meta property="og:url" content="https://dreamforgestudio.xyz/works-ja.html">
+<meta property="og:image" content="https://dreamforgestudio.xyz/works/poster-xinglan.jpg">
+<meta property="og:image:alt" content="星澜グループ企業ブランド映像の一場面">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="作品 — Dreamforge Studio">
+<meta name="twitter:description" content="Dreamforge Studio の作品集：企業映像、縦型ショートドラマ、商品広告、旅行動画、ナレーション短編、アニメーション、ロゴ＆ギフトカードデザイン——完成した作品をブラウザでそのまま再生できます。">
+<meta name="twitter:image" content="https://dreamforgestudio.xyz/works/poster-xinglan.jpg">
+<link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/works-ja.html">
+<link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/works-zh.html">
+<link rel="alternate" hreflang="ja" href="https://dreamforgestudio.xyz/works-ja.html">
+<link rel="alternate" hreflang="ko" href="https://dreamforgestudio.xyz/works-ko.html">
+<link rel="alternate" hreflang="fr" href="https://dreamforgestudio.xyz/works-fr.html">
+<link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/works-ja.html">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="icons/icon-192.png" alt="" width="40" height="40">
+    <div>
+      <h1>Dreamforge Studio</h1>
+      <p>AIメディア＆ツールスタジオ</p>
+    </div>
+  </div>
+  <p class="privacy">AI動画・デザイン・ツール——デジタル納品、世界対応</p>
+  <select class="lang-select" id="langSelect" aria-label="Language / 语言 / 言語 / 언어 / Langue" title="Language">
+      <option value="works.html">English</option>
+      <option value="works-zh.html">中文（简体）</option>
+      <option value="works-ja.html" selected>日本語</option>
+      <option value="works-ko.html">한국어</option>
+      <option value="works-fr.html">Français</option>
+  </select>
+  <script>document.getElementById('langSelect').addEventListener('change',function(){location.href=this.value;});</script>
+</header>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow">ポートフォリオ</p>
+    <h2>作品が語る</h2>
+    <p class="lead">以下はすべて当スタジオの完成作品です。動画はブラウザでそのまま再生できます。カテゴリで絞り込んで、必要な作品をお探しください。</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="studio-ja.html#services">サービスを見る</a>
+      <a class="btn btn-outline" href="mailto:a13259605261@163.com">同じような作品を注文</a>
+    </div>
+  </section>
+
+  <nav class="works-filter" aria-label="Filter works by category" id="worksFilter">
+    <button class="chip" type="button" data-filter="all" aria-pressed="true">すべて</button>
+    <button class="chip" type="button" data-filter="corporate" aria-pressed="false">企業映像</button>
+    <button class="chip" type="button" data-filter="drama" aria-pressed="false">ショートドラマ</button>
+    <button class="chip" type="button" data-filter="ads" aria-pressed="false">商品広告</button>
+    <button class="chip" type="button" data-filter="travel" aria-pressed="false">旅行</button>
+    <button class="chip" type="button" data-filter="explainer" aria-pressed="false">解説</button>
+    <button class="chip" type="button" data-filter="animation" aria-pressed="false">アニメーション</button>
+    <button class="chip" type="button" data-filter="design" aria-pressed="false">デザイン</button>
+    <button class="chip" type="button" data-filter="tools" aria-pressed="false">ツール</button>
+  </nav>
+  <p class="work-count"><span id="workCount">20</span> / 全 20 件</p>
+
+  <section class="work-grid" id="workGrid">
+    <article class="work" data-cat="corporate">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-xinglan.jpg"><source src="works/xinglan-enterprise.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">企業映像</span>
+        <h3>星澜グループ — 企業ブランド映像</h3>
+        <p>2分間の16:9企業イメージ映像。空撮風のオープニング、ブランドストーリー、締めのブランドカード——企業映像の代表作です。</p>
+        <span class="spec">2:00 · 16:9 · 1280×720</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="drama">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-lasttrain.jpg"><source src="works/the-last-train.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">ショートドラマ</span>
+        <h3>The Last Train — 縦型ドラマ（英語）</h3>
+        <p>英語の縦型ショートドラマ。脚本のあるシリーズで、AIによる演技、英語ナレーション、焼き込み字幕付き。</p>
+        <span class="spec">1:20 · 9:16 · 720×1280</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="drama">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-coldopen.jpg"><source src="works/coldopen-v13.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">ショートドラマ</span>
+        <h3>『データ・アセンション』— コールドオープン</h3>
+        <p>仙侠シリーズ『データ・アセンション』の32秒コールドオープン。転生者が修行の世界へ踏み出す第一歩。</p>
+        <span class="spec">0:32 · 9:16 · 720×1280 (web version)</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-pet.jpg"><source src="works/pawjoy-pet.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">商品広告</span>
+        <h3>PawJoy — ペットフード インフィード広告</h3>
+        <p>ペットフードブランドの15秒縦型インフィード広告——フックは最初の3秒に。</p>
+        <span class="spec">0:15 · 9:16 · 720×1280</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-daily.jpg"><source src="works/mornclean-daily.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">商品広告</span>
+        <h3>MornClean — 日用品広告</h3>
+        <p>日用品の30秒モーニングルーティン広告。フィード掲載用に制作。</p>
+        <span class="spec">0:30 · 9:16 · 720×1280</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-tvc.jpg"><source src="works/soundclear-tvc.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">商品広告</span>
+        <h3>SoundClear — テレビCM</h3>
+        <p>ノイズキャンセリングイヤホンの45秒テレビCM。製品ショットとすっきりした音のストーリー。</p>
+        <span class="spec">0:45 · 16:9 · 1280×720</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-bloodorange-15s.jpg"><source src="works/blood-orange-15s.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">商品広告</span>
+        <h3>ブラッドオレンジ — 商品広告（15 秒）</h3>
+        <p>最初のフレームから果汁が弾けるフック。ブラッドオレンジの15秒縦型商品広告。</p>
+        <span class="spec">0:15 · 9:16 · 1080×1920</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-bloodorange-30s.jpg"><source src="works/blood-orange-30s.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">商品広告</span>
+        <h3>ブラッドオレンジ — 商品広告（30 秒）</h3>
+        <p>ロングバージョン。同じブラッドオレンジの朝食とアフタヌーンティーのシーン。</p>
+        <span class="spec">0:30 · 9:16 · 1080×1920</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-thermos-15s.jpg"><source src="works/thermos-cup-15s.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">商品広告</span>
+        <h3>保温ボトル — 商品広告（15 秒）</h3>
+        <p>保温ボトルの15秒縦型商品広告。比較型フック、ヒーローショットは画像生成動画。</p>
+        <span class="spec">0:15 · 9:16 · 1080×1920</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-thermos-30s.jpg"><source src="works/thermos-cup-30s.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">商品広告</span>
+        <h3>保温ボトル — 商品広告（30 秒）</h3>
+        <p>ロングバージョン。同じボトルに、使用シーンと乾いた仕上がりのクローズアップを加えて。</p>
+        <span class="spec">0:30 · 9:16 · 1080×1920</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="travel">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-map.jpg"><source src="works/qinling-map.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">旅行</span>
+        <h3>秦嶺へ — 地図ルート旅行映像</h3>
+        <p>地図ルートの旅行短編。秦嶺へ南へドライブし、ルート図とフルサウンドスケープ付き。</p>
+        <span class="spec">1:11 · 16:9 · 1280×720</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="explainer">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-commentary.jpg"><source src="works/commentary-1140.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">解説</span>
+        <h3>11:40 — ナレーション短編ドラマ</h3>
+        <p>60秒のナレーション短編ドラマ。解説者の深夜の物語、雨音は実録、字幕付き。</p>
+        <span class="spec">1:00 · 9:16 · 720×1280</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="animation">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-mg.jpg"><source src="works/mg-yiwangtongban.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">アニメーション</span>
+        <h3>ワンストップ行政サービス — MGアニメーション</h3>
+        <p>行政サービスキャンペーンの20秒フラットベクターMGアニメーション。フック、3つの悩み、4ステップの解決策。</p>
+        <span class="spec">0:20 · 16:9 · 1920×1080</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="animation">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-frame.jpg"><source src="works/frame-cat-butterfly.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">アニメーション</span>
+        <h3>子猫が蝶を追う — フレームアニメーション</h3>
+        <p>14秒の手描き風フレームアニメーション。168枚を1枚ずつ描き、毎秒12枚。</p>
+        <span class="spec">0:14 · 16:9 · 1280×720</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/logo-novapulse.jpg" alt="NOVAPULSE technology logo design presentation board" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">デザイン</span>
+        <h3>NOVAPULSE — テクノロジーロゴ</h3>
+        <p>テクノロジーブランドの六角形とパルスによる幾何学マーク。明暗両背景とカラーパレットで紹介。</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">ロゴを注文 →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/logo-shanwai.jpg" alt="Shanwai Shan Chinese tea brand logo design presentation board" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">デザイン</span>
+        <h3>山外山 — 中国茶ブランドロゴ</h3>
+        <p>重なる山並みと茶葉に、墨緑と金色の書体レタリングを添えて。</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">ロゴを注文 →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/logo-maixiang.jpg" alt="Maixiang Diary bakery logo design presentation board" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">デザイン</span>
+        <h3>麦香日記 — ベーカリーロゴ</h3>
+        <p>小麦の穂がパンを囲む円形バッジ。テラコッタと小麦金——温かく、棚映えするベーカリーのブランディング。</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">ロゴを注文 →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/giftcard-sunbeam.jpg" alt="Sunbeam Coffee gift card design, front and back" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">デザイン</span>
+        <h3>サンシャインコーヒー — ギフトカード</h3>
+        <p>スキャンテスト済みQRコード付き、印刷対応ギフトカードの表裏。印刷仕様（85×55mm、300dpi、塗り足し付き）で制作。</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">ギフトカードを注文 →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/giftcard-leafpage.jpg" alt="Leaf and Page Books gift card design, front and back" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">デザイン</span>
+        <h3>リーフ＆ページ書店 — ギフトカード</h3>
+        <p>独立書店のための静かで本好きなギフトカードデザイン。表裏、QRコードと印刷用ファイル付き。</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">ギフトカードを注文 →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="tools">
+      <span class="thumb"><img src="assets/bead-before-after.jpg" alt="A landscape photo turned into a fuse-bead pattern by Bead Pattern Maker" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">ツール</span>
+        <h3>ビーズパターンメーカー — 写真を図案に</h3>
+        <p>ブラウザツールが写真をアイロンビーズの図案に変換し、色ごとの買い物リスト付き。無料で試せて、アカウント不要。</p>
+        <a class="card-link" href="index-ja.html">ツールを開く →</a>
+      </div>
+    </article>
+  </section>
+  <p class="fineprint">上記のデザイン作品は、スタイルと制作品質を示すためのスタジオデモサンプルです。表示されているブランドは架空のものです。動画はブラウザで直接再生できます。『データ・アセンション』の全話は Bilibili で公開しています。</p>
+
+  <p class="works-more"><a class="btn btn-primary" href="studio-ja.html#services">サービスと料金を見る</a></p>
+
+  <section class="cta-band reveal">
+    <h2>プロジェクトのご相談は？</h2>
+    <p>メール一通で十分です。お支払い前に固定の見積もりと納期をお伝えします。</p>
+    <div class="cta-actions">
+      <a class="btn btn-light" href="mailto:a13259605261@163.com">スタジオにメールする</a>
+      <a class="btn btn-outline-light" href="studio-ja.html#services">サービスを見る</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <nav class="footer-nav" aria-label="Site links">
+    <a href="index-ja.html">Bead Pattern Maker</a> · <a href="studio-ja.html">全サービス</a> · <a href="works-ja.html">作品</a> ·
+    <a href="privacy.html">プライバシーポリシー</a> · <a href="terms.html">利用規約</a> ·
+    <a href="index-ja.html#pricing">料金</a> ·
+    <a href="mailto:a13259605261@163.com">サポート：a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+  </nav>
+  <p>ビジネスに関するお問い合わせはメールで： <a href="mailto:a13259605261@163.com">a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a></p>
+  <p>© 2026 Dreamforge Studio</p>
+  <div class="footer-cols">
+    <div class="fcol"><h4>サービス</h4>
+      <a href="studio-ja.html#services">AI ショート動画</a>
+      <a href="studio-ja.html#services">縦型ショートドラマ</a>
+      <a href="studio-ja.html#services">企業映像</a>
+      <a href="studio-ja.html#services">ロゴ＆ギフトカードデザイン</a>
+      <a href="index-ja.html">Bead Pattern Maker (tool)</a>
+    </div>
+    <div class="fcol"><h4>スタジオ</h4>
+      <a href="studio-ja.html#about">スタジオについて</a>
+      <a href="studio-ja.html#work">選りすぐりの作品</a>
+      <a href="works-ja.html">すべての作品</a>
+      <a href="studio-ja.html#process">進め方</a>
+      <a href="studio-ja.html#faq">よくある質問</a>
+      <a href="guide-ja.html">ユーザーガイド</a>
+    </div>
+    <div class="fcol"><h4>サポート</h4>
+      <a href="mailto:a13259605261@163.com">a13259605261@163.com</a>
+      <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="terms.html">利用規約</a>
+      <a href="index-ja.html#pricing">ツール料金</a>
+    </div>
+  </div>
+  <nav class="lang-switch footer-lang" aria-label="Language">
+    <a href="works.html" hreflang="en">EN</a><span class="sep">|</span><a href="works-zh.html" hreflang="zh-CN">中文</a><span class="sep">|</span><a href="works-ja.html" class="active" hreflang="ja">日本語</a><span class="sep">|</span><a href="works-ko.html" hreflang="ko">한국어</a><span class="sep">|</span><a href="works-fr.html" hreflang="fr">Français</a>
+  </nav>
+</footer>
+
+<script>(function(){
+  var chips=document.querySelectorAll('#worksFilter .chip');
+  var cards=document.querySelectorAll('#workGrid .work');
+  var count=document.getElementById('workCount');
+  function apply(f){
+    var n=0;
+    cards.forEach(function(c){
+      var show=f==='all'||c.getAttribute('data-cat')===f;
+      if(!show){var v=c.querySelector('video');if(v&&!v.paused){v.pause();}}
+      c.hidden=!show; if(show){n++;}
+    });
+    if(count){count.textContent=n;}
+  }
+  chips.forEach(function(ch){
+    ch.addEventListener('click',function(){
+      chips.forEach(function(c){c.setAttribute('aria-pressed','false');});
+      ch.setAttribute('aria-pressed','true');
+      apply(ch.getAttribute('data-filter'));
+    });
+  });
+})();</script>
+<script>(function(){var els=document.querySelectorAll('.reveal');if(!('IntersectionObserver' in window)||!els.length){return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('rv-in');io.unobserve(e.target);}});},{threshold:.1});els.forEach(function(el){el.classList.add('rv-init');io.observe(el);});})();</script>
+</body>
+</html>

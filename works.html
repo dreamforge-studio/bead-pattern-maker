@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Works — Dreamforge Studio</title>
+<meta name="description" content="The Dreamforge Studio portfolio: corporate films, vertical short dramas, product ads, travel films, narrated shorts, animation, logo and gift card design — finished work, playable in your browser.">
+<link rel="canonical" href="https://dreamforgestudio.xyz/works.html">
+<meta name="theme-color" content="#0e4d2c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* --- works page --- */
+  .hero { padding: 34px 6px 8px; text-align: center; }
+  .eyebrow {
+    margin: 0 0 10px; font-size: .78rem; font-weight: 700;
+    letter-spacing: .22em; text-transform: uppercase; color: var(--green);
+  }
+  .hero h2 {
+    margin: 0 auto 12px; max-width: 640px;
+    font-size: 2rem; line-height: 1.2; font-weight: 700; color: var(--ink);
+  }
+  .hero .lead {
+    margin: 0 auto 22px; max-width: 600px;
+    color: var(--muted); font-size: 1.02rem; line-height: 1.6;
+  }
+  .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-outline {
+    background: #fff; color: var(--green-dark); border: 1px solid var(--green);
+    transition: background .15s ease, color .15s ease;
+  }
+  .btn-outline:hover { background: #eef6f1; border-color: var(--green); }
+
+  /* category filter */
+  .works-filter {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    margin: 26px 0 8px; padding: 0 6px;
+  }
+  .chip {
+    min-height: 44px; padding: 10px 18px; border-radius: 999px;
+    border: 1px solid var(--line); background: #fff;
+    font: inherit; font-size: .92rem; font-weight: 600; color: var(--ink);
+    cursor: pointer; transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .chip:hover { border-color: var(--green); color: var(--green-dark); }
+  .chip[aria-pressed="true"] { background: var(--green); border-color: var(--green); color: #fff; }
+  .work-count { text-align: center; color: var(--muted); font-size: .88rem; margin: 0 0 20px; }
+
+  /* gallery grid (3 cols desktop, 2 tablet, 1 phone) */
+  .work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .work {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .work:hover {
+    transform: translateY(-3px); border-color: #bcd8c6;
+    box-shadow: 0 10px 24px rgba(20, 102, 60, .10);
+  }
+  .work[hidden] { display: none; }
+  .work-media {
+    aspect-ratio: 16 / 9; display: block;
+    background: linear-gradient(135deg, #0e2e1f, #17573a);
+  }
+  .work-media video { width: 100%; height: 100%; display: block; object-fit: contain; background: #101613; }
+  .work .thumb { background: #f0f3f0; display: block; }
+  .work .thumb img { width: 100%; height: 210px; object-fit: contain; display: block; }
+  .work .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .work h3 { margin: 0; font-size: 1rem; line-height: 1.4; }
+  .work p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.55; flex: 1; }
+  .work .spec { color: var(--muted); font-size: .84rem; }
+  .tag {
+    align-self: flex-start; font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--green-dark);
+    background: #eef6f1; border-radius: 999px; padding: 3px 10px;
+  }
+  .work a.card-link { color: var(--green); font-weight: 600; font-size: .9rem; text-decoration: none; display: inline-block; padding: 11px 2px; margin: 3px -2px -7px; }
+  .work a.card-link:hover { text-decoration: underline; }
+  .fineprint { margin: 12px 6px 0; color: var(--muted); font-size: .84rem; line-height: 1.55; }
+  .works-more { text-align: center; margin: 26px 0 4px; }
+
+  footer p a { color: var(--green); text-decoration: none; }
+  footer p a:hover { text-decoration: underline; }
+
+  @media (max-width: 1100px) { .work-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 680px) {
+    .hero { padding-top: 24px; }
+    .hero h2 { font-size: 1.55rem; }
+    .work-grid { grid-template-columns: 1fr; }
+    .work .thumb img { height: 190px; }
+  }
+</style>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dreamforge Studio">
+<meta property="og:title" content="Works — Dreamforge Studio">
+<meta property="og:description" content="The Dreamforge Studio portfolio: corporate films, vertical short dramas, product ads, travel films, narrated shorts, animation, logo and gift card design — finished work, playable in your browser.">
+<meta property="og:url" content="https://dreamforgestudio.xyz/works.html">
+<meta property="og:image" content="https://dreamforgestudio.xyz/works/poster-xinglan.jpg">
+<meta property="og:image:alt" content="A frame from the Xinglan Group corporate brand film">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Works — Dreamforge Studio">
+<meta name="twitter:description" content="The Dreamforge Studio portfolio: corporate films, vertical short dramas, product ads, travel films, narrated shorts, animation, logo and gift card design — finished work, playable in your browser.">
+<meta name="twitter:image" content="https://dreamforgestudio.xyz/works/poster-xinglan.jpg">
+<link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/works.html">
+<link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/works-zh.html">
+<link rel="alternate" hreflang="ja" href="https://dreamforgestudio.xyz/works-ja.html">
+<link rel="alternate" hreflang="ko" href="https://dreamforgestudio.xyz/works-ko.html">
+<link rel="alternate" hreflang="fr" href="https://dreamforgestudio.xyz/works-fr.html">
+<link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/works.html">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="icons/icon-192.png" alt="" width="40" height="40">
+    <div>
+      <h1>Dreamforge Studio</h1>
+      <p>AI Media &amp; Tools Studio</p>
+    </div>
+  </div>
+  <p class="privacy">AI video · design · tools — delivered digitally, worldwide</p>
+  <select class="lang-select" id="langSelect" aria-label="Language / 语言 / 言語 / 언어 / Langue" title="Language">
+      <option value="works.html" selected>English</option>
+      <option value="works-zh.html">中文（简体）</option>
+      <option value="works-ja.html">日本語</option>
+      <option value="works-ko.html">한국어</option>
+      <option value="works-fr.html">Français</option>
+  </select>
+  <script>document.getElementById('langSelect').addEventListener('change',function(){location.href=this.value;});</script>
+</header>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow">Portfolio</p>
+    <h2>Work that speaks for itself</h2>
+    <p class="lead">Every piece below is finished work from this studio. Videos play right here
+    in your browser — tap one to watch. Filter by category to find the kind of work you need.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="studio.html#services">Browse services</a>
+      <a class="btn btn-outline" href="mailto:a13259605261@163.com">Order a piece like these</a>
+    </div>
+  </section>
+
+  <nav class="works-filter" aria-label="Filter works by category" id="worksFilter">
+    <button class="chip" type="button" data-filter="all" aria-pressed="true">All work</button>
+    <button class="chip" type="button" data-filter="corporate" aria-pressed="false">Corporate Film</button>
+    <button class="chip" type="button" data-filter="drama" aria-pressed="false">Short Drama</button>
+    <button class="chip" type="button" data-filter="ads" aria-pressed="false">Product Ads</button>
+    <button class="chip" type="button" data-filter="travel" aria-pressed="false">Travel</button>
+    <button class="chip" type="button" data-filter="explainer" aria-pressed="false">Explainer</button>
+    <button class="chip" type="button" data-filter="animation" aria-pressed="false">Animation</button>
+    <button class="chip" type="button" data-filter="design" aria-pressed="false">Design</button>
+    <button class="chip" type="button" data-filter="tools" aria-pressed="false">Tools</button>
+  </nav>
+  <p class="work-count"><span id="workCount">20</span> / 20 pieces</p>
+
+  <section class="work-grid" id="workGrid">
+    <article class="work" data-cat="corporate">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-xinglan.jpg"><source src="works/xinglan-enterprise.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">Corporate Film</span>
+        <h3>Xinglan Group — Corporate Brand Film</h3>
+        <p>A two-minute 16:9 corporate image film: aerial-style opening, brand story in the middle, closing brand card — our reference piece for company films.</p>
+        <span class="spec">2:00 · 16:9 · 1280×720</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="drama">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-lasttrain.jpg"><source src="works/the-last-train.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">Short Drama</span>
+        <h3>The Last Train — Vertical Drama (English)</h3>
+        <p>An English-language vertical short drama: scripted episodes with AI performance, English voice-over and subtitles.</p>
+        <span class="spec">1:20 · 9:16 · 720×1280</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="drama">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-coldopen.jpg"><source src="works/coldopen-v13.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">Short Drama</span>
+        <h3>Data Ascension — Cold Open</h3>
+        <p>The 32-second cold open of our xianxia series Data Ascension: a transmigrator&rsquo;s first step into the cultivation world.</p>
+        <span class="spec">0:32 · 9:16 · 720×1280 (web version)</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-pet.jpg"><source src="works/pawjoy-pet.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">Product Ads</span>
+        <h3>PawJoy — Pet Food Info-feed Ad</h3>
+        <p>A 15-second vertical info-feed ad for a pet food brand — the hook lands in the first three seconds.</p>
+        <span class="spec">0:15 · 9:16 · 720×1280</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-daily.jpg"><source src="works/mornclean-daily.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">Product Ads</span>
+        <h3>MornClean — Daily Care Ad</h3>
+        <p>A 30-second morning-routine ad for a daily-care product, built for feed placement.</p>
+        <span class="spec">0:30 · 9:16 · 720×1280</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-tvc.jpg"><source src="works/soundclear-tvc.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">Product Ads</span>
+        <h3>SoundClear — TV Commercial</h3>
+        <p>A 45-second TV commercial for noise-cancelling earbuds — product shots with a clean sound story.</p>
+        <span class="spec">0:45 · 16:9 · 1280×720</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-bloodorange-15s.jpg"><source src="works/blood-orange-15s.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">Product Ads</span>
+        <h3>Blood Orange — Product Ad (15s)</h3>
+        <p>Juice-burst hook in the first frame: a 15-second vertical product ad for blood oranges.</p>
+        <span class="spec">0:15 · 9:16 · 1080×1920</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-bloodorange-30s.jpg"><source src="works/blood-orange-30s.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">Product Ads</span>
+        <h3>Blood Orange — Product Ad (30s)</h3>
+        <p>The longer cut — breakfast and afternoon-tea scenes for the same blood-orange product.</p>
+        <span class="spec">0:30 · 9:16 · 1080×1920</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-thermos-15s.jpg"><source src="works/thermos-cup-15s.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">Product Ads</span>
+        <h3>Insulated Bottle — Product Ad (15s)</h3>
+        <p>A 15-second vertical product ad for an insulated bottle — a comparison hook with a video-generated hero shot.</p>
+        <span class="spec">0:15 · 9:16 · 1080×1920</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-thermos-30s.jpg"><source src="works/thermos-cup-30s.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">Product Ads</span>
+        <h3>Insulated Bottle — Product Ad (30s)</h3>
+        <p>The longer cut — the same bottle, with usage scenes and a dry-finish close-up.</p>
+        <span class="spec">0:30 · 9:16 · 1080×1920</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="travel">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-map.jpg"><source src="works/qinling-map.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">Travel</span>
+        <h3>Into the Qinling — Map-route Travel Film</h3>
+        <p>A map-route travel short: driving south into the Qinling mountains, with route graphics and a full soundscape.</p>
+        <span class="spec">1:11 · 16:9 · 1280×720</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="explainer">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-commentary.jpg"><source src="works/commentary-1140.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">Explainer</span>
+        <h3>11:40 — Narrated Drama Short</h3>
+        <p>A 60-second narrated drama short: a commentator&rsquo;s late-night story, rain recorded live, subtitles included.</p>
+        <span class="spec">1:00 · 9:16 · 720×1280</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="animation">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-mg.jpg"><source src="works/mg-yiwangtongban.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">Animation</span>
+        <h3>One-Stop Government Services — MG Animation</h3>
+        <p>A 20-second flat-vector MG animation for a government-services campaign: hook, three pain points, and a four-step solution.</p>
+        <span class="spec">0:20 · 16:9 · 1920×1080</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="animation">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-frame.jpg"><source src="works/frame-cat-butterfly.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">Animation</span>
+        <h3>Kitten Chases a Butterfly — Frame Animation</h3>
+        <p>A 14-second hand-drawn-style frame animation: 168 frames drawn one by one, 12 frames per second.</p>
+        <span class="spec">0:14 · 16:9 · 1280×720</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/logo-novapulse.jpg" alt="NOVAPULSE technology logo design presentation board" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">Design</span>
+        <h3>NOVAPULSE — Technology Logo</h3>
+        <p>A geometric hexagon-and-pulse mark for a tech brand, shown on light and dark backgrounds with its colour palette.</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">Order a logo →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/logo-shanwai.jpg" alt="Shanwai Shan Chinese tea brand logo design presentation board" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">Design</span>
+        <h3>Shanwai Shan — Chinese Tea Brand Logo</h3>
+        <p>Layered mountain ridges with a tea leaf, paired with calligraphic lettering in ink green and gold.</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">Order a logo →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/logo-maixiang.jpg" alt="Maixiang Diary bakery logo design presentation board" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">Design</span>
+        <h3>Maixiang Diary — Bakery Logo</h3>
+        <p>A round badge of wheat ears around a loaf, in terracotta and wheat gold — warm, shelf-friendly branding for a bakery.</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">Order a logo →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/giftcard-sunbeam.jpg" alt="Sunbeam Coffee gift card design, front and back" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">Design</span>
+        <h3>Sunbeam Coffee — Gift Card</h3>
+        <p>Front and back of a print-ready gift card with a scan-tested QR code, produced to print spec (85 × 55 mm, 300 dpi, with bleed).</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">Order a gift card →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/giftcard-leafpage.jpg" alt="Leaf and Page Books gift card design, front and back" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">Design</span>
+        <h3>Leaf &amp; Page Books — Gift Card</h3>
+        <p>A quiet, bookish gift card design for an independent bookshop, front and back, with QR code and print-ready files.</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">Order a gift card →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="tools">
+      <span class="thumb"><img src="assets/bead-before-after.jpg" alt="A landscape photo turned into a fuse-bead pattern by Bead Pattern Maker" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">Tools</span>
+        <h3>Bead Pattern Maker — Photo to Pattern</h3>
+        <p>Our browser tool turns any photo into a fuse-bead pattern with a per-color shopping list. Free to try, no account needed.</p>
+        <a class="card-link" href="index.html">Open the tool →</a>
+      </div>
+    </article>
+  </section>
+  <p class="fineprint">Design pieces above are studio demonstration samples created to show style and
+  production quality; the brands shown are fictional. Videos play in your browser — tap a video
+  to watch it. Full episodes of Data Ascension are published on Bilibili.</p>
+
+  <p class="works-more"><a class="btn btn-primary" href="studio.html#services">See services &amp; prices</a></p>
+
+  <section class="cta-band reveal">
+    <h2>Have a project in mind?</h2>
+    <p>One email is enough to start — you get a fixed quote and a delivery date before you pay anything.</p>
+    <div class="cta-actions">
+      <a class="btn btn-light" href="mailto:a13259605261@163.com">Email the studio</a>
+      <a class="btn btn-outline-light" href="studio.html#services">Browse services</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <nav class="footer-nav" aria-label="Site links">
+    <a href="index.html">Bead Pattern Maker</a> · <a href="studio.html">All Services</a> · <a href="works.html">Works</a> ·
+    <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Service</a> ·
+    <a href="index.html#pricing">Pricing</a> ·
+    <a href="mailto:a13259605261@163.com">Support: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+  </nav>
+  <p>Business enquiries by email: <a href="mailto:a13259605261@163.com">a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a></p>
+  <p>© 2026 Dreamforge Studio</p>
+  <div class="footer-cols">
+    <div class="fcol"><h4>Services</h4>
+      <a href="studio.html#services">AI Short Videos</a>
+      <a href="studio.html#services">Vertical Short Dramas</a>
+      <a href="studio.html#services">Corporate Films</a>
+      <a href="studio.html#services">Logo &amp; Gift Card Design</a>
+      <a href="index.html">Bead Pattern Maker (tool)</a>
+    </div>
+    <div class="fcol"><h4>Studio</h4>
+      <a href="studio.html#about">About the studio</a>
+      <a href="studio.html#work">Selected work</a>
+      <a href="works.html">All works</a>
+      <a href="studio.html#process">How we work</a>
+      <a href="studio.html#faq">FAQ</a>
+      <a href="guide.html">User Guide</a>
+    </div>
+    <div class="fcol"><h4>Support</h4>
+      <a href="mailto:a13259605261@163.com">a13259605261@163.com</a>
+      <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="index.html#pricing">Tool pricing</a>
+    </div>
+  </div>
+  <nav class="lang-switch footer-lang" aria-label="Language">
+    <a href="works.html" class="active" hreflang="en">EN</a><span class="sep">|</span><a href="works-zh.html" hreflang="zh-CN">中文</a><span class="sep">|</span><a href="works-ja.html" hreflang="ja">日本語</a><span class="sep">|</span><a href="works-ko.html" hreflang="ko">한국어</a><span class="sep">|</span><a href="works-fr.html" hreflang="fr">Français</a>
+  </nav>
+</footer>
+
+<script>(function(){
+  var chips=document.querySelectorAll('#worksFilter .chip');
+  var cards=document.querySelectorAll('#workGrid .work');
+  var count=document.getElementById('workCount');
+  function apply(f){
+    var n=0;
+    cards.forEach(function(c){
+      var show=f==='all'||c.getAttribute('data-cat')===f;
+      if(!show){var v=c.querySelector('video');if(v&&!v.paused){v.pause();}}
+      c.hidden=!show; if(show){n++;}
+    });
+    if(count){count.textContent=n;}
+  }
+  chips.forEach(function(ch){
+    ch.addEventListener('click',function(){
+      chips.forEach(function(c){c.setAttribute('aria-pressed','false');});
+      ch.setAttribute('aria-pressed','true');
+      apply(ch.getAttribute('data-filter'));
+    });
+  });
+})();</script>
+<script>(function(){var els=document.querySelectorAll('.reveal');if(!('IntersectionObserver' in window)||!els.length){return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('rv-in');io.unobserve(e.target);}});},{threshold:.1});els.forEach(function(el){el.classList.add('rv-init');io.observe(el);});})();</script>
+</body>
+</html>

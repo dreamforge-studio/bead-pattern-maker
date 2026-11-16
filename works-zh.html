@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>作品展厅 — Dreamforge Studio</title>
+<meta name="description" content="Dreamforge Studio 作品展厅：企业片、竖屏短剧、产品广告、文旅短片、解说短片、动画、Logo 与礼品卡设计——全部为已完成作品，可直接在浏览器里播放。">
+<link rel="canonical" href="https://dreamforgestudio.xyz/works-zh.html">
+<meta name="theme-color" content="#0e4d2c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* --- works page --- */
+  .hero { padding: 34px 6px 8px; text-align: center; }
+  .eyebrow {
+    margin: 0 0 10px; font-size: .78rem; font-weight: 700;
+    letter-spacing: .22em; text-transform: uppercase; color: var(--green);
+  }
+  .hero h2 {
+    margin: 0 auto 12px; max-width: 640px;
+    font-size: 2rem; line-height: 1.2; font-weight: 700; color: var(--ink);
+  }
+  .hero .lead {
+    margin: 0 auto 22px; max-width: 600px;
+    color: var(--muted); font-size: 1.02rem; line-height: 1.6;
+  }
+  .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-outline {
+    background: #fff; color: var(--green-dark); border: 1px solid var(--green);
+    transition: background .15s ease, color .15s ease;
+  }
+  .btn-outline:hover { background: #eef6f1; border-color: var(--green); }
+
+  /* category filter */
+  .works-filter {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    margin: 26px 0 8px; padding: 0 6px;
+  }
+  .chip {
+    min-height: 44px; padding: 10px 18px; border-radius: 999px;
+    border: 1px solid var(--line); background: #fff;
+    font: inherit; font-size: .92rem; font-weight: 600; color: var(--ink);
+    cursor: pointer; transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .chip:hover { border-color: var(--green); color: var(--green-dark); }
+  .chip[aria-pressed="true"] { background: var(--green); border-color: var(--green); color: #fff; }
+  .work-count { text-align: center; color: var(--muted); font-size: .88rem; margin: 0 0 20px; }
+
+  /* gallery grid (3 cols desktop, 2 tablet, 1 phone) */
+  .work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .work {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .work:hover {
+    transform: translateY(-3px); border-color: #bcd8c6;
+    box-shadow: 0 10px 24px rgba(20, 102, 60, .10);
+  }
+  .work[hidden] { display: none; }
+  .work-media {
+    aspect-ratio: 16 / 9; display: block;
+    background: linear-gradient(135deg, #0e2e1f, #17573a);
+  }
+  .work-media video { width: 100%; height: 100%; display: block; object-fit: contain; background: #101613; }
+  .work .thumb { background: #f0f3f0; display: block; }
+  .work .thumb img { width: 100%; height: 210px; object-fit: contain; display: block; }
+  .work .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .work h3 { margin: 0; font-size: 1rem; line-height: 1.4; }
+  .work p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.55; flex: 1; }
+  .work .spec { color: var(--muted); font-size: .84rem; }
+  .tag {
+    align-self: flex-start; font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--green-dark);
+    background: #eef6f1; border-radius: 999px; padding: 3px 10px;
+  }
+  .work a.card-link { color: var(--green); font-weight: 600; font-size: .9rem; text-decoration: none; display: inline-block; padding: 11px 2px; margin: 3px -2px -7px; }
+  .work a.card-link:hover { text-decoration: underline; }
+  .fineprint { margin: 12px 6px 0; color: var(--muted); font-size: .84rem; line-height: 1.55; }
+  .works-more { text-align: center; margin: 26px 0 4px; }
+
+  footer p a { color: var(--green); text-decoration: none; }
+  footer p a:hover { text-decoration: underline; }
+
+  @media (max-width: 1100px) { .work-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 680px) {
+    .hero { padding-top: 24px; }
+    .hero h2 { font-size: 1.55rem; }
+    .work-grid { grid-template-columns: 1fr; }
+    .work .thumb img { height: 190px; }
+  }
+</style>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dreamforge Studio">
+<meta property="og:title" content="作品展厅 — Dreamforge Studio">
+<meta property="og:description" content="Dreamforge Studio 作品展厅：企业片、竖屏短剧、产品广告、文旅短片、解说短片、动画、Logo 与礼品卡设计——全部为已完成作品，可直接在浏览器里播放。">
+<meta property="og:url" content="https://dreamforgestudio.xyz/works-zh.html">
+<meta property="og:image" content="https://dreamforgestudio.xyz/works/poster-xinglan.jpg">
+<meta property="og:image:alt" content="星澜集团企业品牌片中的一帧">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="作品展厅 — Dreamforge Studio">
+<meta name="twitter:description" content="Dreamforge Studio 作品展厅：企业片、竖屏短剧、产品广告、文旅短片、解说短片、动画、Logo 与礼品卡设计——全部为已完成作品，可直接在浏览器里播放。">
+<meta name="twitter:image" content="https://dreamforgestudio.xyz/works/poster-xinglan.jpg">
+<link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/works-zh.html">
+<link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/works-zh.html">
+<link rel="alternate" hreflang="ja" href="https://dreamforgestudio.xyz/works-ja.html">
+<link rel="alternate" hreflang="ko" href="https://dreamforgestudio.xyz/works-ko.html">
+<link rel="alternate" hreflang="fr" href="https://dreamforgestudio.xyz/works-fr.html">
+<link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/works-zh.html">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="icons/icon-192.png" alt="" width="40" height="40">
+    <div>
+      <h1>Dreamforge Studio</h1>
+      <p>AI 媒体与工具工作室</p>
+    </div>
+  </div>
+  <p class="privacy">AI 视频 · 设计 · 工具——数字交付，全球可达</p>
+  <select class="lang-select" id="langSelect" aria-label="Language / 语言 / 言語 / 언어 / Langue" title="Language">
+      <option value="works.html">English</option>
+      <option value="works-zh.html" selected>中文（简体）</option>
+      <option value="works-ja.html">日本語</option>
+      <option value="works-ko.html">한국어</option>
+      <option value="works-fr.html">Français</option>
+  </select>
+  <script>document.getElementById('langSelect').addEventListener('change',function(){location.href=this.value;});</script>
+</header>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow">作品集</p>
+    <h2>作品自己会说话</h2>
+    <p class="lead">下面全部是本工作室已完成的作品。视频直接在浏览器里播放——点一下就能看。按分类筛选，快速找到你需要的那一类。</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="studio-zh.html#services">查看服务</a>
+      <a class="btn btn-outline" href="mailto:a13259605261@163.com">订做同类作品</a>
+    </div>
+  </section>
+
+  <nav class="works-filter" aria-label="Filter works by category" id="worksFilter">
+    <button class="chip" type="button" data-filter="all" aria-pressed="true">全部作品</button>
+    <button class="chip" type="button" data-filter="corporate" aria-pressed="false">企业片</button>
+    <button class="chip" type="button" data-filter="drama" aria-pressed="false">短剧</button>
+    <button class="chip" type="button" data-filter="ads" aria-pressed="false">产品广告</button>
+    <button class="chip" type="button" data-filter="travel" aria-pressed="false">文旅</button>
+    <button class="chip" type="button" data-filter="explainer" aria-pressed="false">解说</button>
+    <button class="chip" type="button" data-filter="animation" aria-pressed="false">动画</button>
+    <button class="chip" type="button" data-filter="design" aria-pressed="false">设计</button>
+    <button class="chip" type="button" data-filter="tools" aria-pressed="false">工具</button>
+  </nav>
+  <p class="work-count"><span id="workCount">20</span> / 共 20 件</p>
+
+  <section class="work-grid" id="workGrid">
+    <article class="work" data-cat="corporate">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-xinglan.jpg"><source src="works/xinglan-enterprise.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">企业片</span>
+        <h3>星澜集团 — 企业品牌片</h3>
+        <p>两分钟 16:9 企业形象片：航拍式开场、中间讲品牌故事、结尾品牌卡——我们企业片的标杆作品。</p>
+        <span class="spec">2:00 · 16:9 · 1280×720</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="drama">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-lasttrain.jpg"><source src="works/the-last-train.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">短剧</span>
+        <h3>末班车 — 竖屏短剧（英文）</h3>
+        <p>英文竖屏短剧：有剧本的系列短剧，AI 表演、英文配音、烧录字幕。</p>
+        <span class="spec">1:20 · 9:16 · 720×1280</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="drama">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-coldopen.jpg"><source src="works/coldopen-v13.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">短剧</span>
+        <h3>《数据入道》— 冷开场</h3>
+        <p>仙侠剧《数据入道》32 秒冷开场：穿越者踏入修仙世界的第一步。</p>
+        <span class="spec">0:32 · 9:16 · 720×1280 (web version)</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-pet.jpg"><source src="works/pawjoy-pet.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">产品广告</span>
+        <h3>PawJoy — 宠物食品信息流广告</h3>
+        <p>宠物食品品牌 15 秒竖屏信息流广告——钩子落在前三秒。</p>
+        <span class="spec">0:15 · 9:16 · 720×1280</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-daily.jpg"><source src="works/mornclean-daily.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">产品广告</span>
+        <h3>MornClean — 日化用品广告</h3>
+        <p>日化产品 30 秒晨间场景广告，为信息流投放制作。</p>
+        <span class="spec">0:30 · 9:16 · 720×1280</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-tvc.jpg"><source src="works/soundclear-tvc.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">产品广告</span>
+        <h3>SoundClear — 电视广告</h3>
+        <p>降噪耳机 45 秒电视广告——产品镜头配干净的声音故事。</p>
+        <span class="spec">0:45 · 16:9 · 1280×720</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-bloodorange-15s.jpg"><source src="works/blood-orange-15s.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">产品广告</span>
+        <h3>血橙 — 产品广告（15 秒）</h3>
+        <p>第一帧就是掰开爆汁的钩子：血橙 15 秒竖屏产品广告。</p>
+        <span class="spec">0:15 · 9:16 · 1080×1920</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-bloodorange-30s.jpg"><source src="works/blood-orange-30s.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">产品广告</span>
+        <h3>血橙 — 产品广告（30 秒）</h3>
+        <p>加长版——同一款血橙产品的早餐与下午茶场景。</p>
+        <span class="spec">0:30 · 9:16 · 1080×1920</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-thermos-15s.jpg"><source src="works/thermos-cup-15s.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">产品广告</span>
+        <h3>保温杯 — 产品广告（15 秒）</h3>
+        <p>保温杯 15 秒竖屏产品广告——对比型钩子，钩子镜为图生视频。</p>
+        <span class="spec">0:15 · 9:16 · 1080×1920</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-thermos-30s.jpg"><source src="works/thermos-cup-30s.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">产品广告</span>
+        <h3>保温杯 — 产品广告（30 秒）</h3>
+        <p>加长版——同一只保温杯，使用场景加干爽收尾特写。</p>
+        <span class="spec">0:30 · 9:16 · 1080×1920</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="travel">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-map.jpg"><source src="works/qinling-map.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">文旅</span>
+        <h3>向南，入秦岭 — 地图路线文旅短片</h3>
+        <p>地图路线文旅短片：驱车南入秦岭，路线图示配完整声景。</p>
+        <span class="spec">1:11 · 16:9 · 1280×720</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="explainer">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-commentary.jpg"><source src="works/commentary-1140.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">解说</span>
+        <h3>十一点四十 — 解说短剧</h3>
+        <p>60 秒解说短剧：解说员深夜讲的故事，雨声实录，配字幕。</p>
+        <span class="spec">1:00 · 9:16 · 720×1280</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="animation">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-mg.jpg"><source src="works/mg-yiwangtongban.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">动画</span>
+        <h3>政务服务一网通办 — MG 动画</h3>
+        <p>政务服务宣传 20 秒扁平矢量 MG 动画：钩子、三大痛点、四步解决方案。</p>
+        <span class="spec">0:20 · 16:9 · 1920×1080</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="animation">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-frame.jpg"><source src="works/frame-cat-butterfly.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">动画</span>
+        <h3>小猫追蝴蝶 — 逐帧动画</h3>
+        <p>14 秒手绘风逐帧动画：168 张画逐张绘制，每秒 12 张。</p>
+        <span class="spec">0:14 · 16:9 · 1280×720</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/logo-novapulse.jpg" alt="NOVAPULSE technology logo design presentation board" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">设计</span>
+        <h3>NOVAPULSE — 科技品牌 Logo</h3>
+        <p>科技品牌的六边形＋脉冲几何标志，深浅双底版配色板展示。</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">订做 Logo →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/logo-shanwai.jpg" alt="Shanwai Shan Chinese tea brand logo design presentation board" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">设计</span>
+        <h3>山外山 — 中式茶品牌 Logo</h3>
+        <p>层叠山峦加一片茶叶，配墨绿描金书法字标。</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">订做 Logo →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/logo-maixiang.jpg" alt="Maixiang Diary bakery logo design presentation board" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">设计</span>
+        <h3>麦香日记 — 烘焙品牌 Logo</h3>
+        <p>麦穗环绕面包的圆形徽章，陶土棕配麦金——温暖、上架好看的烘焙品牌。</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">订做 Logo →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/giftcard-sunbeam.jpg" alt="Sunbeam Coffee gift card design, front and back" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">设计</span>
+        <h3>日光咖啡 — 礼品卡</h3>
+        <p>可印刷礼品卡正反面，附扫码实测二维码，按印刷规格制作（85×55mm、300dpi、含出血）。</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">订做礼品卡 →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/giftcard-leafpage.jpg" alt="Leaf and Page Books gift card design, front and back" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">设计</span>
+        <h3>拾页书店 — 礼品卡</h3>
+        <p>独立书店的安静书香风礼品卡设计，正反面，附二维码与印刷文件。</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">订做礼品卡 →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="tools">
+      <span class="thumb"><img src="assets/bead-before-after.jpg" alt="A landscape photo turned into a fuse-bead pattern by Bead Pattern Maker" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">工具</span>
+        <h3>拼豆图纸生成器 — 照片转图纸</h3>
+        <p>我们的浏览器工具能把任何照片变成拼豆图纸，附每色颗数清单。免费试用，不用注册。</p>
+        <a class="card-link" href="index-zh.html">打开工具 →</a>
+      </div>
+    </article>
+  </section>
+  <p class="fineprint">以上设计作品为工作室演示样板，用于展示风格与制作水准；图中所用品牌均为虚构。视频在浏览器里直接播放——点一下视频即可观看。《数据入道》完整剧集发布于 B 站。</p>
+
+  <p class="works-more"><a class="btn btn-primary" href="studio-zh.html#services">查看服务与价格</a></p>
+
+  <section class="cta-band reveal">
+    <h2>有项目想做？</h2>
+    <p>一封邮件就够了——付款前你会先拿到固定报价和交付日期。</p>
+    <div class="cta-actions">
+      <a class="btn btn-light" href="mailto:a13259605261@163.com">给工作室发邮件</a>
+      <a class="btn btn-outline-light" href="studio-zh.html#services">查看服务</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <nav class="footer-nav" aria-label="Site links">
+    <a href="index-zh.html">Bead Pattern Maker</a> · <a href="studio-zh.html">全部服务</a> · <a href="works-zh.html">作品</a> ·
+    <a href="privacy.html">隐私政策</a> · <a href="terms.html">服务条款</a> ·
+    <a href="index-zh.html#pricing">价格</a> ·
+    <a href="mailto:a13259605261@163.com">支持：a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+  </nav>
+  <p>商务咨询请发邮件： <a href="mailto:a13259605261@163.com">a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a></p>
+  <p>© 2026 Dreamforge Studio</p>
+  <div class="footer-cols">
+    <div class="fcol"><h4>服务</h4>
+      <a href="studio-zh.html#services">AI 短视频</a>
+      <a href="studio-zh.html#services">竖屏短剧</a>
+      <a href="studio-zh.html#services">企业片</a>
+      <a href="studio-zh.html#services">Logo 与礼品卡设计</a>
+      <a href="index-zh.html">Bead Pattern Maker (tool)</a>
+    </div>
+    <div class="fcol"><h4>工作室</h4>
+      <a href="studio-zh.html#about">关于工作室</a>
+      <a href="studio-zh.html#work">精选作品</a>
+      <a href="works-zh.html">全部作品</a>
+      <a href="studio-zh.html#process">合作流程</a>
+      <a href="studio-zh.html#faq">常见问题</a>
+      <a href="guide-zh.html">使用指南</a>
+    </div>
+    <div class="fcol"><h4>支持</h4>
+      <a href="mailto:a13259605261@163.com">a13259605261@163.com</a>
+      <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+      <a href="privacy.html">隐私政策</a>
+      <a href="terms.html">服务条款</a>
+      <a href="index-zh.html#pricing">工具价格</a>
+    </div>
+  </div>
+  <nav class="lang-switch footer-lang" aria-label="Language">
+    <a href="works.html" hreflang="en">EN</a><span class="sep">|</span><a href="works-zh.html" class="active" hreflang="zh-CN">中文</a><span class="sep">|</span><a href="works-ja.html" hreflang="ja">日本語</a><span class="sep">|</span><a href="works-ko.html" hreflang="ko">한국어</a><span class="sep">|</span><a href="works-fr.html" hreflang="fr">Français</a>
+  </nav>
+</footer>
+
+<script>(function(){
+  var chips=document.querySelectorAll('#worksFilter .chip');
+  var cards=document.querySelectorAll('#workGrid .work');
+  var count=document.getElementById('workCount');
+  function apply(f){
+    var n=0;
+    cards.forEach(function(c){
+      var show=f==='all'||c.getAttribute('data-cat')===f;
+      if(!show){var v=c.querySelector('video');if(v&&!v.paused){v.pause();}}
+      c.hidden=!show; if(show){n++;}
+    });
+    if(count){count.textContent=n;}
+  }
+  chips.forEach(function(ch){
+    ch.addEventListener('click',function(){
+      chips.forEach(function(c){c.setAttribute('aria-pressed','false');});
+      ch.setAttribute('aria-pressed','true');
+      apply(ch.getAttribute('data-filter'));
+    });
+  });
+})();</script>
+<script>(function(){var els=document.querySelectorAll('.reveal');if(!('IntersectionObserver' in window)||!els.length){return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('rv-in');io.unobserve(e.target);}});},{threshold:.1});els.forEach(function(el){el.classList.add('rv-init');io.observe(el);});})();</script>
+</body>
+</html>

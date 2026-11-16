@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>작품 — Dreamforge Studio</title>
+<meta name="description" content="Dreamforge Studio 포트폴리오: 기업 영상, 세로형 숏드라마, 제품 광고, 여행 영상, 내레이션 단편, 애니메이션, 로고 및 기프트카드 디자인 — 완성된 작품을 브라우저에서 바로 재생할 수 있습니다.">
+<link rel="canonical" href="https://dreamforgestudio.xyz/works-ko.html">
+<meta name="theme-color" content="#0e4d2c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* --- works page --- */
+  .hero { padding: 34px 6px 8px; text-align: center; }
+  .eyebrow {
+    margin: 0 0 10px; font-size: .78rem; font-weight: 700;
+    letter-spacing: .22em; text-transform: uppercase; color: var(--green);
+  }
+  .hero h2 {
+    margin: 0 auto 12px; max-width: 640px;
+    font-size: 2rem; line-height: 1.2; font-weight: 700; color: var(--ink);
+  }
+  .hero .lead {
+    margin: 0 auto 22px; max-width: 600px;
+    color: var(--muted); font-size: 1.02rem; line-height: 1.6;
+  }
+  .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-outline {
+    background: #fff; color: var(--green-dark); border: 1px solid var(--green);
+    transition: background .15s ease, color .15s ease;
+  }
+  .btn-outline:hover { background: #eef6f1; border-color: var(--green); }
+
+  /* category filter */
+  .works-filter {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    margin: 26px 0 8px; padding: 0 6px;
+  }
+  .chip {
+    min-height: 44px; padding: 10px 18px; border-radius: 999px;
+    border: 1px solid var(--line); background: #fff;
+    font: inherit; font-size: .92rem; font-weight: 600; color: var(--ink);
+    cursor: pointer; transition: background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .chip:hover { border-color: var(--green); color: var(--green-dark); }
+  .chip[aria-pressed="true"] { background: var(--green); border-color: var(--green); color: #fff; }
+  .work-count { text-align: center; color: var(--muted); font-size: .88rem; margin: 0 0 20px; }
+
+  /* gallery grid (3 cols desktop, 2 tablet, 1 phone) */
+  .work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .work {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .work:hover {
+    transform: translateY(-3px); border-color: #bcd8c6;
+    box-shadow: 0 10px 24px rgba(20, 102, 60, .10);
+  }
+  .work[hidden] { display: none; }
+  .work-media {
+    aspect-ratio: 16 / 9; display: block;
+    background: linear-gradient(135deg, #0e2e1f, #17573a);
+  }
+  .work-media video { width: 100%; height: 100%; display: block; object-fit: contain; background: #101613; }
+  .work .thumb { background: #f0f3f0; display: block; }
+  .work .thumb img { width: 100%; height: 210px; object-fit: contain; display: block; }
+  .work .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .work h3 { margin: 0; font-size: 1rem; line-height: 1.4; }
+  .work p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.55; flex: 1; }
+  .work .spec { color: var(--muted); font-size: .84rem; }
+  .tag {
+    align-self: flex-start; font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--green-dark);
+    background: #eef6f1; border-radius: 999px; padding: 3px 10px;
+  }
+  .work a.card-link { color: var(--green); font-weight: 600; font-size: .9rem; text-decoration: none; display: inline-block; padding: 11px 2px; margin: 3px -2px -7px; }
+  .work a.card-link:hover { text-decoration: underline; }
+  .fineprint { margin: 12px 6px 0; color: var(--muted); font-size: .84rem; line-height: 1.55; }
+  .works-more { text-align: center; margin: 26px 0 4px; }
+
+  footer p a { color: var(--green); text-decoration: none; }
+  footer p a:hover { text-decoration: underline; }
+
+  @media (max-width: 1100px) { .work-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 680px) {
+    .hero { padding-top: 24px; }
+    .hero h2 { font-size: 1.55rem; }
+    .work-grid { grid-template-columns: 1fr; }
+    .work .thumb img { height: 190px; }
+  }
+</style>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dreamforge Studio">
+<meta property="og:title" content="작품 — Dreamforge Studio">
+<meta property="og:description" content="Dreamforge Studio 포트폴리오: 기업 영상, 세로형 숏드라마, 제품 광고, 여행 영상, 내레이션 단편, 애니메이션, 로고 및 기프트카드 디자인 — 완성된 작품을 브라우저에서 바로 재생할 수 있습니다.">
+<meta property="og:url" content="https://dreamforgestudio.xyz/works-ko.html">
+<meta property="og:image" content="https://dreamforgestudio.xyz/works/poster-xinglan.jpg">
+<meta property="og:image:alt" content="싱란 그룹 기업 브랜드 영상의 한 장면">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="작품 — Dreamforge Studio">
+<meta name="twitter:description" content="Dreamforge Studio 포트폴리오: 기업 영상, 세로형 숏드라마, 제품 광고, 여행 영상, 내레이션 단편, 애니메이션, 로고 및 기프트카드 디자인 — 완성된 작품을 브라우저에서 바로 재생할 수 있습니다.">
+<meta name="twitter:image" content="https://dreamforgestudio.xyz/works/poster-xinglan.jpg">
+<link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/works-ko.html">
+<link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/works-zh.html">
+<link rel="alternate" hreflang="ja" href="https://dreamforgestudio.xyz/works-ja.html">
+<link rel="alternate" hreflang="ko" href="https://dreamforgestudio.xyz/works-ko.html">
+<link rel="alternate" hreflang="fr" href="https://dreamforgestudio.xyz/works-fr.html">
+<link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/works-ko.html">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="icons/icon-192.png" alt="" width="40" height="40">
+    <div>
+      <h1>Dreamforge Studio</h1>
+      <p>AI 미디어 & 도구 스튜디오</p>
+    </div>
+  </div>
+  <p class="privacy">AI 영상 · 디자인 · 도구 — 디지털 납품, 전 세계</p>
+  <select class="lang-select" id="langSelect" aria-label="Language / 语言 / 言語 / 언어 / Langue" title="Language">
+      <option value="works.html">English</option>
+      <option value="works-zh.html">中文（简体）</option>
+      <option value="works-ja.html">日本語</option>
+      <option value="works-ko.html" selected>한국어</option>
+      <option value="works-fr.html">Français</option>
+  </select>
+  <script>document.getElementById('langSelect').addEventListener('change',function(){location.href=this.value;});</script>
+</header>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow">포트폴리오</p>
+    <h2>작품이 말해줍니다</h2>
+    <p class="lead">아래는 모두 저희 스튜디오의 완성 작품입니다. 동영상은 브라우저에서 바로 재생됩니다. 카테고리로 골라 필요한 작품을 찾아보세요.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="studio-ko.html#services">서비스 보기</a>
+      <a class="btn btn-outline" href="mailto:a13259605261@163.com">이런 작품 주문하기</a>
+    </div>
+  </section>
+
+  <nav class="works-filter" aria-label="Filter works by category" id="worksFilter">
+    <button class="chip" type="button" data-filter="all" aria-pressed="true">전체</button>
+    <button class="chip" type="button" data-filter="corporate" aria-pressed="false">기업 영상</button>
+    <button class="chip" type="button" data-filter="drama" aria-pressed="false">숏드라마</button>
+    <button class="chip" type="button" data-filter="ads" aria-pressed="false">제품 광고</button>
+    <button class="chip" type="button" data-filter="travel" aria-pressed="false">여행</button>
+    <button class="chip" type="button" data-filter="explainer" aria-pressed="false">설명</button>
+    <button class="chip" type="button" data-filter="animation" aria-pressed="false">애니메이션</button>
+    <button class="chip" type="button" data-filter="design" aria-pressed="false">디자인</button>
+    <button class="chip" type="button" data-filter="tools" aria-pressed="false">도구</button>
+  </nav>
+  <p class="work-count"><span id="workCount">20</span> / 총 20점</p>
+
+  <section class="work-grid" id="workGrid">
+    <article class="work" data-cat="corporate">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-xinglan.jpg"><source src="works/xinglan-enterprise.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">기업 영상</span>
+        <h3>싱란 그룹 — 기업 브랜드 영상</h3>
+        <p>2분짜리 16:9 기업 이미지 영상: 항공 촬영 스타일의 오프닝, 브랜드 스토리, 마무리 브랜드 카드 — 기업 영상의 대표작입니다.</p>
+        <span class="spec">2:00 · 16:9 · 1280×720</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="drama">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-lasttrain.jpg"><source src="works/the-last-train.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">숏드라마</span>
+        <h3>The Last Train — 세로형 드라마(영어)</h3>
+        <p>영어 세로형 숏드라마: 대본이 있는 시리즈, AI 연기, 영어 내레이션과 자막 포함.</p>
+        <span class="spec">1:20 · 9:16 · 720×1280</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="drama">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-coldopen.jpg"><source src="works/coldopen-v13.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">숏드라마</span>
+        <h3>《데이터 입문》— 콜드 오픈</h3>
+        <p>선협 시리즈 《데이터 입문》의 32초 콜드 오픈: 이세계로 온 주인공이 수련 세계에 첫발을 내딛는 순간.</p>
+        <span class="spec">0:32 · 9:16 · 720×1280 (web version)</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-pet.jpg"><source src="works/pawjoy-pet.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">제품 광고</span>
+        <h3>PawJoy — 펫푸드 인피드 광고</h3>
+        <p>펫푸드 브랜드 15초 세로형 인피드 광고 — 첫 3초에 훅을 심었습니다.</p>
+        <span class="spec">0:15 · 9:16 · 720×1280</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-daily.jpg"><source src="works/mornclean-daily.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">제품 광고</span>
+        <h3>MornClean — 생활용품 광고</h3>
+        <p>생활용품 30초 아침 루틴 광고, 피드 게재용으로 제작.</p>
+        <span class="spec">0:30 · 9:16 · 720×1280</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-tvc.jpg"><source src="works/soundclear-tvc.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">제품 광고</span>
+        <h3>SoundClear — TV 광고</h3>
+        <p>노이즈 캔슬링 이어폰 45초 TV 광고 — 제품 샷과 깔끔한 사운드 스토리.</p>
+        <span class="spec">0:45 · 16:9 · 1280×720</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-bloodorange-15s.jpg"><source src="works/blood-orange-15s.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">제품 광고</span>
+        <h3>블러드 오렌지 — 제품 광고(15초)</h3>
+        <p>첫 프레임부터 과즙이 터지는 훅: 블러드 오렌지 15초 세로형 제품 광고.</p>
+        <span class="spec">0:15 · 9:16 · 1080×1920</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-bloodorange-30s.jpg"><source src="works/blood-orange-30s.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">제품 광고</span>
+        <h3>블러드 오렌지 — 제품 광고(30초)</h3>
+        <p>긴 버전 — 같은 블러드 오렌지 제품의 아침 식사와 오후 티타임 장면.</p>
+        <span class="spec">0:30 · 9:16 · 1080×1920</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-thermos-15s.jpg"><source src="works/thermos-cup-15s.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">제품 광고</span>
+        <h3>보온병 — 제품 광고(15초)</h3>
+        <p>보온병 15초 세로형 제품 광고 — 비교형 훅, 히어로 샷은 이미지 생성 영상.</p>
+        <span class="spec">0:15 · 9:16 · 1080×1920</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="ads">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-thermos-30s.jpg"><source src="works/thermos-cup-30s.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">제품 광고</span>
+        <h3>보온병 — 제품 광고(30초)</h3>
+        <p>긴 버전 — 같은 보온병, 사용 장면과 드라이 피니시 클로즈업 포함.</p>
+        <span class="spec">0:30 · 9:16 · 1080×1920</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="travel">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-map.jpg"><source src="works/qinling-map.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">여행</span>
+        <h3>친링으로 — 지도 루트 여행 영상</h3>
+        <p>지도 루트 여행 단편: 친링산맥으로 남쪽 드라이브, 루트 그래픽과 풀 사운드스케이프.</p>
+        <span class="spec">1:11 · 16:9 · 1280×720</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="explainer">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-commentary.jpg"><source src="works/commentary-1140.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">설명</span>
+        <h3>11:40 — 내레이션 단편 드라마</h3>
+        <p>60초 내레이션 단편 드라마: 해설자의 심야 이야기, 빗소리는 현장 녹음, 자막 포함.</p>
+        <span class="spec">1:00 · 9:16 · 720×1280</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="animation">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-mg.jpg"><source src="works/mg-yiwangtongban.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">애니메이션</span>
+        <h3>원스톱 행정 서비스 — MG 애니메이션</h3>
+        <p>행정 서비스 캠페인 20초 플랫 벡터 MG 애니메이션: 훅, 세 가지 불편함, 네 단계 해결책.</p>
+        <span class="spec">0:20 · 16:9 · 1920×1080</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="animation">
+      <span class="work-media"><video controls preload="none" playsinline poster="works/poster-frame.jpg"><source src="works/frame-cat-butterfly.mp4" type="video/mp4"></video></span>
+      <div class="body">
+        <span class="tag">애니메이션</span>
+        <h3>새끼 고양이와 나비 — 프레임 애니메이션</h3>
+        <p>14초 손그림 스타일 프레임 애니메이션: 168장을 한 장씩 그려, 초당 12장.</p>
+        <span class="spec">0:14 · 16:9 · 1280×720</span>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/logo-novapulse.jpg" alt="NOVAPULSE technology logo design presentation board" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">디자인</span>
+        <h3>NOVAPULSE — 테크놀로지 로고</h3>
+        <p>테크 브랜드의 육각형+펄스 기하학 마크, 밝은/어두운 배경과 컬러 팔레트로 소개.</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">로고 주문하기 →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/logo-shanwai.jpg" alt="Shanwai Shan Chinese tea brand logo design presentation board" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">디자인</span>
+        <h3>산외산 — 중국 차 브랜드 로고</h3>
+        <p>겹겹이 산등성이와 찻잎, 먹빛 그린과 골드의 서체 레터링.</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">로고 주문하기 →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/logo-maixiang.jpg" alt="Maixiang Diary bakery logo design presentation board" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">디자인</span>
+        <h3>맥향일기 — 베이커리 로고</h3>
+        <p>밀 이삭이 빵을 감싼 원형 배지, 테라코타와 밀 골드 — 따뜻하고 매대 친화적인 베이커리 브랜딩.</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">로고 주문하기 →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/giftcard-sunbeam.jpg" alt="Sunbeam Coffee gift card design, front and back" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">디자인</span>
+        <h3>선빔 커피 — 기프트카드</h3>
+        <p>스캔 테스트한 QR 코드가 있는 인쇄용 기프트카드 앞뒷면, 인쇄 규격(85×55mm, 300dpi, 재단 여유 포함)으로 제작.</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">기프트카드 주문하기 →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="design">
+      <span class="thumb"><img src="assets/giftcard-leafpage.jpg" alt="Leaf and Page Books gift card design, front and back" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">디자인</span>
+        <h3>리프 & 페이지 서점 — 기프트카드</h3>
+        <p>독립 서점을 위한 조용하고 책향기 나는 기프트카드 디자인, 앞뒷면, QR 코드와 인쇄 파일 포함.</p>
+        <a class="card-link" href="mailto:a13259605261@163.com">기프트카드 주문하기 →</a>
+      </div>
+    </article>
+
+    <article class="work" data-cat="tools">
+      <span class="thumb"><img src="assets/bead-before-after.jpg" alt="A landscape photo turned into a fuse-bead pattern by Bead Pattern Maker" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">도구</span>
+        <h3>비드 패턴 메이커 — 사진을 도안으로</h3>
+        <p>브라우저 도구가 어떤 사진이든 비즈 도안으로 바꾸고 색상별 구매 목록까지 제공합니다. 무료 체험, 계정 불필요.</p>
+        <a class="card-link" href="index-ko.html">도구 열기 →</a>
+      </div>
+    </article>
+  </section>
+  <p class="fineprint">위 디자인 작품은 스타일과 제작 수준을 보여주기 위한 스튜디오 데모 샘플이며, 표시된 브랜드는 가상입니다. 동영상은 브라우저에서 바로 재생됩니다. 《데이터 입문》 전편은 Bilibili에서 공개 중입니다.</p>
+
+  <p class="works-more"><a class="btn btn-primary" href="studio-ko.html#services">서비스와 가격 보기</a></p>
+
+  <section class="cta-band reveal">
+    <h2>프로젝트가 있으신가요?</h2>
+    <p>이메일 한 통이면 충분합니다. 결제 전에 확정 견적과 납기를 알려드립니다.</p>
+    <div class="cta-actions">
+      <a class="btn btn-light" href="mailto:a13259605261@163.com">스튜디오에 이메일 보내기</a>
+      <a class="btn btn-outline-light" href="studio-ko.html#services">서비스 보기</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <nav class="footer-nav" aria-label="Site links">
+    <a href="index-ko.html">Bead Pattern Maker</a> · <a href="studio-ko.html">전체 서비스</a> · <a href="works-ko.html">작품</a> ·
+    <a href="privacy.html">개인정보처리방침</a> · <a href="terms.html">이용약관</a> ·
+    <a href="index-ko.html#pricing">가격</a> ·
+    <a href="mailto:a13259605261@163.com">지원: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+  </nav>
+  <p>비즈니스 문의는 이메일로: <a href="mailto:a13259605261@163.com">a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a></p>
+  <p>© 2026 Dreamforge Studio</p>
+  <div class="footer-cols">
+    <div class="fcol"><h4>서비스</h4>
+      <a href="studio-ko.html#services">AI 숏폼 영상</a>
+      <a href="studio-ko.html#services">세로형 숏드라마</a>
+      <a href="studio-ko.html#services">기업 영상</a>
+      <a href="studio-ko.html#services">로고 및 기프트카드 디자인</a>
+      <a href="index-ko.html">Bead Pattern Maker (tool)</a>
+    </div>
+    <div class="fcol"><h4>스튜디오</h4>
+      <a href="studio-ko.html#about">스튜디오 소개</a>
+      <a href="studio-ko.html#work">대표 작품</a>
+      <a href="works-ko.html">전체 작품</a>
+      <a href="studio-ko.html#process">진행 방식</a>
+      <a href="studio-ko.html#faq">자주 묻는 질문</a>
+      <a href="guide-ko.html">사용 가이드</a>
+    </div>
+    <div class="fcol"><h4>지원</h4>
+      <a href="mailto:a13259605261@163.com">a13259605261@163.com</a>
+      <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+      <a href="privacy.html">개인정보처리방침</a>
+      <a href="terms.html">이용약관</a>
+      <a href="index-ko.html#pricing">도구 가격</a>
+    </div>
+  </div>
+  <nav class="lang-switch footer-lang" aria-label="Language">
+    <a href="works.html" hreflang="en">EN</a><span class="sep">|</span><a href="works-zh.html" hreflang="zh-CN">中文</a><span class="sep">|</span><a href="works-ja.html" hreflang="ja">日本語</a><span class="sep">|</span><a href="works-ko.html" class="active" hreflang="ko">한국어</a><span class="sep">|</span><a href="works-fr.html" hreflang="fr">Français</a>
+  </nav>
+</footer>
+
+<script>(function(){
+  var chips=document.querySelectorAll('#worksFilter .chip');
+  var cards=document.querySelectorAll('#workGrid .work');
+  var count=document.getElementById('workCount');
+  function apply(f){
+    var n=0;
+    cards.forEach(function(c){
+      var show=f==='all'||c.getAttribute('data-cat')===f;
+      if(!show){var v=c.querySelector('video');if(v&&!v.paused){v.pause();}}
+      c.hidden=!show; if(show){n++;}
+    });
+    if(count){count.textContent=n;}
+  }
+  chips.forEach(function(ch){
+    ch.addEventListener('click',function(){
+      chips.forEach(function(c){c.setAttribute('aria-pressed','false');});
+      ch.setAttribute('aria-pressed','true');
+      apply(ch.getAttribute('data-filter'));
+    });
+  });
+})();</script>
+<script>(function(){var els=document.querySelectorAll('.reveal');if(!('IntersectionObserver' in window)||!els.length){return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('rv-in');io.unobserve(e.target);}});},{threshold:.1});els.forEach(function(el){el.classList.add('rv-init');io.observe(el);});})();</script>
+</body>
+</html>

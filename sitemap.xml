@@ -151,6 +151,56 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/guide.html"/>
   </url>
   <url>
+    <loc>https://dreamforgestudio.xyz/works.html</loc>
+    <lastmod>2026-11-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/works.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/works-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dreamforgestudio.xyz/works-ja.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://dreamforgestudio.xyz/works-ko.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dreamforgestudio.xyz/works-fr.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/works.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/works-zh.html</loc>
+    <lastmod>2026-11-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/works.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/works-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dreamforgestudio.xyz/works-ja.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://dreamforgestudio.xyz/works-ko.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dreamforgestudio.xyz/works-fr.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/works.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/works-ja.html</loc>
+    <lastmod>2026-11-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/works.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/works-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dreamforgestudio.xyz/works-ja.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://dreamforgestudio.xyz/works-ko.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dreamforgestudio.xyz/works-fr.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/works.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/works-ko.html</loc>
+    <lastmod>2026-11-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/works.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/works-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dreamforgestudio.xyz/works-ja.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://dreamforgestudio.xyz/works-ko.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dreamforgestudio.xyz/works-fr.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/works.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/works-fr.html</loc>
+    <lastmod>2026-11-16</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/works.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/works-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://dreamforgestudio.xyz/works-ja.html"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://dreamforgestudio.xyz/works-ko.html"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://dreamforgestudio.xyz/works-fr.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/works.html"/>
+  </url>
+  <url>
     <loc>https://dreamforgestudio.xyz/privacy.html</loc>
     <lastmod>2026-11-16</lastmod>
   </url>
