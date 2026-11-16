@@ -288,3 +288,7 @@ footer { max-width: 880px; margin: 0 auto; padding: 0 14px 28px; color: var(--mu
 .footer-nav a:hover { text-decoration: underline; }
 .status-ok { color: var(--green); font-weight: 600; }
 .status-error { color: #b3261e; font-weight: 600; }
+
+/* Downloadable editions (itch.io): the bought tier is on — no key entry, no upsell buttons */
+body.edition .license-controls,
+body.edition .plan-btn { display: none !important; }

@@ -16,9 +16,13 @@
   var CFG = Core.CONFIG;
 
   /* ---------- plan / license state ---------- */
+  /* Downloadable editions (itch.io) set window.BPM_EDITION = 'pro' | 'studio'
+   * before this script loads: the bought tier is simply on, no key needed. */
+  var EDITION = window.BPM_EDITION || '';
   var licenseKey = '';
   try { licenseKey = localStorage.getItem('bpm.license') || ''; } catch (e) { /* private mode */ }
-  var tier = Core.getTier(Core.validateLicenseKey(licenseKey) || 'free');
+  var tier = EDITION ? Core.getTier(EDITION)
+                     : Core.getTier(Core.validateLicenseKey(licenseKey) || 'free');
   var palette = null; // prepared palette for the active tier
 
   function rebuildPalette() {
@@ -87,6 +91,11 @@
       }
     });
     if (els.licenseInput && licenseKey) els.licenseInput.value = licenseKey;
+    if (EDITION) {
+      document.body.classList.add('edition');
+      if (els.licenseStatus) els.licenseStatus.textContent =
+        'Licensed: ' + tier.name + ' Edition — one-time purchase, yours forever. Thank you!';
+    }
   }
 
   function setTier(newTierId, key) {
@@ -108,10 +117,16 @@
   }
   function lockedPrompt(featureKey, featureLabel) {
     var req = Core.getTier(Core.requiredTierFor(featureKey));
-    showUpgrade('🔒 ' + featureLabel + ' is a ' + req.name + ' feature',
-      featureLabel + ' is included in the ' + req.name + ' plan ($' + req.priceMonthly.toFixed(2) +
-      '/month). You are on the ' + tier.name + ' plan. Subscribe on Gumroad to get a license key, ' +
-      'then enter it in the Pricing section below to activate.');
+    var text;
+    if (EDITION) {
+      text = featureLabel + ' is included in the ' + req.name + ' Edition (one-time purchase on itch.io). ' +
+        'You are on the ' + tier.name + ' Edition.';
+    } else {
+      text = featureLabel + ' is included in the ' + req.name + ' plan ($' + req.priceMonthly.toFixed(2) +
+        '/month). You are on the ' + tier.name + ' plan. Subscribe on Gumroad to get a license key, ' +
+        'then enter it in the Pricing section below to activate.';
+    }
+    showUpgrade('🔒 ' + featureLabel + ' is a ' + req.name + ' feature', text);
   }
   els.modalClose.addEventListener('click', function () { els.modal.classList.add('hidden'); });
   document.getElementById('upgradeGo').addEventListener('click', function () { els.modal.classList.add('hidden'); });
