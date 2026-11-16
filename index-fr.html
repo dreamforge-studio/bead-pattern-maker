@@ -25,6 +25,12 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="stylesheet" href="styles.css">
+<link rel="alternate" hreflang="en" href="https://dreamforge-studio.github.io/bead-pattern-maker/index.html">
+<link rel="alternate" hreflang="zh-CN" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-zh.html">
+<link rel="alternate" hreflang="ja" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-ja.html">
+<link rel="alternate" hreflang="ko" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-ko.html">
+<link rel="alternate" hreflang="fr" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-fr.html">
+<link rel="alternate" hreflang="x-default" href="https://dreamforge-studio.github.io/bead-pattern-maker/index.html">
 </head>
 <body>
 <header class="topbar">
@@ -121,6 +127,17 @@
       <button id="exportBtn" class="btn btn-primary" type="button">⬇ Télécharger le motif (PNG)</button>
       <button id="csvBtn" class="btn" type="button">⬇ Liste de perles (CSV) 🔒 Pro</button>
       <button id="pdfBtn" class="btn" type="button">🖨 Imprimer / planches PDF 🔒 Studio</button>
+      <button id="svgBtn" class="btn" type="button">⬇ Modèle (SVG) 🔒 Pro</button>
+      <button id="xlsxBtn" class="btn" type="button">⬇ Liste de perles (XLSX) 🔒 Pro</button>
+    </div>
+    <div class="edit-bar" id="editBar">
+      <h3>Corriger à la main — repeindre chaque cellule</h3>
+      <p class="hint" id="editHint">Choisissez une couleur ci-dessous, puis touchez les cellules du modèle pour les repeindre. La liste de perles se met à jour au fur et à mesure.</p>
+      <div class="edit-palette" id="editPalette"></div>
+      <div class="edit-actions">
+        <button id="editErase" class="btn" type="button">🧽 Gomme</button>
+        <button id="editUndo" class="btn" type="button" disabled>↩ Annuler</button>
+      </div>
     </div>
     <h3>Liste d’achat — les perles qu’il vous faut</h3>
     <p class="hint" id="statsSummary"></p>
@@ -311,6 +328,8 @@
       <li><strong>Grille téléchargeable.</strong> Exportez le motif fini en PNG avec lignes de grille et codes couleur imprimés dans chaque case, prêt à réaliser.</li>
       <li><strong>100 % privé.</strong> Tout fonctionne en local dans votre navigateur. Votre photo n’est jamais envoyée sur un serveur.</li>
       <li><strong>Trois offres.</strong> L’offre gratuite couvre les motifs jusqu’à 48 perles de large avec la palette de base et des exports filigranés. Pro et Studio relèvent la limite de largeur et débloquent la palette complète, les listes de perles CSV, les planches PDF imprimables et le mode lot — voir les tarifs ci-dessous pour le détail de chaque offre.</li>
+      <li><strong>Édition cellule par cellule.</strong> Si la couleur choisie automatiquement ne vous plaît pas, repeignez n’importe quelle cellule à la main — choisissez une couleur, touchez la cellule, c’est fait. Les comptes de perles se mettent à jour pendant l’édition, et Annuler (ou Ctrl+Z) revient en arrière.</li>
+      <li><strong>Exports SVG et tableur.</strong> Avec Pro et Studio, téléchargez le modèle en SVG vectoriel pour vos outils de design, et la liste de perles en XLSX en plus du CSV.</li>
     </ul>
   </section>
 
@@ -340,6 +359,7 @@
           <li>Nombre de perles dans la grille à l’écran</li>
           <li>Export PNG avec un petit filigrane</li>
           <li>Aucun compte, fonctionne pour toujours</li>
+          <li><strong>Édition cellule par cellule</strong> — repeindre chaque perle à la main</li>
         </ul>
         <a href="#" class="btn plan-btn">Offre actuelle</a>
       </div>
@@ -353,6 +373,7 @@
           <li>Exports PNG haute résolution <strong>sans filigrane</strong></li>
           <li>Liste de perles en <strong>CSV téléchargeable</strong> — liste d’achat imprimable</li>
           <li>Tout ce qu’il y a dans l’offre gratuite</li>
+          <li><strong>Export du modèle en SVG</strong> + liste de perles <strong>CSV ou XLSX</strong></li>
         </ul>
         <a href="https://dreamforgestudioshop.gumroad.com/l/bead-pattern-maker-pro" target="_blank" rel="noopener" class="btn plan-btn btn-primary">Passer à Pro</a>
       </div>
@@ -440,6 +461,10 @@
       <summary>Puis-je vendre les pièces réalisées avec ces modèles ?</summary>
       <p>Oui avec l'offre Studio, qui inclut une licence commerciale. Les offres Free et Pro sont réservées aux projets personnels.</p>
     </details>
+    <details class="faq-item">
+      <summary>Puis-je corriger une couleur mal choisie par l’outil ?</summary>
+      <p>Oui. Sous votre modèle, choisissez une couleur de la palette et touchez les cellules à changer — ou utilisez la gomme pour vider une cellule. La liste d’achats se recalcule après chaque modification, et Annuler revient pas à pas sur vos changements.</p>
+    </details>
   </section>
 </main>
 
@@ -453,7 +478,7 @@
   offres payantes) par distance perceptuelle (Lab). Sans affiliation avec Perler® ou Hama®.</p>
   <nav class="footer-nav" aria-label="Legal and support">
     <a href="studio-fr.html">Dreamforge Studio — Tous les services</a> ·
-    <a href="privacy.html">Politique de confidentialité</a> · <a href="terms.html">Conditions d’utilisation</a> ·
+    <a href="guide-fr.html">Guide d’utilisation</a> · <a href="privacy.html">Politique de confidentialité</a> · <a href="terms.html">Conditions d’utilisation</a> ·
     <a href="#pricing">Tarifs</a> ·
     <a href="mailto:a13259605261@163.com">Support: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
   </nav>

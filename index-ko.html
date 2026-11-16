@@ -25,6 +25,12 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="stylesheet" href="styles.css">
+<link rel="alternate" hreflang="en" href="https://dreamforge-studio.github.io/bead-pattern-maker/index.html">
+<link rel="alternate" hreflang="zh-CN" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-zh.html">
+<link rel="alternate" hreflang="ja" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-ja.html">
+<link rel="alternate" hreflang="ko" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-ko.html">
+<link rel="alternate" hreflang="fr" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-fr.html">
+<link rel="alternate" hreflang="x-default" href="https://dreamforge-studio.github.io/bead-pattern-maker/index.html">
 </head>
 <body>
 <header class="topbar">
@@ -121,6 +127,17 @@
       <button id="exportBtn" class="btn btn-primary" type="button">⬇ 도안 다운로드 (PNG)</button>
       <button id="csvBtn" class="btn" type="button">⬇ 비즈 목록 (CSV) 🔒 Pro</button>
       <button id="pdfBtn" class="btn" type="button">🖨 인쇄 / PDF 보드 시트 🔒 Studio</button>
+      <button id="svgBtn" class="btn" type="button">⬇ 도안 (SVG) 🔒 Pro</button>
+      <button id="xlsxBtn" class="btn" type="button">⬇ 비즈 목록 (XLSX) 🔒 Pro</button>
+    </div>
+    <div class="edit-bar" id="editBar">
+      <h3>수동 수정 — 셀을 눌러 색 바꾸기</h3>
+      <p class="hint" id="editHint">아래에서 색상을 고른 뒤 도안의 셀을 누르면 색이 바뀝니다. 비즈 목록도 함께 업데이트됩니다.</p>
+      <div class="edit-palette" id="editPalette"></div>
+      <div class="edit-actions">
+        <button id="editErase" class="btn" type="button">🧽 지우개</button>
+        <button id="editUndo" class="btn" type="button" disabled>↩ 실행 취소</button>
+      </div>
     </div>
     <h3>구매 목록 — 필요한 비즈</h3>
     <p class="hint" id="statsSummary"></p>
@@ -303,6 +320,8 @@
       <li><strong>다운로드 가능한 도안.</strong> 완성 도안을 격자선과 모든 칸의 색상 코드가 인쇄된 PNG로 내보내 바로 만들 수 있습니다.</li>
       <li><strong>100% 프라이빗.</strong> 모든 것이 브라우저에서 로컬로 실행됩니다. 사진이 서버에 업로드되지 않습니다.</li>
       <li><strong>세 가지 플랜.</strong> 무료는 너비 48개까지의 도안, 기본 팔레트, 워터마크 있는 내보내기를 제공합니다. Pro와 Studio는 너비 한도를 높이고 전체 팔레트, CSV 비즈 목록, 인쇄용 PDF 보드 시트, 일괄 모드를 엽니다 — 각 플랜 내용은 아래 가격을 보세요.</li>
+      <li><strong>셀 클릭 편집.</strong> 도구가 고른 색이 마음에 들지 않으면 어떤 셀이든 직접 다시 칠할 수 있습니다. 색을 고르고 셀을 누르면 끝. 비즈 개수는 편집할 때마다 갱신되고, 실행 취소(또는 Ctrl+Z)로 변경을 되돌릴 수 있습니다.</li>
+      <li><strong>SVG 및 스프레드시트 내보내기.</strong> Pro와 Studio에서는 도안을 디자인 도구용 확장 가능한 SVG로, 비즈 목록을 CSV와 함께 XLSX로도 내려받을 수 있습니다.</li>
     </ul>
   </section>
 
@@ -332,6 +351,7 @@
           <li>페이지 도안에서 개수 확인</li>
           <li>작은 워터마크가 있는 PNG 내보내기</li>
           <li>계정 불필요, 영구 사용</li>
+          <li><strong>셀 클릭 편집</strong> — 어떤 비즈든 직접 다시 칠하기</li>
         </ul>
         <a href="#" class="btn plan-btn">현재 플랜</a>
       </div>
@@ -345,6 +365,7 @@
           <li><strong>워터마크 없음</strong>, 고해상도 PNG 내보내기</li>
           <li>비즈 목록을 <strong>다운로드 가능한 CSV</strong>로 — 인쇄용 구매 목록</li>
           <li>무료의 모든 기능 포함</li>
+          <li><strong>SVG 도안 내보내기</strong> + 비즈 목록 <strong>CSV / XLSX</strong></li>
         </ul>
         <a href="https://dreamforgestudioshop.gumroad.com/l/bead-pattern-maker-pro" target="_blank" rel="noopener" class="btn plan-btn btn-primary">Pro로 업그레이드</a>
       </div>
@@ -429,6 +450,10 @@
       <summary>이 도안으로 만든 작품을 팔 수 있나요?</summary>
       <p>Studio 플랜은 가능합니다. 상업용 라이선스가 포함됩니다. Free와 Pro는 개인 프로젝트용입니다.</p>
     </details>
+    <details class="faq-item">
+      <summary>도구가 잘못 고른 색을 고칠 수 있나요?</summary>
+      <p>네. 도안 아래 팔레트에서 색상을 고르고 바꾸고 싶은 셀을 누르세요. 지우개로 셀을 비울 수도 있습니다. 쇼핑 목록은 편집할 때마다 다시 계산되고, 실행 취소로 변경을 단계별로 되돌릴 수 있습니다.</p>
+    </details>
   </section>
 </main>
 
@@ -442,7 +467,7 @@
   Perler® 및 Hama®와 제휴 관계가 없습니다.</p>
   <nav class="footer-nav" aria-label="Legal and support">
     <a href="studio-ko.html">Dreamforge Studio — 전체 서비스</a> ·
-    <a href="privacy.html">개인정보 처리방침</a> · <a href="terms.html">이용약관</a> ·
+    <a href="guide-ko.html">사용 가이드</a> · <a href="privacy.html">개인정보 처리방침</a> · <a href="terms.html">이용약관</a> ·
     <a href="#pricing">가격</a> ·
     <a href="mailto:a13259605261@163.com">Support: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
   </nav>

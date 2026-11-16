@@ -25,6 +25,12 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="stylesheet" href="styles.css">
+<link rel="alternate" hreflang="en" href="https://dreamforge-studio.github.io/bead-pattern-maker/index.html">
+<link rel="alternate" hreflang="zh-CN" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-zh.html">
+<link rel="alternate" hreflang="ja" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-ja.html">
+<link rel="alternate" hreflang="ko" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-ko.html">
+<link rel="alternate" hreflang="fr" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-fr.html">
+<link rel="alternate" hreflang="x-default" href="https://dreamforge-studio.github.io/bead-pattern-maker/index.html">
 </head>
 <body>
 <header class="topbar">
@@ -121,6 +127,17 @@
       <button id="exportBtn" class="btn btn-primary" type="button">⬇ 図案をダウンロード（PNG）</button>
       <button id="csvBtn" class="btn" type="button">⬇ ビーズリスト（CSV）🔒 Pro</button>
       <button id="pdfBtn" class="btn" type="button">🖨 印刷／PDFボードシート 🔒 Studio</button>
+      <button id="svgBtn" class="btn" type="button">⬇ 図案 (SVG) 🔒 Pro</button>
+      <button id="xlsxBtn" class="btn" type="button">⬇ ビーズリスト (XLSX) 🔒 Pro</button>
+    </div>
+    <div class="edit-bar" id="editBar">
+      <h3>手作業で修正 — セルを塗り替え</h3>
+      <p class="hint" id="editHint">下のパレットから色を選び、図案のセルをタップすると塗り替えできます。ビーズリストも自動で更新されます。</p>
+      <div class="edit-palette" id="editPalette"></div>
+      <div class="edit-actions">
+        <button id="editErase" class="btn" type="button">🧽 消しゴム</button>
+        <button id="editUndo" class="btn" type="button" disabled>↩ 元に戻す</button>
+      </div>
     </div>
     <h3>購入リスト — 必要なビーズ</h3>
     <p class="hint" id="statsSummary"></p>
@@ -304,6 +321,8 @@
       <li><strong>ダウンロードできる図案。</strong> 完成した図案を、グリッド線と全マスの色コード入りPNGとして書き出し、そのまま作れます。</li>
       <li><strong>100%プライベート。</strong> すべてブラウザ内でローカルに動作します。写真がサーバーにアップロードされることは決してありません。</li>
       <li><strong>3つのプラン。</strong> 無料プランは幅48ビーズまで、基本パレットと透かし入り書き出しに対応。ProとStudioは幅の上限を引き上げ、フルパレット、CSVビーズリスト、印刷用PDFボードシート、一括変換を解放します — 各プランの内容は下の料金をご覧ください。</li>
+      <li><strong>セルをクリックして編集。</strong>自動で選ばれた色が気に入らなければ、好きなセルを手作業で塗り替えできます。色を選んでセルをタップするだけ。ビーズ数は編集に合わせて更新され、「元に戻す」（Ctrl+Z）で変更をさかのぼれます。</li>
+      <li><strong>SVGとスプレッドシートのエクスポート。</strong>ProとStudioでは、図案をデザインツール向けのスケーラブルなSVGとして、ビーズリストをCSVに加えてXLSXとしてもダウンロードできます。</li>
     </ul>
   </section>
 
@@ -333,6 +352,7 @@
           <li>ページ上の図案で個数を確認</li>
           <li>小さな透かし入りのPNG書き出し</li>
           <li>アカウント不要、ずっと使えます</li>
+          <li><strong>セル編集</strong> — どのビーズも手作業で塗り替え可能</li>
         </ul>
         <a href="#" class="btn plan-btn">現在のプラン</a>
       </div>
@@ -346,6 +366,7 @@
           <li><strong>透かしなし</strong>、高解像度PNG書き出し</li>
           <li>ビーズリストを <strong>ダウンロード可能なCSV</strong> で — 印刷できる購入リスト</li>
           <li>無料プランのすべてを含む</li>
+          <li><strong>SVG図案エクスポート</strong>＋ビーズリスト <strong>CSV / XLSX</strong></li>
         </ul>
         <a href="https://dreamforgestudioshop.gumroad.com/l/bead-pattern-maker-pro" target="_blank" rel="noopener" class="btn plan-btn btn-primary">Proにアップグレード</a>
       </div>
@@ -430,6 +451,10 @@
       <summary>作った作品を販売できますか？</summary>
       <p>Studioプランなら可能です。商用ライセンスが含まれます。FreeとProは個人利用向けです。</p>
     </details>
+    <details class="faq-item">
+      <summary>ツールが選んだ色を直せますか？</summary>
+      <p>はい。図案の下でパレットの色を選び、変えたいセルをタップしてください。消しゴムでセルを空に戻すこともできます。買い物リストは編集のたびに再計算され、「元に戻す」で変更をさかのぼれます。</p>
+    </details>
   </section>
 </main>
 
@@ -443,7 +468,7 @@
   Perler®およびHama®とは提携していません。</p>
   <nav class="footer-nav" aria-label="Legal and support">
     <a href="studio-ja.html">Dreamforge Studio — 全サービス</a> ·
-    <a href="privacy.html">プライバシーポリシー</a> · <a href="terms.html">利用規約</a> ·
+    <a href="guide-ja.html">ユーザーガイド</a> · <a href="privacy.html">プライバシーポリシー</a> · <a href="terms.html">利用規約</a> ·
     <a href="#pricing">料金</a> ·
     <a href="mailto:a13259605261@163.com">Support: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
   </nav>

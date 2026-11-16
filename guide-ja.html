@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ユーザーガイド — Bead Pattern Maker</title>
+<meta name="description" content="Bead Pattern Maker の完全ガイド：写真の選び方、幅の設定、図案の読み方、セルの手作業修正、エクスポート形式、サイズと印刷。">
+<link rel="canonical" href="https://dreamforgestudio.xyz/guide-ja.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Bead Pattern Maker">
+<meta property="og:title" content="ユーザーガイド — Bead Pattern Maker">
+<meta property="og:description" content="Bead Pattern Maker の完全ガイド：写真の選び方、幅の設定、図案の読み方、セルの手作業修正、エクスポート形式、サイズと印刷。">
+<meta property="og:url" content="https://dreamforgestudio.xyz/guide-ja.html">
+<meta property="og:image" content="https://dreamforgestudio.xyz/examples/cat-pattern.png">
+<meta property="og:image:alt" content="A cat portrait converted into a Perler bead pattern with color codes">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ユーザーガイド — Bead Pattern Maker">
+<meta name="twitter:description" content="Bead Pattern Maker の完全ガイド：写真の選び方、幅の設定、図案の読み方、セルの手作業修正、エクスポート形式、サイズと印刷。">
+<meta name="twitter:image" content="https://dreamforgestudio.xyz/examples/cat-pattern.png">
+<link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/guide.html">
+<link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/guide-zh.html">
+<link rel="alternate" hreflang="ja" href="https://dreamforgestudio.xyz/guide-ja.html">
+<link rel="alternate" hreflang="ko" href="https://dreamforgestudio.xyz/guide-ko.html">
+<link rel="alternate" hreflang="fr" href="https://dreamforgestudio.xyz/guide-fr.html">
+<meta name="theme-color" content="#0e4d2c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="icons/icon-192.png" alt="" width="40" height="40">
+    <div>
+      <h1>Bead Pattern Maker</h1>
+      <p>完全ガイド — 写真から完成まで</p>
+    </div>
+  </div>
+  <p class="privacy">🔒 写真がデバイスから出ることはありません。すべてローカルで動作します。</p>
+  <select class="lang-select" id="langSelect" aria-label="Language" title="Language">
+      <option value="guide.html">English</option>
+      <option value="guide-zh.html">中文（简体）</option>
+      <option value="guide-ja.html" selected>日本語</option>
+      <option value="guide-ko.html">한국어</option>
+      <option value="guide-fr.html">Français</option>
+  </select>
+  <script>document.getElementById('langSelect').addEventListener('change',function(){location.href=this.value;});</script>
+</header>
+
+<main>
+  <section class="card hero">
+    <h2 class="hero-title">写真から完成まで — 完全ガイド</h2>
+    <p class="hero-sub">変換がうまくいく写真の選び方、幅の決め方、図案の読み方、色の手作業修正、エクスポート形式の選び方まで、すべてをここにまとめました。フューズビーズが初めてなら、ステップ1から順にどうぞ。</p>
+    <p class="hero-cta"><a href="index-ja.html" class="btn btn-primary">Bead Pattern Maker を開く</a></p>
+  </section>
+
+  <nav class="card toc" aria-label="このページの内容">
+    <h2>このページの内容</h2>
+    <ol class="toc-list">
+      <li><a href="#s1">良い写真を選ぶ</a></li>
+      <li><a href="#s2">幅を設定する</a></li>
+      <li><a href="#s3">図案を読む</a></li>
+      <li><a href="#s4">リストでビーズを買う</a></li>
+      <li><a href="#s5">ダウンロード・印刷・組み立て</a></li>
+      <li><a href="#s6">色を手作業で直す</a></li>
+      <li><a href="#s7">エクスポート形式</a></li>
+      <li><a href="#s8">サイズ・ボード・印刷</a></li>
+      <li><a href="#faq">よくある質問</a></li>
+    </ol>
+  </nav>
+
+  <section class="card" id="s1">
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">1</span> 良い写真を選ぶ</h3>
+        <p><strong>被写体がひとつはっきりしていて、背景がシンプルで、コントラストが強い</strong>写真を選びましょう。顔、ペット、ロゴ、カートゥーン系が最適です。細部が多い写真はビーズのサイズではつぶれてしまいます——込み入った写真は被写体に寄せてトリミングしてください。</p>
+      </div>
+      <img src="examples/guide-photo-good-vs-busy.png" loading="lazy" alt="比較図：シンプルな猫の肖像は良、ごちゃごちゃした写真は不可と表示">
+    </div>
+  </section>
+  <section class="card" id="s2">
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">2</span> 幅を設定する</h3>
+        <p>幅は完成品の横のビーズ数です。高さは写真の比率に合わせて自動で決まります。ビーズが多いほど精細になりますが、数も時間もコストも増えます。目安：<strong>キーホルダーは20–30幅、コースターはボード1枚ちょうどの29、デスク小物は40–60、壁掛けは80以上</strong>。標準のミディビーズは5&nbsp;mmなので、29個 ≈ 14.5&nbsp;cmです。</p>
+      </div>
+      <img src="examples/guide-widths.png" loading="lazy" alt="同じ笑顔の絵を16・29・48ビーズ幅で変換し、細部が増えていく比較">
+    </div>
+  </section>
+  <section class="card" id="s3">
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">3</span> 図案を読む</h3>
+        <p><strong>1マスが1個のビーズです。</strong>セルに印刷されたコード（例：<strong>P01</strong>）がそのビーズのカラーコードで、買い物リストと同じです。<strong>5ビーズごとの太線</strong>で、1つずつではなく5つずつ数えられます。グリッド線とコードは図案の上でオン・オフできます。</p>
+      </div>
+      <img src="examples/guide-read-chart.png" loading="lazy" alt="拡大したビーズ図案の注釈：1マス＝1ビーズ、各セルにカラーコード、5ビーズごとに太線">
+    </div>
+  </section>
+  <section class="card" id="s4">
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">4</span> リストでビーズを買う</h3>
+        <p>図案の下に買い物リストがあります。各色のコード、名前、<strong>正確な個数</strong>、合計個数、標準29 × 29ボードが何枚必要かまで分かります。各色とも約<strong>10%多め</strong>に買うのがおすすめです——数個は必ず転がっていきます。</p>
+      </div>
+      <img src="examples/guide-shopping-list.png" loading="lazy" alt="猫の図案の買い物リスト例：上位の色と個数、合計1,600個、ボード4枚">
+    </div>
+  </section>
+  <section class="card" id="s5">
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">5</span> ダウンロード・印刷・組み立て</h3>
+        <p>図案をPNGでダウンロードして画面で組み立てるか、印刷してください。印刷時は<strong>100% /「実際のサイズ」</strong>を選んでください——「ページに合わせる」とグリッドが縮小してボードと合わなくなります。StudioプランのPDFボードシートは、大きな図案をボード1枚＝1ページに分割し、全ページに行・列番号が付きます。<strong>仕上げのアイロン：</strong>並べ終わったらクッキングシートをかぶせ、中温でゆっくり円を描くようにアイロンをかけ、ビーズの頭が溶けてつながるまで。重い本をのせて平らに冷ますと反りを防げます。</p>
+      </div>
+      <img src="examples/guide-print.png" loading="lazy" alt="印刷の図解：ページに合わせるではなく、100%実寸で印刷">
+    </div>
+  </section>
+
+  <section class="card" id="s6">
+    <h2><span class="step">6</span> 色を手作業で直す</h2>
+    <p>自動マッチングは優秀ですが、猫の目が緑でなければならないことまでは分かりません。図案の下には、プラン内の全色をそろえた<strong>編集パレット</strong>があります。色を選んで、塗り替えたいセルをタップ——またはドラッグ——してください。</p>
+    <p><strong>消しゴム</strong>はセルを空（ビーズなし）に戻します。<strong>元に戻す</strong>（Ctrl+Z）で、変更を1ストロークずつさかのぼれます。ビーズリストと合計は編集のたびに再計算されるので、表示どおりに買えば大丈夫です。セル編集は全プランで無料です。</p>
+  </section>
+
+  <section class="card" id="s7">
+    <h2><span class="step">7</span> エクスポート形式の説明</h2>
+    <div class="table-wrap">
+      <table class="size-table">
+        <thead><tr><th>形式</th><th>用途</th><th>プラン</th></tr></thead>
+        <tbody>
+          <tr><td><strong>PNG図案</strong></td><td>画面で組み立てる、図案を共有する</td><td>全プラン（Freeは小さな透かし入り）</td></tr>
+          <tr><td><strong>CSVビーズリスト</strong></td><td>印刷できる買い物リスト</td><td>Pro と Studio</td></tr>
+          <tr><td><strong>XLSXビーズリスト</strong></td><td>表計算の買い物リスト——並べ替え・絞り込み・共有</td><td>Pro と Studio</td></tr>
+          <tr><td><strong>SVG図案</strong></td><td>デザインツールや印刷向けのスケーラブルな図案</td><td>Pro と Studio</td></tr>
+          <tr><td><strong>PDFボードシート</strong></td><td>ボード1枚＝1ページ、行・列の座標付き</td><td>Studio</td></tr>
+          <tr><td><strong>一括生成</strong></td><td>複数の写真をまとめて変換</td><td>Studio</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card" id="s8">
+    <h2><span class="step">8</span> サイズ・ボード・印刷 — 数字で確認</h2>
+    <ul class="feature-list spec-list">
+      <li><strong>ビーズのサイズ：</strong>標準ミディビーズは5&nbsp;mm。完成幅 ＝ 横のビーズ数 × 5&nbsp;mm。</li>
+      <li><strong>ボード：</strong>標準ボードは29 × 29。必要枚数はツールが見積もります。</li>
+      <li><strong>幅の上限：</strong>Freeは48、Proは120、Studioは200ビーズまで。</li>
+      <li><strong>パレット：</strong>Freeは64色。ProとStudioは Perler + Hama + Artkal の全100色。</li>
+      <li><strong>印刷：</strong>必ず100% / 実際のサイズで。印刷の1マスがビーズ1個と一致しなければなりません。</li>
+      <li><strong>プライバシー：</strong>すべてブラウザ内で動作します。写真はアップロードされず、アカウントもありません。</li>
+    </ul>
+  </section>
+
+  <section class="card" id="faq">
+    <h2>ガイド FAQ</h2>
+    <details class="faq-item">
+      <summary>ビーズとペグボードはどれくらい必要ですか？</summary>
+      <p>図案の下の購入リストが、すべての色を正確に数え、ビーズ総数と標準29 × 29ペグボードの
+      必要枚数も示します。たとえば上の猫の図案は21色で1,600個、ペグボード4枚が必要です。
+      ヒント：各色とも約10%多めに買ってください — ビーズは必ず何個か転がっていきます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>写真はサーバーにアップロードされますか？</summary>
+      <p>いいえ。すべてブラウザ内でローカルに動作します — 写真がデバイスの外に出ることはなく、
+      何も保存されず、アカウントもありません。タブを閉じれば消えます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>無料プラン、Pro、Studioの違いは？</summary>
+      <p>無料プラン：幅48ビーズまで、基本64色パレット、小さな透かし入りのPNG書き出し。
+      Pro（$4.99/月）：幅120まで、フル100色パレット、透かしなし書き出し、ダウンロード可能なCSVビーズリスト。
+      Studio（$9.99/月）：幅200まで、印刷用PDFボードシート、一括変換、商用ライセンス。
+      完全な比較は上の料金をご覧ください。</p>
+    </details>
+    <details class="faq-item">
+      <summary>ダウンロードしたPNGに透かしがあるのはなぜ？</summary>
+      <p>無料プランの書き出しには、ツールを見つけてもらえるよう、下部に小さな
+      「Made with Bead Pattern Maker」の帯が入ります。ProとStudioの書き出しは完全な無地です。</p>
+    </details>
+    <details class="faq-item">
+      <summary>印刷したグリッドがペグボードと合いません。何が問題ですか？</summary>
+      <p>プリンターがページを拡大縮小しています。<strong>100%／「実際のサイズ」</strong> で再印刷し、
+      「ページに合わせる」をオフにしてください — 印刷された1マスが1ビーズと一致しなければなりません。
+      あるいは画面を見て作るか、StudioのPDFボードシート（1ページ＝ペグボード1枚、行列番号付き）を使ってください。</p>
+    </details>
+    <details class="faq-item">
+      <summary>スマートフォンでも使えますか？</summary>
+      <p>はい — モダンなモバイルブラウザならどれでも動作し、アプリのようにインストールもできます
+      （「ホーム画面に追加」を探してください）。その後はオフラインでも使えます。
+      写真はパソコンと同じく、スマートフォンの中に留まります。</p>
+    </details>
+    <details class="faq-item">
+      <summary>アカウント登録は必要ですか？</summary>
+      <p>不要です。アカウントもインストールもなし——ページを開けばすぐ使えます。アップグレードしても、ライセンスキーはあなたの端末にだけ保存されます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>どのブランドのビーズに対応していますか？</summary>
+      <p>色見本は Perler / Hama の標準色番号に沿っています。各色に色番号と名前（例：H05 Red）が付くので、図案どおりに買い揃えられます。</p>
+    </details>
+    <details class="faq-item">
+      <summary>作った作品を販売できますか？</summary>
+      <p>Studioプランなら可能です。商用ライセンスが含まれます。FreeとProは個人利用向けです。</p>
+    </details>
+    <details class="faq-item">
+      <summary>ツールが選んだ色を直せますか？</summary>
+      <p>はい。図案の下でパレットの色を選び、変えたいセルをタップしてください。消しゴムでセルを空に戻すこともできます。買い物リストは編集のたびに再計算され、「元に戻す」で変更をさかのぼれます。</p>
+    </details>
+  </section>
+
+  <section class="cta-band reveal">
+    <h2>作ってみませんか？</h2>
+    <p>ツールを開いて写真を入れるだけ。最初の図案は1分ほどで完成します。</p>
+    <div class="cta-actions">
+      <a class="btn btn-light" href="index-ja.html">Bead Pattern Maker を開く</a>
+      <a class="btn btn-outline-light" href="index-ja.html#pricing">料金を見る</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <nav class="footer-nav" aria-label="Page sections">
+    <a href="index-ja.html#examples">実例</a> ·
+    <a href="index-ja.html#size-guide">サイズガイド</a> ·
+    <a href="guide-ja.html">ガイド</a> ·
+    <a href="index-ja.html#pricing">料金</a> ·
+    <a href="index-ja.html#faq">FAQ</a>
+  </nav>
+  <p>Free版：図案は最大48ビーズ幅、エクスポートには小さな透かしが入ります。色は標準の Perler / Hama パレット（Free 64色、 有料プラン100色）に知覚的（Lab）距離でマッチング。Perler®・Hama® とは関係ありません。</p>
+  <nav class="footer-nav" aria-label="Legal and support">
+    <a href="studio-ja.html">Dreamforge Studio — All Services</a> ·
+    <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Service</a> ·
+    <a href="index-ja.html#pricing">Pricing</a> ·
+    <a href="mailto:a13259605261@163.com">Support: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+  </nav>
+  <p>© 2026 Bead Pattern Maker · Dreamforge Studio</p>
+  <nav class="lang-switch footer-lang" aria-label="Language">
+    <a href="guide.html" hreflang="en">EN</a><span class="sep">|</span><a href="guide-zh.html" hreflang="zh-CN">中文</a><span class="sep">|</span><a href="guide-ja.html" class="active" hreflang="ja">日本語</a><span class="sep">|</span><a href="guide-ko.html" hreflang="ko">한국어</a><span class="sep">|</span><a href="guide-fr.html" hreflang="fr">Français</a>
+  </nav>
+</footer>
+
+<script>(function(){var els=document.querySelectorAll('.reveal');if(!('IntersectionObserver' in window)||!els.length){return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('rv-in');io.unobserve(e.target);}});},{threshold:.1});els.forEach(function(el){el.classList.add('rv-init');io.observe(el);});})();</script>
+</body>
+</html>

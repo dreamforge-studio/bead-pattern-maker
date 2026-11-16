@@ -25,6 +25,12 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="stylesheet" href="styles.css">
+<link rel="alternate" hreflang="en" href="https://dreamforge-studio.github.io/bead-pattern-maker/index.html">
+<link rel="alternate" hreflang="zh-CN" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-zh.html">
+<link rel="alternate" hreflang="ja" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-ja.html">
+<link rel="alternate" hreflang="ko" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-ko.html">
+<link rel="alternate" hreflang="fr" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-fr.html">
+<link rel="alternate" hreflang="x-default" href="https://dreamforge-studio.github.io/bead-pattern-maker/index.html">
 </head>
 <body>
 <header class="topbar">
@@ -121,6 +127,17 @@
       <button id="exportBtn" class="btn btn-primary" type="button">⬇ 下载图纸（PNG）</button>
       <button id="csvBtn" class="btn" type="button">⬇ 豆子清单（CSV）🔒 Pro</button>
       <button id="pdfBtn" class="btn" type="button">🖨 打印 / PDF 分页图纸 🔒 Studio</button>
+      <button id="svgBtn" class="btn" type="button">⬇ 图纸 (SVG) 🔒 Pro</button>
+      <button id="xlsxBtn" class="btn" type="button">⬇ 颗数清单 (XLSX) 🔒 Pro</button>
+    </div>
+    <div class="edit-bar" id="editBar">
+      <h3>手工修正 — 点格改色</h3>
+      <p class="hint" id="editHint">在下面选一个颜色，再点图纸上的格子即可改色。颗数清单会随修改实时更新。</p>
+      <div class="edit-palette" id="editPalette"></div>
+      <div class="edit-actions">
+        <button id="editErase" class="btn" type="button">🧽 橡皮擦</button>
+        <button id="editUndo" class="btn" type="button" disabled>↩ 撤销</button>
+      </div>
     </div>
     <h3>采购清单 — 你需要的豆子</h3>
     <p class="hint" id="statsSummary"></p>
@@ -302,6 +319,8 @@
       <li><strong>可下载的图纸。</strong> 把成品图纸导出为 PNG，带网格线、每格印颜色编号，照着就能拼。</li>
       <li><strong>100% 隐私。</strong> 全部在浏览器本地运行。你的照片从不上传到服务器。</li>
       <li><strong>三个版本。</strong> 免费版支持最宽 48 颗豆的图纸、基础色卡和带水印导出。Pro 和 Studio 提高宽度上限，解锁完整色卡、CSV 豆子清单、可打印的 PDF 分页图纸和批量模式 — 每版具体包含什么见下方价格区。</li>
+      <li><strong>点格改色。</strong>如果自动配色有你不满意的颜色，可以手工重涂任何格子——选好颜色点一下格子就行。颗数会随修改实时更新，撤销按钮（或 Ctrl+Z）可以一步步退回。</li>
+      <li><strong>SVG 与电子表格导出。</strong>Pro 和 Studio 可以把图纸下载为可缩放的 SVG（给设计软件用），颗数清单除了 CSV 还能导出 XLSX 表格。</li>
     </ul>
   </section>
 
@@ -331,6 +350,7 @@
           <li>页面图纸内查看每色颗数</li>
           <li>PNG 导出带小水印</li>
           <li>无需账号，永久可用</li>
+          <li><strong>点格改色</strong> — 手工重涂任何一颗</li>
         </ul>
         <a href="#" class="btn plan-btn">当前版本</a>
       </div>
@@ -344,6 +364,7 @@
           <li><strong>无水印</strong>、高清 PNG 导出</li>
           <li>豆子清单可 <strong>下载 CSV</strong> — 可打印的采购清单</li>
           <li>包含免费版全部功能</li>
+          <li><strong>SVG 图纸导出</strong>＋颗数清单 <strong>CSV / XLSX</strong></li>
         </ul>
         <a href="https://dreamforgestudioshop.gumroad.com/l/bead-pattern-maker-pro" target="_blank" rel="noopener" class="btn plan-btn btn-primary">升级到 Pro</a>
       </div>
@@ -427,6 +448,10 @@
       <summary>用这里的图纸做的成品能拿去卖吗？</summary>
       <p>Studio 版可以，包含商用许可。Free 和 Pro 版限个人作品使用。</p>
     </details>
+    <details class="faq-item">
+      <summary>工具配错的颜色可以改吗？</summary>
+      <p>可以。在图纸下方的调色板里选一个颜色，点想改的格子即可；橡皮擦可以把格子清空。每次修改后购物清单都会重新计数，撤销可以逐步退回你的修改。</p>
+    </details>
   </section>
 </main>
 
@@ -440,7 +465,7 @@
   与 Perler®、Hama® 无隶属关系。</p>
   <nav class="footer-nav" aria-label="Legal and support">
     <a href="studio-zh.html">Dreamforge Studio — 全部服务</a> ·
-    <a href="privacy.html">隐私政策</a> · <a href="terms.html">服务条款</a> ·
+    <a href="guide-zh.html">使用指南</a> · <a href="privacy.html">隐私政策</a> · <a href="terms.html">服务条款</a> ·
     <a href="#pricing">价格</a> ·
     <a href="mailto:a13259605261@163.com">Support: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
   </nav>

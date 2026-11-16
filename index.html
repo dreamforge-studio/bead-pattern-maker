@@ -25,6 +25,12 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="stylesheet" href="styles.css">
+<link rel="alternate" hreflang="en" href="https://dreamforge-studio.github.io/bead-pattern-maker/index.html">
+<link rel="alternate" hreflang="zh-CN" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-zh.html">
+<link rel="alternate" hreflang="ja" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-ja.html">
+<link rel="alternate" hreflang="ko" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-ko.html">
+<link rel="alternate" hreflang="fr" href="https://dreamforge-studio.github.io/bead-pattern-maker/index-fr.html">
+<link rel="alternate" hreflang="x-default" href="https://dreamforge-studio.github.io/bead-pattern-maker/index.html">
 </head>
 <body>
 <header class="topbar">
@@ -121,6 +127,17 @@
       <button id="exportBtn" class="btn btn-primary" type="button">⬇ Download pattern (PNG)</button>
       <button id="csvBtn" class="btn" type="button">⬇ Bead list (CSV) 🔒 Pro</button>
       <button id="pdfBtn" class="btn" type="button">🖨 Print / PDF board sheets 🔒 Studio</button>
+      <button id="svgBtn" class="btn" type="button">⬇ Pattern (SVG) 🔒 Pro</button>
+      <button id="xlsxBtn" class="btn" type="button">⬇ Bead list (XLSX) 🔒 Pro</button>
+    </div>
+    <div class="edit-bar" id="editBar">
+      <h3>Fix it by hand — repaint any cell</h3>
+      <p class="hint" id="editHint">Pick a color below, then tap cells on the pattern to repaint them. The bead list updates as you edit.</p>
+      <div class="edit-palette" id="editPalette"></div>
+      <div class="edit-actions">
+        <button id="editErase" class="btn" type="button">🧽 Eraser</button>
+        <button id="editUndo" class="btn" type="button" disabled>↩ Undo</button>
+      </div>
     </div>
     <h3>Shopping list — beads you need</h3>
     <p class="hint" id="statsSummary"></p>
@@ -321,6 +338,8 @@
         basic palette and watermarked exports. Pro and Studio raise the width limit and
         unlock the full palette, CSV bead lists, printable PDF board sheets and batch
         mode — see Pricing below for exactly what each plan includes.</li>
+      <li><strong>Click-to-edit cells.</strong> If the tool picks a color you don’t like, repaint any cell by hand — pick a color, tap the cell, done. The bead counts update as you edit, and Undo (or Ctrl+Z) walks changes back.</li>
+      <li><strong>SVG &amp; spreadsheet exports.</strong> On Pro and Studio, download the pattern as a scalable SVG for design tools, and the bead list as an XLSX spreadsheet alongside CSV.</li>
     </ul>
   </section>
 
@@ -350,6 +369,7 @@
           <li>Bead counts in the on-page chart</li>
           <li>PNG export with a small watermark</li>
           <li>No account, works forever</li>
+          <li><strong>Click-to-edit cells</strong> — repaint any bead by hand</li>
         </ul>
         <a href="#" class="btn plan-btn">Current plan</a>
       </div>
@@ -363,6 +383,7 @@
           <li><strong>Watermark-free</strong>, high-resolution PNG exports</li>
           <li>Bead list as a <strong>downloadable CSV</strong> — printable shopping list</li>
           <li>Everything in Free</li>
+          <li><strong>SVG pattern export</strong> + bead list as <strong>CSV or XLSX</strong></li>
         </ul>
         <a href="https://dreamforgestudioshop.gumroad.com/l/bead-pattern-maker-pro" target="_blank" rel="noopener" class="btn plan-btn btn-primary">Upgrade to Pro</a>
       </div>
@@ -450,6 +471,10 @@
       <summary>Can I sell pieces I make with these patterns?</summary>
       <p>Yes on the Studio plan, which includes a commercial license. Free and Pro are for personal projects.</p>
     </details>
+    <details class="faq-item">
+      <summary>Can I fix a color the tool got wrong?</summary>
+      <p>Yes. Under your pattern, pick any palette color and tap the cells you want to change — or use the eraser to clear a cell back to empty. The shopping list recounts itself after every edit, and Undo steps back through your changes.</p>
+    </details>
   </section>
 </main>
 
@@ -463,7 +488,7 @@
   paid plans) using perceptual (Lab) distance. Not affiliated with Perler® or Hama®.</p>
   <nav class="footer-nav" aria-label="Legal and support">
     <a href="studio.html">Dreamforge Studio — All Services</a> ·
-    <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Service</a> ·
+    <a href="guide.html">User Guide</a> · <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Service</a> ·
     <a href="#pricing">Pricing</a> ·
     <a href="mailto:a13259605261@163.com">Support: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
   </nav>

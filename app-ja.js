@@ -52,6 +52,12 @@
     exportBtn: document.getElementById('exportBtn'),
     csvBtn: document.getElementById('csvBtn'),
     pdfBtn: document.getElementById('pdfBtn'),
+    svgBtn: document.getElementById('svgBtn'),
+    xlsxBtn: document.getElementById('xlsxBtn'),
+    editPalette: document.getElementById('editPalette'),
+    editErase: document.getElementById('editErase'),
+    editUndo: document.getElementById('editUndo'),
+    editHint: document.getElementById('editHint'),
     statsSummary: document.getElementById('statsSummary'),
     statsBody: document.querySelector('#statsTable tbody'),
     licenseInput: document.getElementById('licenseInput'),
@@ -66,6 +72,21 @@
 
   var state = { img: null, grid: null, W: 0, H: 0, stats: null };
 
+  /* ---------- per-cell editing (round 2): strings + state ---------- */
+  var EDIT_I18N = {
+    svgUnlocked: ' SVGエクスポートが使えます。',
+    xlsxUnlocked: ' XLSXビーズリストが使えます。',
+    svgSaved: '✓ SVGを保存しました — ダウンロードをご確認ください',
+    xlsxSaved: '✓ スプレッドシートを保存しました — ダウンロードをご確認ください',
+    svgLabel: 'SVG図案エクスポート',
+    xlsxLabel: 'スプレッドシートのビーズリスト (XLSX)',
+    paintingFmt: '{code} {name} で塗っています — セルをタップして適用。消しゴムでセルを消せます。',
+    eraseOn: '消しゴム使用中 — セルをタップすると空になります。',
+    sizeInfoFmt: '図案サイズ：{W} × {H} ビーズ · 標準ボード {boards} 枚 (29×29) · 合計 {beads} 個、{colors} 色。'
+  };
+  /* color: palette index to paint, -1 = eraser, -2 = nothing picked yet */
+  var EDIT = { color: -2, undo: [], stroke: false, strokeChanged: false };
+
   /* ---------- tier UI sync ---------- */
   function planSummary(t) {
     var colors = t.paletteSize === 'full' ? 'フル100色パレット' : '基本64色パレット';
@@ -73,11 +94,14 @@
       ' ビーズまで · ' + colors + ' · ' +
       (t.watermark ? '書き出しには小さな透かしが入ります。' : '透かしなしの書き出し。');
     if (t.csvExport) s += ' CSV書き出しが解放されています。';
+    if (t.svgExport) s += EDIT_I18N.svgUnlocked;
+    if (t.xlsxExport) s += EDIT_I18N.xlsxUnlocked;
     if (t.pdfExport) s += ' PDFボードシート＋一括変換が解放されています。';
     return s;
   }
 
   function syncTierUi() {
+    renderEditPalette();
     els.widthRange.max = tier.maxWidth;
     els.widthNumber.max = tier.maxWidth;
     els.planNote.textContent = planSummary(tier);
@@ -164,6 +188,22 @@
   els.exportBtn.addEventListener('click', exportPng);
   els.csvBtn.addEventListener('click', exportCsv);
   els.pdfBtn.addEventListener('click', exportPdf);
+  els.svgBtn.addEventListener('click', exportSvg);
+  els.xlsxBtn.addEventListener('click', exportXlsx);
+  els.editUndo.addEventListener('click', undoEdit);
+  els.editErase.addEventListener('click', function () { selectEditColor(-1); });
+  els.preview.addEventListener('pointerdown', onCanvasPointerDown);
+  els.preview.addEventListener('pointermove', onCanvasPointerMove);
+  window.addEventListener('pointerup', function () {
+    if (EDIT.stroke) { EDIT.stroke = false; if (EDIT.strokeChanged) afterEdit(); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (!(e.ctrlKey || e.metaKey) || (e.key !== 'z' && e.key !== 'Z')) return;
+    var tag = (e.target && e.target.tagName) || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || !state.grid) return;
+    e.preventDefault();
+    undoEdit();
+  });
   els.batchBtn.addEventListener('click', function () {
     if (!tier.batch) { lockedPrompt('batch', '一括変換'); return; }
     els.batchInput.click();
@@ -281,6 +321,7 @@
       out.stats.colorCount + ' 色。';
     drawPreview();
     drawStats();
+    resetEditState();
   }
 
   function textColorFor(hex) {
@@ -362,6 +403,155 @@
         '<td class="num">' + pct + '</td>';
       els.statsBody.appendChild(tr);
     });
+  }
+
+  /* ---------- per-cell editing + SVG / XLSX exports (round 2) ---------- */
+  function renderEditPalette() {
+    if (!els.editPalette) return;
+    els.editPalette.innerHTML = '';
+    palette.forEach(function (c, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'edit-swatch' + (EDIT.color === i ? ' active' : '');
+      b.style.background = c.hex;
+      b.title = c.code + ' ' + c.name;
+      b.setAttribute('aria-label', c.code + ' ' + c.name);
+      b.addEventListener('click', function () { selectEditColor(i); });
+      els.editPalette.appendChild(b);
+    });
+  }
+
+  function selectEditColor(i) {
+    EDIT.color = i;
+    renderEditPalette();
+    els.editErase.classList.toggle('active', i === -1);
+    if (!els.editHint) return;
+    if (i === -1) {
+      els.editHint.textContent = EDIT_I18N.eraseOn;
+    } else if (i >= 0) {
+      els.editHint.textContent = EDIT_I18N.paintingFmt
+        .replace('{code}', palette[i].code).replace('{name}', palette[i].name);
+    }
+  }
+
+  function resetEditState() {
+    EDIT.undo = [];
+    EDIT.stroke = false;
+    EDIT.strokeChanged = false;
+    if (els.editUndo) els.editUndo.disabled = true;
+  }
+
+  function pushUndo() {
+    EDIT.undo.push(new Int32Array(state.grid));
+    if (EDIT.undo.length > 60) EDIT.undo.shift();
+    els.editUndo.disabled = false;
+  }
+
+  function undoEdit() {
+    if (!EDIT.undo.length || !state.grid) return;
+    state.grid = EDIT.undo.pop();
+    els.editUndo.disabled = EDIT.undo.length === 0;
+    afterEdit();
+  }
+
+  function afterEdit() {
+    state.stats = Core.buildStats(state.grid, palette);
+    els.sizeInfo.textContent = EDIT_I18N.sizeInfoFmt
+      .replace('{W}', state.W).replace('{H}', state.H)
+      .replace('{boards}', Core.pegboardsNeeded(state.W, state.H))
+      .replace('{beads}', state.stats.totalBeads.toLocaleString())
+      .replace('{colors}', state.stats.colorCount);
+    drawPreview();
+    drawStats();
+  }
+
+  function canvasCell(e) {
+    var rect = els.preview.getBoundingClientRect();
+    if (!rect.width || !rect.height) return null;
+    var x = Math.floor((e.clientX - rect.left) / rect.width * state.W);
+    var y = Math.floor((e.clientY - rect.top) / rect.height * state.H);
+    if (x < 0 || y < 0 || x >= state.W || y >= state.H) return null;
+    return y * state.W + x;
+  }
+
+  /* Repaint one cell on the preview canvas (full redraw happens on
+   * pointer-up via afterEdit, which also refreshes the bead list). */
+  function paintCellVisual(i) {
+    var cell = Math.max(6, Math.floor(780 / Math.max(state.W, state.H)));
+    var ctx = els.preview.getContext('2d');
+    var x = i % state.W, y = Math.floor(i / state.W);
+    var idx = state.grid[i];
+    ctx.fillStyle = idx < 0 ? '#ffffff' : palette[idx].hex;
+    ctx.fillRect(x * cell, y * cell, cell, cell);
+    if (idx >= 0 && els.toggleCodes.checked && cell >= 13) {
+      var c = palette[idx];
+      ctx.fillStyle = textColorFor(c.hex);
+      ctx.font = '600 ' + Math.max(7, Math.floor(cell * 0.34)) + 'px Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(c.code, x * cell + cell / 2, y * cell + cell / 2 + 0.5);
+    }
+    if (els.toggleGrid.checked) {
+      ctx.strokeStyle = 'rgba(30,30,30,0.28)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x * cell + 0.5, y * cell + 0.5, cell, cell);
+    }
+  }
+
+  function paintAt(e) {
+    var i = canvasCell(e);
+    if (i === null) return;
+    if (state.grid[i] === EDIT.color) return;
+    state.grid[i] = EDIT.color;
+    EDIT.strokeChanged = true;
+    paintCellVisual(i);
+  }
+
+  function onCanvasPointerDown(e) {
+    if (!state.grid || EDIT.color === -2) return;
+    if (canvasCell(e) === null) return;
+    pushUndo();
+    EDIT.stroke = true;
+    EDIT.strokeChanged = false;
+    paintAt(e);
+  }
+
+  function onCanvasPointerMove(e) {
+    if (!EDIT.stroke) return;
+    paintAt(e);
+  }
+
+  function exportSvg() {
+    if (!tier.svgExport) { lockedPrompt('svgExport', EDIT_I18N.svgLabel); return; }
+    if (!state.grid) return;
+    var cell = Math.max(16, Math.floor(2400 / Math.max(state.W, state.H)));
+    var svg = Core.buildSvg(state.grid, state.W, state.H, palette, { cell: cell });
+    var blob = new Blob([svg], { type: 'image/svg+xml' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'bead-pattern-' + state.W + 'x' + state.H + '.svg';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+    flashLabel(els.svgBtn, EDIT_I18N.svgSaved);
+  }
+
+  function exportXlsx() {
+    if (!tier.xlsxExport) { lockedPrompt('xlsxExport', EDIT_I18N.xlsxLabel); return; }
+    if (!state.stats) return;
+    var bytes = Core.buildXlsx(state.stats, 'Bead list ' + state.W + 'x' + state.H);
+    var blob = new Blob([bytes], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'bead-list-' + state.W + 'x' + state.H + '.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+    flashLabel(els.xlsxBtn, EDIT_I18N.xlsxSaved);
   }
 
   /* ---------- exports ---------- */
