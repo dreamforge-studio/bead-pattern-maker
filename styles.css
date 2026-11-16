@@ -496,8 +496,9 @@ main .hero h2 {
   grid-column: 1 / -1; text-align: center; color: var(--muted);
   font-size: .86rem; margin-top: 2px; letter-spacing: .02em;
 }
-@media (max-width: 760px) { .wall { grid-template-columns: repeat(3, 1fr); } .wall img { height: 92px; } }
-@media (max-width: 420px) { .wall { grid-template-columns: repeat(2, 1fr); } }
+/* wall tiers (round 3): desktop multi-column → tablet 2 → phone 2, cover-cropped, never distorted */
+@media (max-width: 1024px) { .wall { grid-template-columns: repeat(2, 1fr); } .wall img { height: 190px; } }
+@media (max-width: 480px) { .wall { grid-template-columns: repeat(2, 1fr); } .wall img { height: 96px; } }
 /* about grid (studio) */
 .about-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px 26px; }
 .about-grid h3 { margin: 0 0 7px; font-size: 1rem; line-height: 1.35; }
@@ -557,3 +558,57 @@ main .hero h2 {
 }
 .edit-actions .btn:disabled { opacity: .45; cursor: default; }
 canvas#preview { cursor: crosshair; }
+
+/* ============================================================
+   Round 3 — responsive polish (2026-11-16, REN: phone, tablet
+   and desktop must all browse well). Three tiers:
+     phone   ≤ 480px
+     tablet  481–1024px
+     desktop ≥ 1025px
+   Rules below only change responsive behaviour and touch
+   ergonomics — no content, prices or links are touched.
+   ============================================================ */
+/* safety net: media never exceeds its column */
+img, video { max-width: 100%; }
+/* language dropdown: full 44px touch height + 16px font (stops iOS focus zoom) */
+.lang-select { min-height: 44px; font-size: 1rem; }
+/* FAQ rows: the whole summary line is a comfortable tap target */
+.faq-item summary { padding: 13px 2px; margin: -13px -2px; }
+/* footer + TOC text links: taller tap areas without changing the words */
+.footer-nav a { display: inline-block; padding: 10px 3px; margin: -6px 0; }
+.fcol a { padding: 11px 0; }
+.toc-list a { display: inline-block; padding: 10px 0; margin: -5px 0; }
+.lang-switch a { padding: 11px 6px; margin: -6px 0; }
+/* studio card links (page inline styles load after this sheet, so out-specify them) */
+main .svc a.tool-link, main .work a.card-link { display: inline-block; padding: 11px 2px; margin: 3px -2px -7px; }
+/* upgrade modal: let the two actions wrap instead of squeezing */
+.modal-actions { flex-wrap: wrap; }
+/* tool checkboxes: bigger box, taller label row */
+.controls .check input[type="checkbox"] { width: 19px; height: 19px; flex: none; accent-color: var(--green); }
+.controls .check { min-height: 40px; }
+/* touch devices: palette swatches grow to finger size */
+@media (pointer: coarse) {
+  .edit-palette { gap: 8px; }
+  .edit-swatch { width: 34px; height: 34px; }
+}
+/* --- phone tier --- */
+@media (max-width: 480px) {
+  .topbar { padding: 14px 14px 12px; gap: 8px; }
+  .brand { gap: 9px; }
+  .brand img { width: 34px; height: 34px; }
+  .brand p { font-size: .84rem; }
+  .privacy { font-size: .82rem; padding: 5px 10px; }
+  main { padding: 14px 10px 24px; }
+  .card { padding: 15px 14px; }
+  footer { padding: 0 10px 24px; }
+  .cta-band { padding: 28px 16px 24px; }
+  .cta-band h2 { font-size: 1.38rem; }
+  .stat-num { font-size: 1.55rem; }
+  .spec-num { font-size: 1.32rem; }
+  .price-card .price { font-size: 1.5rem; }
+  .modal { padding: 10px; }
+  .modal-box { padding: 18px; }
+  /* export actions: one full-width button per row, easy to hit */
+  .actions .btn { display: flex; width: 100%; }
+  .dropzone { padding: 26px 12px; }
+}
