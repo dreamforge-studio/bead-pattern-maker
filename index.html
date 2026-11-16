@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bead Pattern Maker — Free Perler &amp; Hama Bead Pattern Generator</title>
+<meta name="description" content="Turn any photo into a fuse bead (Perler / Hama) pattern with a color chart and bead counts. Free, runs 100% in your browser — your photo never leaves your device.">
+<meta name="theme-color" content="#14663c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="icons/icon-192.png" alt="" width="40" height="40">
+    <div>
+      <h1>Bead Pattern Maker</h1>
+      <p>Turn any photo into a Perler / Hama bead pattern — free, right in your browser.</p>
+    </div>
+  </div>
+  <p class="privacy">🔒 Your photo never leaves your device. Everything runs locally.</p>
+</header>
+
+<main>
+  <section class="card" id="step-upload">
+    <h2><span class="step">1</span> Pick a photo</h2>
+    <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload an image">
+      <p class="dz-big">Drop an image here, or tap to choose</p>
+      <p class="dz-small">PNG, JPG or WebP. Simple, high-contrast pictures work best.</p>
+      <input type="file" id="fileInput" accept="image/*" hidden>
+    </div>
+    <button id="sampleBtn" class="btn btn-ghost" type="button">No photo handy? Try a sample image</button>
+  </section>
+
+  <section class="card hidden" id="step-settings">
+    <h2><span class="step">2</span> Set the size</h2>
+    <div class="controls">
+      <label class="control-wide">
+        Pattern width: <strong><span id="widthLabel">29</span> beads</strong>
+        <input type="range" id="widthRange" min="8" max="48" value="29" step="1">
+      </label>
+      <label>
+        Width (beads)
+        <input type="number" id="widthNumber" min="8" max="48" value="29">
+      </label>
+      <label class="check"><input type="checkbox" id="toggleGrid" checked> Grid lines</label>
+      <label class="check"><input type="checkbox" id="toggleCodes" checked> Color codes</label>
+    </div>
+    <p class="hint" id="sizeInfo"></p>
+    <p class="hint" id="freeNote"></p>
+  </section>
+
+  <section class="card hidden" id="step-result">
+    <h2><span class="step">3</span> Your pattern</h2>
+    <div class="canvas-wrap"><canvas id="preview"></canvas></div>
+    <div class="actions">
+      <button id="exportBtn" class="btn btn-primary" type="button">⬇ Download pattern (PNG)</button>
+    </div>
+    <h3>Shopping list — beads you need</h3>
+    <p class="hint" id="statsSummary"></p>
+    <div class="table-wrap">
+      <table id="statsTable">
+        <thead><tr><th></th><th>Code</th><th>Color</th><th>Beads</th><th>%</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Free version: patterns up to 48 beads wide, exports carry a small watermark.
+  Colors are matched to a 64-color Perler / Hama palette using perceptual (Lab) distance.
+  Not affiliated with Perler® or Hama®.</p>
+</footer>
+
+<script src="palette.js"></script>
+<script src="core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
