@@ -76,6 +76,14 @@
     <p class="hero-cta"><a href="#step-upload" class="btn btn-primary">Créer mon motif ↓</a></p>
   </section>
 
+  
+  <section class="spec-strip reveal" aria-label="Caractéristiques de l'outil">
+    <div class="spec"><span class="spec-num">100</span><span class="spec-label">couleurs de perles, chacune avec son code</span></div>
+    <div class="spec"><span class="spec-num">200</span><span class="spec-label">perles de large — taille maximale</span></div>
+    <div class="spec"><span class="spec-num">29×29</span><span class="spec-label">feuilles d'impression par plaque (Studio)</span></div>
+    <div class="spec"><span class="spec-num">0</span><span class="spec-label">photo envoyée — 100 % local</span></div>
+  </section>
+
   <section class="card" id="step-upload">
     <h2><span class="step">1</span> Choisissez une photo</h2>
     <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Importer une image">
@@ -418,6 +426,20 @@
       (cherchez « Ajouter à l’écran d’accueil ») ; ensuite, ça fonctionne même hors ligne. Vos photos
       restent sur votre téléphone, exactement comme sur un ordinateur.</p>
     </details>
+      <details class="faq-item">
+      <summary>Faut-il un compte ou une inscription ?</summary>
+      <p>Non. Aucun compte, rien à installer — ouvrez la page et commencez. Si vous passez à une offre payante, votre clé de licence reste stockée sur votre seul appareil.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>À quelles marques de perles les couleurs correspondent-elles ?</summary>
+      <p>La palette suit les codes couleur standard Perler / Hama — chaque couleur porte son code et son nom (par exemple H05 Red), pour acheter exactement les perles du modèle.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Puis-je vendre les pièces réalisées avec ces modèles ?</summary>
+      <p>Oui avec l'offre Studio, qui inclut une licence commerciale. Les offres Free et Pro sont réservées aux projets personnels.</p>
+    </details>
   </section>
 </main>
 
@@ -473,5 +495,6 @@
   apply();
 })();
 </script>
+<script>(function(){var els=document.querySelectorAll('.reveal');if(!('IntersectionObserver' in window)||!els.length){return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('rv-in');io.unobserve(e.target);}});},{threshold:.1});els.forEach(function(el){el.classList.add('rv-init');io.observe(el);});})();</script>
 </body>
 </html>

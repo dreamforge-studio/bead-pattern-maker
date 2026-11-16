@@ -76,6 +76,14 @@
     <p class="hero-cta"><a href="#step-upload" class="btn btn-primary">生成我的图纸 ↓</a></p>
   </section>
 
+  
+  <section class="spec-strip reveal" aria-label="工具规格速览">
+    <div class="spec"><span class="spec-num">100</span><span class="spec-label">种拼豆颜色，都有色号</span></div>
+    <div class="spec"><span class="spec-num">200</span><span class="spec-label">颗最大图案宽度</span></div>
+    <div class="spec"><span class="spec-num">29×29</span><span class="spec-label">底板分页打印（Studio）</span></div>
+    <div class="spec"><span class="spec-num">0</span><span class="spec-label">张照片上传——100% 本地运行</span></div>
+  </section>
+
   <section class="card" id="step-upload">
     <h2><span class="step">1</span> 选一张照片</h2>
     <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="上传图片">
@@ -405,6 +413,20 @@
       <p>能 — 任何现代手机浏览器都能用，还可以像 App 一样安装
       （找「添加到主屏幕」）；装好后离线也能用。照片留在你的手机上，和电脑上一样。</p>
     </details>
+      <details class="faq-item">
+      <summary>需要注册账号吗？</summary>
+      <p>不需要。没有账号，也不用安装——打开页面就能用。升级后，密钥也只存在你自己的设备上。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>颜色对得上哪个品牌的拼豆？</summary>
+      <p>色卡按 Perler / Hama 标准色号编排——每种颜色都带色号和名称（比如 H05 红色），照着图纸就能买齐对应的豆子。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>用这里的图纸做的成品能拿去卖吗？</summary>
+      <p>Studio 版可以，包含商用许可。Free 和 Pro 版限个人作品使用。</p>
+    </details>
   </section>
 </main>
 
@@ -460,5 +482,6 @@
   apply();
 })();
 </script>
+<script>(function(){var els=document.querySelectorAll('.reveal');if(!('IntersectionObserver' in window)||!els.length){return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('rv-in');io.unobserve(e.target);}});},{threshold:.1});els.forEach(function(el){el.classList.add('rv-init');io.observe(el);});})();</script>
 </body>
 </html>

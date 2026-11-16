@@ -76,6 +76,14 @@
     <p class="hero-cta"><a href="#step-upload" class="btn btn-primary">내 도안 만들기 ↓</a></p>
   </section>
 
+  
+  <section class="spec-strip reveal" aria-label="도구 사양 한눈에">
+    <div class="spec"><span class="spec-num">100</span><span class="spec-label">가지 비즈 색상, 색상 코드 포함</span></div>
+    <div class="spec"><span class="spec-num">200</span><span class="spec-label">최대 너비(비즈 수)</span></div>
+    <div class="spec"><span class="spec-num">29×29</span><span class="spec-label">페그보드 인쇄 시트(Studio)</span></div>
+    <div class="spec"><span class="spec-num">0</span><span class="spec-label">장 업로드 — 100% 로컬 실행</span></div>
+  </section>
+
   <section class="card" id="step-upload">
     <h2><span class="step">1</span> 사진 선택</h2>
     <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="이미지 업로드">
@@ -407,6 +415,20 @@
       ("홈 화면에 추가"를 찾으세요). 설치 후에는 오프라인에서도 작동합니다.
       사진은 컴퓨터에서처럼 휴대폰 안에 그대로 남습니다.</p>
     </details>
+      <details class="faq-item">
+      <summary>계정이나 회원가입이 필요한가요?</summary>
+      <p>아니요. 계정도, 설치도 필요 없습니다. 페이지를 열면 바로 시작할 수 있습니다. 업그레이드해도 라이선스 키는 내 기기에만 저장됩니다.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>어떤 브랜드 비즈와 색상이 맞나요?</summary>
+      <p>팔레트는 Perler / Hama 표준 색상 코드를 따릅니다. 모든 색상에 코드와 이름(예: H05 Red)이 있어 도안 그대로 비즈를 살 수 있습니다.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>이 도안으로 만든 작품을 팔 수 있나요?</summary>
+      <p>Studio 플랜은 가능합니다. 상업용 라이선스가 포함됩니다. Free와 Pro는 개인 프로젝트용입니다.</p>
+    </details>
   </section>
 </main>
 
@@ -462,5 +484,6 @@
   apply();
 })();
 </script>
+<script>(function(){var els=document.querySelectorAll('.reveal');if(!('IntersectionObserver' in window)||!els.length){return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('rv-in');io.unobserve(e.target);}});},{threshold:.1});els.forEach(function(el){el.classList.add('rv-init');io.observe(el);});})();</script>
 </body>
 </html>

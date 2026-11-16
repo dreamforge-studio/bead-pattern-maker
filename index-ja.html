@@ -76,6 +76,14 @@
     <p class="hero-cta"><a href="#step-upload" class="btn btn-primary">図案を作る ↓</a></p>
   </section>
 
+  
+  <section class="spec-strip reveal" aria-label="ツールの仕様">
+    <div class="spec"><span class="spec-num">100</span><span class="spec-label">色（色番号つき）</span></div>
+    <div class="spec"><span class="spec-num">200</span><span class="spec-label">最大幅（ビーズ数）</span></div>
+    <div class="spec"><span class="spec-num">29×29</span><span class="spec-label">ペグボード印刷シート（Studio）</span></div>
+    <div class="spec"><span class="spec-num">0</span><span class="spec-label">アップロード——100%ローカル処理</span></div>
+  </section>
+
   <section class="card" id="step-upload">
     <h2><span class="step">1</span> 写真を選ぶ</h2>
     <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="画像をアップロード">
@@ -408,6 +416,20 @@
       （「ホーム画面に追加」を探してください）。その後はオフラインでも使えます。
       写真はパソコンと同じく、スマートフォンの中に留まります。</p>
     </details>
+      <details class="faq-item">
+      <summary>アカウント登録は必要ですか？</summary>
+      <p>不要です。アカウントもインストールもなし——ページを開けばすぐ使えます。アップグレードしても、ライセンスキーはあなたの端末にだけ保存されます。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>どのブランドのビーズに対応していますか？</summary>
+      <p>色見本は Perler / Hama の標準色番号に沿っています。各色に色番号と名前（例：H05 Red）が付くので、図案どおりに買い揃えられます。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>作った作品を販売できますか？</summary>
+      <p>Studioプランなら可能です。商用ライセンスが含まれます。FreeとProは個人利用向けです。</p>
+    </details>
   </section>
 </main>
 
@@ -463,5 +485,6 @@
   apply();
 })();
 </script>
+<script>(function(){var els=document.querySelectorAll('.reveal');if(!('IntersectionObserver' in window)||!els.length){return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('rv-in');io.unobserve(e.target);}});},{threshold:.1});els.forEach(function(el){el.classList.add('rv-init');io.observe(el);});})();</script>
 </body>
 </html>

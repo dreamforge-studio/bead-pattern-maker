@@ -76,6 +76,14 @@
     <p class="hero-cta"><a href="#step-upload" class="btn btn-primary">Make my pattern ↓</a></p>
   </section>
 
+  
+  <section class="spec-strip reveal" aria-label="Tool specifications at a glance">
+    <div class="spec"><span class="spec-num">100</span><span class="spec-label">bead colors, each with its code</span></div>
+    <div class="spec"><span class="spec-num">200</span><span class="spec-label">beads wide — maximum pattern size</span></div>
+    <div class="spec"><span class="spec-num">29×29</span><span class="spec-label">pegboard sheets for printing (Studio)</span></div>
+    <div class="spec"><span class="spec-num">0</span><span class="spec-label">photos uploaded — runs 100% locally</span></div>
+  </section>
+
   <section class="card" id="step-upload">
     <h2><span class="step">1</span> Pick a photo</h2>
     <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload an image">
@@ -428,6 +436,20 @@
       (look for “Add to Home Screen”); after that it even works offline. Your photos
       stay on your phone, exactly like on a computer.</p>
     </details>
+      <details class="faq-item">
+      <summary>Do I need an account or sign-up?</summary>
+      <p>No. There is no account and nothing to install — open the page and start. If you upgrade, your license key is stored only on your own device.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Which bead brands do the colors match?</summary>
+      <p>The palette follows standard Perler / Hama color codes — every color carries its code and name (for example H05 Red), so you can buy exactly the beads the chart calls for.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Can I sell pieces I make with these patterns?</summary>
+      <p>Yes on the Studio plan, which includes a commercial license. Free and Pro are for personal projects.</p>
+    </details>
   </section>
 </main>
 
@@ -483,5 +505,6 @@
   apply();
 })();
 </script>
+<script>(function(){var els=document.querySelectorAll('.reveal');if(!('IntersectionObserver' in window)||!els.length){return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('rv-in');io.unobserve(e.target);}});},{threshold:.1});els.forEach(function(el){el.classList.add('rv-init');io.observe(el);});})();</script>
 </body>
 </html>
