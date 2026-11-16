@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>アイロンビーズ図案メーカー — 無料Perler／Hamaビーズ図案ジェネレーター</title>
+<meta name="description" content="あらゆる写真をアイロンビーズ（Perler／Hama）図案に変換。カラーチャートと色ごとの個数付き。無料、100%ブラウザ内で動作 — 写真がデバイスの外に出ることはありません。">
+<link rel="canonical" href="https://dreamforge-studio.github.io/bead-pattern-maker/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bead Pattern Maker">
+<meta property="og:title" content="アイロンビーズ図案メーカー — 無料Perler／Hamaビーズ図案ジェネレーター">
+<meta property="og:description" content="あらゆる写真をアイロンビーズ（Perler／Hama）図案に変換。カラーチャートと正確な個数付き。無料、100%ブラウザ内で動作 — 写真がデバイスの外に出ることはありません。">
+<meta property="og:url" content="https://dreamforge-studio.github.io/bead-pattern-maker/">
+<meta property="og:image" content="https://dreamforge-studio.github.io/bead-pattern-maker/examples/cat-pattern.png">
+<meta property="og:image:width" content="800">
+<meta property="og:image:height" content="800">
+<meta property="og:image:alt" content="猫のポートレートを色コード付きPerlerビーズ図案に変換した画像">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="アイロンビーズ図案メーカー — 無料Perler／Hamaビーズ図案ジェネレーター">
+<meta name="twitter:description" content="あらゆる写真をアイロンビーズ図案に変換。カラーチャートと正確な個数付き。無料、100%ブラウザ内で動作 — アップロードなし、登録不要。">
+<meta name="twitter:image" content="https://dreamforge-studio.github.io/bead-pattern-maker/examples/cat-pattern.png">
+<meta name="twitter:image:alt" content="猫のポートレートを色コード付きPerlerビーズ図案に変換した画像">
+<meta name="theme-color" content="#14663c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="icons/icon-192.png" alt="" width="40" height="40">
+    <div>
+      <h1>Bead Pattern Maker</h1>
+      <p>あらゆる写真をPerler／Hamaビーズ図案に — 無料で、ブラウザの中だけで。</p>
+    </div>
+  </div>
+  <p class="privacy">🔒 写真がデバイスの外に出ることはありません。すべてローカルで動作します。</p>
+  <nav class="lang-switch" aria-label="Language">
+    <a href="index.html" hreflang="en">EN</a><span class="sep">|</span><a href="index-zh.html" hreflang="zh-CN">中文</a><span class="sep">|</span><a href="index-ja.html" class="active" hreflang="ja">日本語</a><span class="sep">|</span><a href="index-ko.html" hreflang="ko">한국어</a><span class="sep">|</span><a href="index-fr.html" hreflang="fr">Français</a>
+  </nav>
+</header>
+
+<main>
+  <section class="card hero" id="hero">
+    <h2 class="hero-title">あなたの写真を、本当に作れるビーズ図案に</h2>
+    <p class="hero-sub">スライダーをドラッグして見比べてください。これはモックアップではなく、このツールが実際に作った図案です —
+    <strong>40 × 40 ビーズ · 21 色 · 1,600 個</strong>、正確な購入リスト付き。</p>
+    <div class="compare" id="heroCompare">
+      <img class="cmp-base" src="examples/cat-pattern.png" alt="猫の写真から生成されたビーズ図案">
+      <img class="cmp-top" id="cmpTop" src="examples/cat-original.png" alt="元の写真：漫画風の猫の顔">
+      <span class="cmp-label cmp-label-l">写真</span>
+      <span class="cmp-label cmp-label-r">図案</span>
+      <div class="cmp-handle" id="cmpHandle"><span class="cmp-grip">⇔</span></div>
+      <input type="range" class="cmp-range" id="cmpRange" min="0" max="100" value="50"
+             aria-label="スライドして元の写真とビーズ図案を比較">
+    </div>
+    <div class="bead-strip" aria-hidden="true">
+      <span style="background:#BE1E2D"></span><span style="background:#EE6A24"></span>
+      <span style="background:#F6C90E"></span><span style="background:#1E9E4A"></span>
+      <span style="background:#2456A6"></span><span style="background:#6E4B9E"></span>
+      <span style="background:#E38CA6"></span><span style="background:#7BA7D9"></span>
+      <span style="background:#8CC63E"></span><span style="background:#6E3B26"></span>
+      <span style="background:#F1E4C3"></span><span style="background:#17181A"></span>
+    </div>
+    <ul class="trust-strip">
+      <li>✓ 登録不要</li>
+      <li>✓ 100%ブラウザ内で動作 — 写真はアップロードされません</li>
+      <li>✓ 無料でスタート</li>
+    </ul>
+    <p class="hero-cta"><a href="#step-upload" class="btn btn-primary">図案を作る ↓</a></p>
+  </section>
+
+  <section class="card" id="step-upload">
+    <h2><span class="step">1</span> 写真を選ぶ</h2>
+    <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="画像をアップロード">
+      <p class="dz-big">ここに画像をドロップ、またはタップして選択</p>
+      <p class="dz-small">PNG、JPG、WebP対応。シンプルでコントラストの強い画像が最適です。</p>
+      <input type="file" id="fileInput" accept="image/*" hidden>
+    </div>
+    <button id="sampleBtn" class="btn btn-ghost" type="button">写真がない？ サンプル画像で試す</button>
+    <button id="batchBtn" class="btn btn-ghost" type="button">🔒 一括変換：複数の写真をまとめて変換（Studio）</button>
+    <input type="file" id="batchInput" accept="image/*" multiple hidden>
+  </section>
+
+  <section class="card hidden" id="step-settings">
+    <h2><span class="step">2</span> サイズを設定</h2>
+    <div class="controls">
+      <label class="control-wide">
+        図案の幅：<strong><span id="widthLabel">29</span> ビーズ</strong>
+        <input type="range" id="widthRange" min="8" max="48" value="29" step="1">
+      </label>
+      <label>
+        幅（ビーズ数）
+        <input type="number" id="widthNumber" min="8" max="48" value="29">
+      </label>
+      <label class="check"><input type="checkbox" id="toggleGrid" checked> グリッド線</label>
+      <label class="check"><input type="checkbox" id="toggleCodes" checked> 色コード</label>
+    </div>
+    <p class="hint" id="sizeInfo"></p>
+    <p class="hint" id="freeNote"></p>
+  </section>
+
+  <section class="card hidden" id="step-result">
+    <h2><span class="step">3</span> あなたの図案</h2>
+    <div class="canvas-wrap"><canvas id="preview"></canvas></div>
+    <div class="actions">
+      <button id="exportBtn" class="btn btn-primary" type="button">⬇ 図案をダウンロード（PNG）</button>
+      <button id="csvBtn" class="btn" type="button">⬇ ビーズリスト（CSV）🔒 Pro</button>
+      <button id="pdfBtn" class="btn" type="button">🖨 印刷／PDFボードシート 🔒 Studio</button>
+    </div>
+    <h3>購入リスト — 必要なビーズ</h3>
+    <p class="hint" id="statsSummary"></p>
+    <div class="table-wrap">
+      <table id="statsTable">
+        <thead><tr><th></th><th>コード</th><th>色</th><th>個数</th><th>%</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card hidden" id="batch">
+    <h2>一括変換の結果</h2>
+    <div id="batchList"></div>
+  </section>
+
+  <section class="card" id="examples">
+    <h2>作例 — このツールの実際の出力</h2>
+    <p>下の図案はすべて、隣の画像からこのジェネレーターが実際に生成したものです。
+    見たままが手に入ります：同じ色、同じコード、同じ個数。</p>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/cat-original.png" alt="元の画像：漫画風の猫の顔" loading="lazy">
+          <span class="img-label">元の画像</span></div>
+        <div><img src="examples/cat-pattern.png" alt="猫の画像から生成されたビーズ図案" loading="lazy">
+          <span class="img-label">図案</span></div>
+      </div>
+      <figcaption>猫のポートレート — 40 × 40 ビーズ · 21 色 · 合計 1,600 個</figcaption>
+      <p class="example-tip">💡 ペットのポートレートや顔には <strong>幅40ビーズ以上</strong>を —
+      目、ひげ、毛並みの陰影には余分な精細さが必要です。</p>
+    </figure>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/landscape-original.png" alt="元の画像：山の風景" loading="lazy">
+          <span class="img-label">元の画像</span></div>
+        <div><img src="examples/landscape-pattern.png" alt="風景画像から生成されたビーズ図案" loading="lazy">
+          <span class="img-label">図案</span></div>
+      </div>
+      <figcaption>山の風景 — 40 × 30 ビーズ · 29 色 · 合計 1,200 個</figcaption>
+      <p class="example-tip">💡 風景は細部が多いジャンルです。空、山、水などの大きな形は
+      幅40でもよく読み取れます。写真のような風景には、もっと幅を（ProまたはStudio）。</p>
+    </figure>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/flower-original.png" alt="元の画像：ひまわり" loading="lazy">
+          <span class="img-label">元の画像</span></div>
+        <div><img src="examples/flower-pattern.png" alt="ひまわりの画像から生成されたビーズ図案" loading="lazy">
+          <span class="img-label">図案</span></div>
+      </div>
+      <figcaption>ひまわり — 32 × 43 ビーズ · 25 色 · 合計 1,376 個</figcaption>
+      <p class="example-tip">💡 無地の背景に大胆な被写体ひとつ、が一番の近道 —
+      小さい幅でもはっきり仕上がります。</p>
+    </figure>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/smiley-original.png" alt="元の画像：漫画風のスマイル" loading="lazy">
+          <span class="img-label">元の画像</span></div>
+        <div><img src="examples/smiley-pattern.png" alt="スマイル画像から生成されたビーズ図案" loading="lazy">
+          <span class="img-label">図案</span></div>
+      </div>
+      <figcaption>スマイル — 36 × 36 ビーズ · 30 色 · 合計 1,296 個</figcaption>
+      <p class="example-tip">💡 ロゴ、アイコン、漫画風アートはほぼどんなサイズでもきれいに変換できます —
+      フラットな色と太い輪郭はビーズに最適です。</p>
+    </figure>
+  </section>
+
+  <section class="card" id="size-guide">
+    <h2>サイズガイド — 「幅」の本当の意味</h2>
+    <p>設定する幅は、横方向のビーズ数です。標準のミディビーズは1個 5&nbsp;mm なので、
+    始める前に完成サイズが簡単に計算できます：</p>
+    <div class="table-wrap">
+      <table class="size-table">
+        <thead><tr>
+          <th>設定する幅</th><th>完成サイズ*</th><th>必要なビーズ†</th>
+          <th>精細さ</th><th>おすすめ用途</th>
+        </tr></thead>
+        <tbody>
+          <tr><td><strong>20 ビーズ</strong></td><td>≈ 10 cm (4″)</td><td>≈ 400</td>
+            <td>粗め — 大きな形のみ</td><td>キーホルダー、チャーム、マグネット</td></tr>
+          <tr><td><strong>29 ビーズ</strong></td><td>≈ 14.5 cm (5.7″)</td><td>841</td>
+            <td>シンプルな絵柄なら鮮明</td><td>標準ペグボードちょうど1枚 — コースター、デスク小物</td></tr>
+          <tr><td><strong>48 ビーズ</strong></td><td>≈ 24 cm (9.4″)</td><td>≈ 2,300</td>
+            <td>良好 — ポートレートも可</td><td>小さな壁飾り、額入りギフト <em>（無料プランの上限）</em></td></tr>
+          <tr><td><strong>100 ビーズ</strong></td><td>≈ 50 cm (20″)</td><td>≈ 10,000</td>
+            <td>写真のような精細さ</td><td>大きな壁飾り <em>（Pro）</em></td></tr>
+          <tr><td><strong>200 ビーズ</strong></td><td>≈ 100 cm (39″)</td><td>≈ 40,000</td>
+            <td>最大の精細さ</td><td>ポスターサイズの作品 <em>（Studio）</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">* 横幅のサイズです。高さは写真の比率に従います。
+    † 正方形で全面を埋めた場合の目安 — 正確な個数は、作る図案ごとの購入リストに表示されます。</p>
+    <p class="example-tip">💡 経験則：図案が小さいほど、写真は大胆に — 大きな被写体ひとつと
+    強いコントラスト。幅100で見事な細かい写真も、幅20ではぐちゃぐちゃになります。</p>
+  </section>
+
+  <section class="card" id="guide">
+    <h2>ステップガイド — 写真から完成まで</h2>
+    <p>アイロンビーズは初めて？ この5ステップで失敗しません。</p>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">1</span> 良い写真を選ぶ</h3>
+        <p><strong>被写体がひとつはっきりしていて、背景がシンプルで、コントラストの強い</strong>画像を選びましょう。
+        顔、ペット、ロゴ、漫画風アートが最適です。細部だらけのごちゃごちゃした場面は
+        ビーズサイズでは溶けてしまいます — 写真が混み合っている場合は、まず被写体に寄って切り抜いてください。</p>
+      </div>
+      <img src="examples/guide-photo-good-vs-busy.png" loading="lazy"
+           alt="比較：良い例として印されたシンプルな猫のポートレートと、悪い例のごちゃごちゃした画像">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">2</span> 幅を設定する</h3>
+        <p>幅は完成品の横方向のビーズ数です。高さは写真に合わせて自動で決まります。
+        ビーズが多いほど精細になりますが、ビーズも時間もコストも増えます。目安：
+        <strong>キーホルダーは幅20〜30、コースターはペグボード1枚でちょうど29、
+        デスク小物は40〜60、壁飾りは80以上</strong>。完成サイズは上のサイズガイドをご覧ください。</p>
+      </div>
+      <img src="examples/guide-widths.png" loading="lazy"
+           alt="同じスマイル画像を幅16、29、48ビーズで変換し、精細さの違いを示した図">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">3</span> 図案を読む</h3>
+        <p><strong>1マスが1ビーズです。</strong> 各マスに印刷されたコード
+        （<strong>P01</strong> のようなもの）がそのビーズの色コードで、購入リストの
+        コードと同じです。<strong>5ビーズごとの太線</strong>のおかげで、1つずつではなく
+        5つずつ数えられます。グリッド線とコードは図案の上でオン／オフできます。</p>
+      </div>
+      <img src="examples/guide-read-chart.png" loading="lazy"
+           alt="拡大したビーズ図案：1マス＝1ビーズ、各マスの色コード、5ビーズごとの太線をラベル表示">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">4</span> リストでビーズを買う</h3>
+        <p>図案の下には購入リストがあります：すべての色についてコード、名前、
+        <strong>正確な個数</strong>、ビーズの総数、標準29 × 29ペグボードが何枚必要か。
+        各色とも約 <strong>10% 多め</strong>に買ってください — ビーズは必ず何個か転がっていきます。</p>
+      </div>
+      <img src="examples/guide-shopping-list.png" loading="lazy"
+           alt="猫の図案の購入リスト例：主要な色と個数、合計1,600個、ペグボード4枚">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">5</span> ダウンロード、印刷、制作</h3>
+        <p>図案をPNGでダウンロードして画面を見ながら作るか、印刷してください。
+        印刷時は <strong>100%／「実際のサイズ」</strong> を選んでください —「ページに合わせる」は
+        グリッドを縮小し、ペグボードと合わなくなります。StudioプランのPDFボードシートは
+        大きな図案をペグボード1枚＝1ページに分割し、各ページに行列番号が付きます。</p>
+      </div>
+      <img src="examples/guide-print.png" loading="lazy"
+           alt="印刷の図解：ページに合わせるのではなく、100%の実際のサイズで印刷">
+    </div>
+
+    <div class="finish-note">
+      <h3>🏁 仕上げ：アイロンがけ</h3>
+      <p>すべてのビーズを置き終えたら、クッキングシート（アイロン用ペーパー）をかぶせ、
+      中温のアイロンをゆっくり円を描くように動かし、ビーズの頭が溶けてくっつくまでかけます。
+      平らなまま冷ましてください — 重い本を乗せると反りを防げます。工程はこれだけ：
+      置く、アイロンをかける、冷ます、完成。</p>
+    </div>
+  </section>
+
+  <section class="card" id="features">
+    <h2>できること</h2>
+    <p>アイロンビーズ図案メーカーは、あらゆる画像をそのまま作れるアイロンビーズ図案に変換します —
+    ペグボードで見ながら作るあの図案が、数秒で生成されます。</p>
+    <ul class="feature-list">
+      <li><strong>写真 → 図案、自動で。</strong> 画像をアップロードすれば、すべてのピクセルが最も近いビーズ色にマッチします — ピクセル単位の手作業は不要です。</li>
+      <li><strong>本物の64色ビーズパレット。</strong> 色は標準のPerler／Hamaパレットから選ばれ、それぞれに色コードと名前（H05 レッドなど）が付き、知覚的（Lab）距離でマッチングするため、数値だけでなく見た目も正確です。</li>
+      <li><strong>ビーズ購入リスト。</strong> すべての色について正確な個数 — コードごとに何個必要か — とビーズ総数が分かります。</li>
+      <li><strong>ペグボードの見積もり。</strong> 完成品に標準29×29ペグボードが何枚必要か分かります。</li>
+      <li><strong>ダウンロードできる図案。</strong> 完成した図案を、グリッド線と全マスの色コード入りPNGとして書き出し、そのまま作れます。</li>
+      <li><strong>100%プライベート。</strong> すべてブラウザ内でローカルに動作します。写真がサーバーにアップロードされることは決してありません。</li>
+      <li><strong>3つのプラン。</strong> 無料プランは幅48ビーズまで、基本パレットと透かし入り書き出しに対応。ProとStudioは幅の上限を引き上げ、フルパレット、CSVビーズリスト、印刷用PDFボードシート、一括変換を解放します — 各プランの内容は下の料金をご覧ください。</li>
+    </ul>
+  </section>
+
+  <section class="card" id="how">
+    <h2>使い方</h2>
+    <ol class="how-steps">
+      <li><span class="step">1</span><div><strong>写真を選ぶ</strong><br>
+        PNG、JPG、WebPをドロップ。シンプルでコントラストの強い画像が最適です。</div></li>
+      <li><span class="step">2</span><div><strong>幅を設定する</strong><br>
+        完成品の幅（ビーズ数）を選ぶだけ — 高さは自動で決まります。</div></li>
+      <li><span class="step">3</span><div><strong>図案を受け取る</strong><br>
+        色コード付きの図案を確認し、色ごとの個数をチェックして、PNGをダウンロード。</div></li>
+    </ol>
+  </section>
+
+  <section class="card" id="pricing">
+    <h2>料金</h2>
+    <p>まずは無料で。もっと大きな図案、フルカラーパレット、
+    印刷して作れるファイルが必要になったらアップグレード。</p>
+    <div class="pricing-grid">
+      <div class="price-card" data-tier="free">
+        <h3>無料プラン</h3>
+        <p class="price">$0</p>
+        <ul>
+          <li>図案は幅 <strong>48 ビーズ</strong>まで</li>
+          <li>基本 <strong>64色</strong>パレット（Perler／Hamaコード）</li>
+          <li>ページ上の図案で個数を確認</li>
+          <li>小さな透かし入りのPNG書き出し</li>
+          <li>アカウント不要、ずっと使えます</li>
+        </ul>
+        <a href="#" class="btn plan-btn">現在のプラン</a>
+      </div>
+      <div class="price-card popular" data-tier="pro">
+        <span class="badge">一番人気</span>
+        <h3>Pro</h3>
+        <p class="price">$4.99<span class="per">/month</span></p>
+        <ul>
+          <li>図案は幅 <strong>120 ビーズ</strong>まで</li>
+          <li><strong>フル100色パレット</strong>（Perler + Hama + Artkal）</li>
+          <li><strong>透かしなし</strong>、高解像度PNG書き出し</li>
+          <li>ビーズリストを <strong>ダウンロード可能なCSV</strong> で — 印刷できる購入リスト</li>
+          <li>無料プランのすべてを含む</li>
+        </ul>
+        <a href="https://dreamforgestudioshop.gumroad.com/l/bead-pattern-maker-pro" target="_blank" rel="noopener" class="btn plan-btn btn-primary">Proにアップグレード</a>
+      </div>
+      <div class="price-card" data-tier="studio">
+        <h3>Studio</h3>
+        <p class="price">$9.99<span class="per">/month</span></p>
+        <ul>
+          <li>図案は幅 <strong>200 ビーズ</strong>まで</li>
+          <li><strong>PDFボードシート</strong> — ペグボードごとにページ分割、印刷用の行列座標付き</li>
+          <li><strong>一括変換</strong> — 複数の写真をまとめて変換</li>
+          <li>作成した図案の <strong>商用ライセンス</strong></li>
+          <li>Proのすべてを含む</li>
+        </ul>
+        <a href="https://dreamforgestudioshop.gumroad.com/l/bead-pattern-maker-studio" target="_blank" rel="noopener" class="btn plan-btn btn-primary">Studioにアップグレード</a>
+      </div>
+    </div>
+    <div class="license-row">
+      <label for="licenseInput"><strong>ライセンスキーをお持ちですか？</strong></label>
+      <div class="license-controls">
+        <input type="text" id="licenseInput" placeholder="BPM-PRO-XXXX-XXXX" autocomplete="off" spellcheck="false">
+        <button id="licenseApply" class="btn" type="button">有効化</button>
+        <button id="licenseReset" class="btn btn-ghost" type="button">無料プランに戻す</button>
+      </div>
+      <p class="hint" id="licenseStatus">キーはこのデバイスにのみ保存され、プランは即座に有効化されます。</p>
+    </div>
+  </section>
+
+  <section class="card" id="faq">
+    <h2>よくある質問</h2>
+
+    <details class="faq-item">
+      <summary>ビーズとペグボードはどれくらい必要ですか？</summary>
+      <p>図案の下の購入リストが、すべての色を正確に数え、ビーズ総数と標準29 × 29ペグボードの
+      必要枚数も示します。たとえば上の猫の図案は21色で1,600個、ペグボード4枚が必要です。
+      ヒント：各色とも約10%多めに買ってください — ビーズは必ず何個か転がっていきます。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>写真はサーバーにアップロードされますか？</summary>
+      <p>いいえ。すべてブラウザ内でローカルに動作します — 写真がデバイスの外に出ることはなく、
+      何も保存されず、アカウントもありません。タブを閉じれば消えます。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>無料プラン、Pro、Studioの違いは？</summary>
+      <p>無料プラン：幅48ビーズまで、基本64色パレット、小さな透かし入りのPNG書き出し。
+      Pro（$4.99/月）：幅120まで、フル100色パレット、透かしなし書き出し、ダウンロード可能なCSVビーズリスト。
+      Studio（$9.99/月）：幅200まで、印刷用PDFボードシート、一括変換、商用ライセンス。
+      完全な比較は上の料金をご覧ください。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>ダウンロードしたPNGに透かしがあるのはなぜ？</summary>
+      <p>無料プランの書き出しには、ツールを見つけてもらえるよう、下部に小さな
+      「Made with Bead Pattern Maker」の帯が入ります。ProとStudioの書き出しは完全な無地です。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>印刷したグリッドがペグボードと合いません。何が問題ですか？</summary>
+      <p>プリンターがページを拡大縮小しています。<strong>100%／「実際のサイズ」</strong> で再印刷し、
+      「ページに合わせる」をオフにしてください — 印刷された1マスが1ビーズと一致しなければなりません。
+      あるいは画面を見て作るか、StudioのPDFボードシート（1ページ＝ペグボード1枚、行列番号付き）を使ってください。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>スマートフォンでも使えますか？</summary>
+      <p>はい — モダンなモバイルブラウザならどれでも動作し、アプリのようにインストールもできます
+      （「ホーム画面に追加」を探してください）。その後はオフラインでも使えます。
+      写真はパソコンと同じく、スマートフォンの中に留まります。</p>
+    </details>
+  </section>
+</main>
+
+<footer>
+  <nav class="footer-nav" aria-label="Page sections">
+    <a href="#examples">作例</a> · <a href="#size-guide">サイズガイド</a> ·
+    <a href="#guide">ガイド</a> · <a href="#pricing">料金</a> · <a href="#faq">よくある質問</a>
+  </nav>
+  <p>無料版：図案は幅48ビーズまで、書き出しには小さな透かしが入ります。
+  色は知覚的（Lab）距離で標準Perler／Hamaパレット（無料プランは64色、有料プランは100色）にマッチングされます。
+  Perler®およびHama®とは提携していません。</p>
+  <nav class="footer-nav" aria-label="Legal and support">
+    <a href="studio-ja.html">Dreamforge Studio — 全サービス</a> ·
+    <a href="privacy.html">プライバシーポリシー</a> · <a href="terms.html">利用規約</a> ·
+    <a href="#pricing">料金</a> ·
+    <a href="mailto:a13259605261@163.com">Support: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+  </nav>
+  <p>© 2026 Bead Pattern Maker · Dreamforge Studio</p>
+</footer>
+
+<div id="upgradeModal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <p id="upgradeText"></p>
+    <div class="modal-actions">
+      <a href="#pricing" class="btn btn-primary" id="upgradeGo">プランを見る</a>
+      <button id="upgradeClose" class="btn" type="button">閉じる</button>
+    </div>
+    <p class="hint">Gumroadで登録すると、ライセンスキーがメールで届きます — 料金セクションに入力すれば、このデバイスでプランが即座に有効化されます。</p>
+  </div>
+</div>
+
+<div id="printArea"></div>
+
+<script src="palette.js"></script>
+<script src="core.js"></script>
+<script src="app-ja.js"></script>
+<script>
+/* Hero before/after compare slider (photo vs pattern). */
+(function () {
+  var range = document.getElementById('cmpRange');
+  var top = document.getElementById('cmpTop');
+  var handle = document.getElementById('cmpHandle');
+  if (!range || !top || !handle) return;
+  function apply() {
+    var v = Number(range.value);
+    top.style.clipPath = 'inset(0 ' + (100 - v) + '% 0 0)';
+    handle.style.left = v + '%';
+  }
+  range.addEventListener('input', apply);
+  apply();
+})();
+</script>
+</body>
+</html>

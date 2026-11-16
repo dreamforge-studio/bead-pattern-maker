@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bead Pattern Maker 拼豆图纸生成器 — 免费 Perler / Hama 图纸生成工具</title>
+<meta name="description" content="把任何照片变成拼豆（Perler / Hama）图纸，附色卡和每种颜色的颗数。免费，100% 在浏览器里运行 — 照片不离开你的设备。">
+<link rel="canonical" href="https://dreamforge-studio.github.io/bead-pattern-maker/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bead Pattern Maker">
+<meta property="og:title" content="Bead Pattern Maker 拼豆图纸生成器 — 免费 Perler / Hama 图纸生成工具">
+<meta property="og:description" content="把任何照片变成拼豆（Perler / Hama）图纸，附色卡和精确的豆子颗数。免费，100% 在浏览器里运行 — 照片不离开你的设备。">
+<meta property="og:url" content="https://dreamforge-studio.github.io/bead-pattern-maker/">
+<meta property="og:image" content="https://dreamforge-studio.github.io/bead-pattern-maker/examples/cat-pattern.png">
+<meta property="og:image:width" content="800">
+<meta property="og:image:height" content="800">
+<meta property="og:image:alt" content="一张猫咪肖像转成的带颜色编号的 Perler 拼豆图纸">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bead Pattern Maker 拼豆图纸生成器 — 免费 Perler / Hama 图纸生成工具">
+<meta name="twitter:description" content="把任何照片变成拼豆图纸，附色卡和精确颗数。免费，100% 在浏览器里运行 — 不上传、不注册。">
+<meta name="twitter:image" content="https://dreamforge-studio.github.io/bead-pattern-maker/examples/cat-pattern.png">
+<meta name="twitter:image:alt" content="一张猫咪肖像转成的带颜色编号的 Perler 拼豆图纸">
+<meta name="theme-color" content="#14663c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="icons/icon-192.png" alt="" width="40" height="40">
+    <div>
+      <h1>Bead Pattern Maker</h1>
+      <p>把任何照片变成 Perler / Hama 拼豆图纸 — 免费，就在浏览器里完成。</p>
+    </div>
+  </div>
+  <p class="privacy">🔒 照片不离开你的设备，全部在本机处理。</p>
+  <nav class="lang-switch" aria-label="Language">
+    <a href="index.html" hreflang="en">EN</a><span class="sep">|</span><a href="index-zh.html" class="active" hreflang="zh-CN">中文</a><span class="sep">|</span><a href="index-ja.html" hreflang="ja">日本語</a><span class="sep">|</span><a href="index-ko.html" hreflang="ko">한국어</a><span class="sep">|</span><a href="index-fr.html" hreflang="fr">Français</a>
+  </nav>
+</header>
+
+<main>
+  <section class="card hero" id="hero">
+    <h2 class="hero-title">你的照片，变成一张真能拼出来的拼豆图纸</h2>
+    <p class="hero-sub">拖动滑块对比看看。这张图纸是本工具真实生成的，不是效果图 —
+    <strong>40 × 40 颗豆 · 21 种颜色 · 1600 颗豆</strong>，还附精确的采购清单。</p>
+    <div class="compare" id="heroCompare">
+      <img class="cmp-base" src="examples/cat-pattern.png" alt="由猫咪照片生成的拼豆图纸">
+      <img class="cmp-top" id="cmpTop" src="examples/cat-original.png" alt="原图：卡通猫脸">
+      <span class="cmp-label cmp-label-l">原图</span>
+      <span class="cmp-label cmp-label-r">图纸</span>
+      <div class="cmp-handle" id="cmpHandle"><span class="cmp-grip">⇔</span></div>
+      <input type="range" class="cmp-range" id="cmpRange" min="0" max="100" value="50"
+             aria-label="拖动对比原图和拼豆图纸">
+    </div>
+    <div class="bead-strip" aria-hidden="true">
+      <span style="background:#BE1E2D"></span><span style="background:#EE6A24"></span>
+      <span style="background:#F6C90E"></span><span style="background:#1E9E4A"></span>
+      <span style="background:#2456A6"></span><span style="background:#6E4B9E"></span>
+      <span style="background:#E38CA6"></span><span style="background:#7BA7D9"></span>
+      <span style="background:#8CC63E"></span><span style="background:#6E3B26"></span>
+      <span style="background:#F1E4C3"></span><span style="background:#17181A"></span>
+    </div>
+    <ul class="trust-strip">
+      <li>✓ 无需注册</li>
+      <li>✓ 100% 在浏览器里运行 — 照片从不上传</li>
+      <li>✓ 免费开始</li>
+    </ul>
+    <p class="hero-cta"><a href="#step-upload" class="btn btn-primary">生成我的图纸 ↓</a></p>
+  </section>
+
+  <section class="card" id="step-upload">
+    <h2><span class="step">1</span> 选一张照片</h2>
+    <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="上传图片">
+      <p class="dz-big">把图片拖到这里，或点这里选择</p>
+      <p class="dz-small">支持 PNG、JPG、WebP。简单、高对比度的图片效果最好。</p>
+      <input type="file" id="fileInput" accept="image/*" hidden>
+    </div>
+    <button id="sampleBtn" class="btn btn-ghost" type="button">手边没照片？试试示例图</button>
+    <button id="batchBtn" class="btn btn-ghost" type="button">🔒 批量转换：一次转换多张照片（Studio 版）</button>
+    <input type="file" id="batchInput" accept="image/*" multiple hidden>
+  </section>
+
+  <section class="card hidden" id="step-settings">
+    <h2><span class="step">2</span> 设置尺寸</h2>
+    <div class="controls">
+      <label class="control-wide">
+        图纸宽度：<strong><span id="widthLabel">29</span> 颗豆</strong>
+        <input type="range" id="widthRange" min="8" max="48" value="29" step="1">
+      </label>
+      <label>
+        宽度（颗豆）
+        <input type="number" id="widthNumber" min="8" max="48" value="29">
+      </label>
+      <label class="check"><input type="checkbox" id="toggleGrid" checked> 网格线</label>
+      <label class="check"><input type="checkbox" id="toggleCodes" checked> 颜色编号</label>
+    </div>
+    <p class="hint" id="sizeInfo"></p>
+    <p class="hint" id="freeNote"></p>
+  </section>
+
+  <section class="card hidden" id="step-result">
+    <h2><span class="step">3</span> 你的图纸</h2>
+    <div class="canvas-wrap"><canvas id="preview"></canvas></div>
+    <div class="actions">
+      <button id="exportBtn" class="btn btn-primary" type="button">⬇ 下载图纸（PNG）</button>
+      <button id="csvBtn" class="btn" type="button">⬇ 豆子清单（CSV）🔒 Pro</button>
+      <button id="pdfBtn" class="btn" type="button">🖨 打印 / PDF 分页图纸 🔒 Studio</button>
+    </div>
+    <h3>采购清单 — 你需要的豆子</h3>
+    <p class="hint" id="statsSummary"></p>
+    <div class="table-wrap">
+      <table id="statsTable">
+        <thead><tr><th></th><th>编号</th><th>颜色</th><th>颗数</th><th>%</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card hidden" id="batch">
+    <h2>批量转换结果</h2>
+    <div id="batchList"></div>
+  </section>
+
+  <section class="card" id="examples">
+    <h2>示例 — 本工具的真实出图</h2>
+    <p>下面每张图纸都是本生成器由旁边的图片真实生成的。
+    所见即所得：同样的颜色、同样的编号、同样的颗数。</p>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/cat-original.png" alt="原图：卡通猫脸" loading="lazy">
+          <span class="img-label">原图</span></div>
+        <div><img src="examples/cat-pattern.png" alt="由猫咪图片生成的拼豆图纸" loading="lazy">
+          <span class="img-label">图纸</span></div>
+      </div>
+      <figcaption>猫咪肖像 — 40 × 40 颗豆 · 21 种颜色 · 共 1600 颗豆</figcaption>
+      <p class="example-tip">💡 宠物肖像和人脸：请用 <strong>40 颗豆宽或更宽</strong> —
+      眼睛、胡须和毛发阴影需要更多细节才留得住。</p>
+    </figure>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/landscape-original.png" alt="原图：山景风光" loading="lazy">
+          <span class="img-label">原图</span></div>
+        <div><img src="examples/landscape-pattern.png" alt="由风景图片生成的拼豆图纸" loading="lazy">
+          <span class="img-label">图纸</span></div>
+      </div>
+      <figcaption>山景风光 — 40 × 30 颗豆 · 29 种颜色 · 共 1200 颗豆</figcaption>
+      <p class="example-tip">💡 风景细节多。大形状 — 天空、山、水面 —
+      在 40 宽时依然清楚；想要照片级风景，就用更宽的尺寸（Pro 或 Studio）。</p>
+    </figure>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/flower-original.png" alt="原图：向日葵" loading="lazy">
+          <span class="img-label">原图</span></div>
+        <div><img src="examples/flower-pattern.png" alt="由向日葵图片生成的拼豆图纸" loading="lazy">
+          <span class="img-label">图纸</span></div>
+      </div>
+      <figcaption>向日葵 — 32 × 43 颗豆 · 25 种颜色 · 共 1376 颗豆</figcaption>
+      <p class="example-tip">💡 一个醒目的主体加纯色背景是最容易成功 —
+      尺寸小一点也依然清晰。</p>
+    </figure>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/smiley-original.png" alt="原图：卡通笑脸" loading="lazy">
+          <span class="img-label">原图</span></div>
+        <div><img src="examples/smiley-pattern.png" alt="由笑脸图片生成的拼豆图纸" loading="lazy">
+          <span class="img-label">图纸</span></div>
+      </div>
+      <figcaption>笑脸 — 36 × 36 颗豆 · 30 种颜色 · 共 1296 颗豆</figcaption>
+      <p class="example-tip">💡 Logo、图标和卡通图在几乎任何尺寸下都转得干净 —
+      平涂色块和粗轮廓天生适合拼豆。</p>
+    </figure>
+  </section>
+
+  <section class="card" id="size-guide">
+    <h2>尺寸指南 — 宽度到底意味着什么</h2>
+    <p>你设的宽度就是横向的豆子颗数。标准中号豆每颗 5&nbsp;mm，
+    所以开工前就能算出成品有多大：</p>
+    <div class="table-wrap">
+      <table class="size-table">
+        <thead><tr>
+          <th>你设的宽度</th><th>成品尺寸*</th><th>约需豆子†</th>
+          <th>细节程度</th><th>适合做</th>
+        </tr></thead>
+        <tbody>
+          <tr><td><strong>20 颗豆</strong></td><td>≈ 10 cm (4″)</td><td>≈ 400</td>
+            <td>粗犷 — 只适合大形状</td><td>钥匙扣、挂件、冰箱贴</td></tr>
+          <tr><td><strong>29 颗豆</strong></td><td>≈ 14.5 cm (5.7″)</td><td>841</td>
+            <td>简单图案很清晰</td><td>正好一块标准拼豆板 — 杯垫、桌面摆件</td></tr>
+          <tr><td><strong>48 颗豆</strong></td><td>≈ 24 cm (9.4″)</td><td>≈ 2,300</td>
+            <td>不错 — 能做肖像</td><td>小型墙饰、装裱礼物 <em>（免费版上限）</em></td></tr>
+          <tr><td><strong>100 颗豆</strong></td><td>≈ 50 cm (20″)</td><td>≈ 10,000</td>
+            <td>接近照片的细节</td><td>大型墙面装饰 <em>（Pro）</em></td></tr>
+          <tr><td><strong>200 颗豆</strong></td><td>≈ 100 cm (39″)</td><td>≈ 40,000</td>
+            <td>最高细节</td><td>海报级大作品 <em>（Studio）</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">* 指横向宽度；高度按你的照片比例自动计算。
+    † 按正方形、铺满的图纸估算 — 你的精确颗数会出现在每张图纸下方的采购清单里。</p>
+    <p class="example-tip">💡 经验法则：图纸越小，照片越要醒目 — 一个大主体加强对比。
+    一张在 100 颗豆宽时很好看的复杂照片，缩到 20 宽就会糊成一团。</p>
+  </section>
+
+  <section class="card" id="guide">
+    <h2>分步指南 — 从照片到成品</h2>
+    <p>第一次玩拼豆？跟着这五步走，不会出错。</p>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">1</span> 选一张好照片</h3>
+        <p>选一张 <strong>主体清晰、背景干净、对比强烈</strong> 的图片。
+        人脸、宠物、Logo 和卡通图效果最好。细节太多太碎的画面缩到豆子大小就会糊在一起 —
+        照片太杂的话，先紧紧裁到主体周围。</p>
+      </div>
+      <img src="examples/guide-photo-good-vs-busy.png" loading="lazy"
+           alt="对比：一张简单的猫咪肖像标为好，一张杂乱的图标为不好">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">2</span> 设置宽度</h3>
+        <p>宽度就是成品横向有多少颗豆；高度按照片自动计算。豆子越多细节越多，
+        但豆子、时间和成本也越多。参考：<strong>钥匙扣 20–30 颗豆宽；杯垫正好一块板 29；
+        桌面摆件 40–60；墙面作品 80 以上</strong>。成品尺寸见上方尺寸指南。</p>
+      </div>
+      <img src="examples/guide-widths.png" loading="lazy"
+           alt="同一张笑脸图分别以 16、29、48 颗豆宽转换，细节逐渐增加">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">3</span> 看懂图纸</h3>
+        <p><strong>每个方格就是一颗豆。</strong> 每格里印的编号
+        （比如 <strong>P01</strong>）就是那颗豆的颜色编号 — 和采购清单里的一致。
+        <strong>每 5 颗豆一条的粗线</strong> 让你可以 5 个 5 个地数，不用一颗颗数。
+        网格线和编号可以在图纸上方开关。</p>
+      </div>
+      <img src="examples/guide-read-chart.png" loading="lazy"
+           alt="放大的拼豆图纸，带标注：一格等于一颗豆、每格有颜色编号、每五颗豆一条粗线">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">4</span> 照清单买豆子</h3>
+        <p>图纸下方就是采购清单：每种颜色的编号、名称和 <strong>精确颗数</strong>，
+        总颗数，以及需要几块标准 29 × 29 拼豆板。每种颜色多买约 <strong>10%</strong> —
+        总有几颗豆会滚跑。</p>
+      </div>
+      <img src="examples/guide-shopping-list.png" loading="lazy"
+           alt="猫咪图纸的采购清单示例：主要颜色与颗数、共 1600 颗豆、4 块拼豆板">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">5</span> 下载、打印、开拼</h3>
+        <p>把图纸下载为 PNG，看着屏幕拼，或者打印出来拼。
+        打印时选 <strong>100% /「实际大小」</strong> —「适合页面」会把网格缩小，
+        和拼豆板对不上。Studio 版的 PDF 分页图纸会把大图纸按一块板一页拆开，
+        每页带行列编号。</p>
+      </div>
+      <img src="examples/guide-print.png" loading="lazy"
+           alt="打印示意图：按 100% 实际大小打印，不要适合页面">
+    </div>
+
+    <div class="finish-note">
+      <h3>🏁 最后一步：熨烫定型</h3>
+      <p>豆子全部摆好后，盖上烘焙纸（熨烫纸），熨斗开中温慢慢打圈熨，
+      直到豆子顶部熔合在一起。放平冷却 — 上面压一本厚书防止卷边。
+      整个手艺就这么多：摆、熨、凉、完成。</p>
+    </div>
+  </section>
+
+  <section class="card" id="features">
+    <h2>功能介绍</h2>
+    <p>拼豆图纸生成器把任何图片转成可以直接开拼的拼豆图纸 —
+    就是你在拼豆板上照着拼的那种图，几秒生成。</p>
+    <ul class="feature-list">
+      <li><strong>照片 → 图纸，全自动。</strong> 上传图片，每个像素都会匹配到最接近的豆子颜色 — 不用手动一个像素一个像素抠。</li>
+      <li><strong>真实的 64 色豆子色卡。</strong> 颜色来自标准 Perler / Hama 色卡，每种带编号和名称（如 H05 红），按感知（Lab）距离匹配，结果看着对，而不只是数字接近。</li>
+      <li><strong>豆子采购清单。</strong> 每种颜色都有精确颗数 — 每个编号需要多少颗 — 外加总颗数。</li>
+      <li><strong>拼豆板估算。</strong> 工具会告诉你成品需要几块标准 29×29 拼豆板。</li>
+      <li><strong>可下载的图纸。</strong> 把成品图纸导出为 PNG，带网格线、每格印颜色编号，照着就能拼。</li>
+      <li><strong>100% 隐私。</strong> 全部在浏览器本地运行。你的照片从不上传到服务器。</li>
+      <li><strong>三个版本。</strong> 免费版支持最宽 48 颗豆的图纸、基础色卡和带水印导出。Pro 和 Studio 提高宽度上限，解锁完整色卡、CSV 豆子清单、可打印的 PDF 分页图纸和批量模式 — 每版具体包含什么见下方价格区。</li>
+    </ul>
+  </section>
+
+  <section class="card" id="how">
+    <h2>使用方法</h2>
+    <ol class="how-steps">
+      <li><span class="step">1</span><div><strong>选一张照片</strong><br>
+        放入任何 PNG、JPG 或 WebP。简单、高对比度的图片效果最好。</div></li>
+      <li><span class="step">2</span><div><strong>设置宽度</strong><br>
+        选成品要多少颗豆宽 — 高度自动跟着算。</div></li>
+      <li><span class="step">3</span><div><strong>拿到图纸</strong><br>
+        看带颜色编号的图纸，核对每种颜色的颗数，下载 PNG。</div></li>
+    </ol>
+  </section>
+
+  <section class="card" id="pricing">
+    <h2>价格</h2>
+    <p>免费开始。需要更大的图纸、完整色卡，
+    或者能打印照着拼的文件时，再升级。</p>
+    <div class="pricing-grid">
+      <div class="price-card" data-tier="free">
+        <h3>免费版</h3>
+        <p class="price">$0</p>
+        <ul>
+          <li>图纸最宽 <strong>48 颗豆</strong></li>
+          <li>基础 <strong>64 色</strong>色卡（Perler / Hama 编号）</li>
+          <li>页面图纸内查看每色颗数</li>
+          <li>PNG 导出带小水印</li>
+          <li>无需账号，永久可用</li>
+        </ul>
+        <a href="#" class="btn plan-btn">当前版本</a>
+      </div>
+      <div class="price-card popular" data-tier="pro">
+        <span class="badge">最受欢迎</span>
+        <h3>Pro</h3>
+        <p class="price">$4.99<span class="per">/month</span></p>
+        <ul>
+          <li>图纸最宽 <strong>120 颗豆</strong></li>
+          <li><strong>完整 100 色色卡</strong>（Perler + Hama + Artkal）</li>
+          <li><strong>无水印</strong>、高清 PNG 导出</li>
+          <li>豆子清单可 <strong>下载 CSV</strong> — 可打印的采购清单</li>
+          <li>包含免费版全部功能</li>
+        </ul>
+        <a href="https://dreamforgestudioshop.gumroad.com/l/bead-pattern-maker-pro" target="_blank" rel="noopener" class="btn plan-btn btn-primary">升级到 Pro</a>
+      </div>
+      <div class="price-card" data-tier="studio">
+        <h3>Studio</h3>
+        <p class="price">$9.99<span class="per">/month</span></p>
+        <ul>
+          <li>图纸最宽 <strong>200 颗豆</strong></li>
+          <li><strong>PDF 分页图纸</strong> — 按拼豆板分页，带行列坐标，方便打印</li>
+          <li><strong>批量转换</strong> — 一次转换多张照片</li>
+          <li>你创作的图纸带 <strong>商用授权</strong></li>
+          <li>包含 Pro 全部功能</li>
+        </ul>
+        <a href="https://dreamforgestudioshop.gumroad.com/l/bead-pattern-maker-studio" target="_blank" rel="noopener" class="btn plan-btn btn-primary">升级到 Studio</a>
+      </div>
+    </div>
+    <div class="license-row">
+      <label for="licenseInput"><strong>已经有授权密钥了？</strong></label>
+      <div class="license-controls">
+        <input type="text" id="licenseInput" placeholder="BPM-PRO-XXXX-XXXX" autocomplete="off" spellcheck="false">
+        <button id="licenseApply" class="btn" type="button">激活</button>
+        <button id="licenseReset" class="btn btn-ghost" type="button">切回免费版</button>
+      </div>
+      <p class="hint" id="licenseStatus">密钥只保存在本设备上，输入后立即开通对应版本。</p>
+    </div>
+  </section>
+
+  <section class="card" id="faq">
+    <h2>常见问题</h2>
+
+    <details class="faq-item">
+      <summary>我需要多少颗豆子和几块拼豆板？</summary>
+      <p>图纸下方的采购清单会精确数出每种颜色的颗数，外加总颗数和需要几块标准
+      29 × 29 拼豆板。比如上面的猫咪图纸需要 1600 颗豆、21 种颜色、4 块板。
+      小提示：每种颜色多买约 10% — 总有几颗豆会滚跑。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>我的照片会上传到服务器吗？</summary>
+      <p>不会。全部在浏览器本地运行 — 照片不离开你的设备，什么都不存，也没有账号。
+      关掉标签页就什么都没了。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>免费版、Pro 和 Studio 有什么区别？</summary>
+      <p>免费版：图纸最宽 48 颗豆，基础 64 色色卡，PNG 导出带小水印。
+      Pro（$4.99/月）：最宽 120，完整 100 色色卡，无水印导出，可下载 CSV 豆子清单。
+      Studio（$9.99/月）：最宽 200，可打印的 PDF 分页图纸，批量转换，商用授权。
+      完整对比见上方价格区。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>为什么我下载的 PNG 有水印？</summary>
+      <p>免费版导出图底部有一条小的「Made with Bead Pattern Maker」字样，
+      方便别人找到这个工具。Pro 和 Studio 的导出完全干净。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>打印出来的网格和拼豆板对不上，怎么回事？</summary>
+      <p>是打印机把页面缩放了。按 <strong>100% /「实际大小」</strong> 重新打印，
+      关掉「适合页面」 — 打印出的一格必须等于一颗豆。或者直接看着屏幕拼，
+      或用 Studio 的 PDF 分页图纸：一页正好一块板，带行列编号。</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>手机上能用吗？</summary>
+      <p>能 — 任何现代手机浏览器都能用，还可以像 App 一样安装
+      （找「添加到主屏幕」）；装好后离线也能用。照片留在你的手机上，和电脑上一样。</p>
+    </details>
+  </section>
+</main>
+
+<footer>
+  <nav class="footer-nav" aria-label="Page sections">
+    <a href="#examples">示例</a> · <a href="#size-guide">尺寸指南</a> ·
+    <a href="#guide">指南</a> · <a href="#pricing">价格</a> · <a href="#faq">常见问题</a>
+  </nav>
+  <p>免费版：图纸最宽 48 颗豆，导出带小水印。
+  颜色按感知（Lab）距离匹配到标准 Perler / Hama 色卡（免费版 64 色，付费版 100 色）。
+  与 Perler®、Hama® 无隶属关系。</p>
+  <nav class="footer-nav" aria-label="Legal and support">
+    <a href="studio-zh.html">Dreamforge Studio — 全部服务</a> ·
+    <a href="privacy.html">隐私政策</a> · <a href="terms.html">服务条款</a> ·
+    <a href="#pricing">价格</a> ·
+    <a href="mailto:a13259605261@163.com">Support: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+  </nav>
+  <p>© 2026 Bead Pattern Maker · Dreamforge Studio</p>
+</footer>
+
+<div id="upgradeModal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <p id="upgradeText"></p>
+    <div class="modal-actions">
+      <a href="#pricing" class="btn btn-primary" id="upgradeGo">查看价格</a>
+      <button id="upgradeClose" class="btn" type="button">关闭</button>
+    </div>
+    <p class="hint">在 Gumroad 订阅后，授权密钥会发到你的邮箱 — 把密钥填到价格区，就能在这台设备上立即开通。</p>
+  </div>
+</div>
+
+<div id="printArea"></div>
+
+<script src="palette.js"></script>
+<script src="core.js"></script>
+<script src="app-zh.js"></script>
+<script>
+/* Hero before/after compare slider (photo vs pattern). */
+(function () {
+  var range = document.getElementById('cmpRange');
+  var top = document.getElementById('cmpTop');
+  var handle = document.getElementById('cmpHandle');
+  if (!range || !top || !handle) return;
+  function apply() {
+    var v = Number(range.value);
+    top.style.clipPath = 'inset(0 ' + (100 - v) + '% 0 0)';
+    handle.style.left = v + '%';
+  }
+  range.addEventListener('input', apply);
+  apply();
+})();
+</script>
+</body>
+</html>

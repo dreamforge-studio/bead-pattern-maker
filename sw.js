@@ -1,13 +1,25 @@
 /* Bead Pattern Maker — service worker: cache the app shell for offline use. */
-var CACHE = 'bead-pattern-maker-v11';
+var CACHE = 'bead-pattern-maker-v13';
 var ASSETS = [
   './',
   './index.html',
+  './index-zh.html',
+  './index-ja.html',
+  './index-ko.html',
+  './index-fr.html',
   './studio.html',
+  './studio-zh.html',
+  './studio-ja.html',
+  './studio-ko.html',
+  './studio-fr.html',
   './styles.css',
   './palette.js',
   './core.js',
   './app.js',
+  './app-zh.js',
+  './app-ja.js',
+  './app-ko.js',
+  './app-fr.js',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',

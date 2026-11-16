@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dreamforge Studio — AI 媒体与工具工作室</title>
+<meta name="description" content="Dreamforge Studio 是一家 AI 媒体与工具工作室：AI 短视频与产品广告、竖屏短剧、企业宣传片、产品图、Logo 与礼品卡设计，以及浏览器端的创作者工具。">
+<link rel="canonical" href="https://dreamforge-studio.github.io/bead-pattern-maker/studio-zh.html">
+<meta name="theme-color" content="#14663c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* --- studio page --- */
+  .hero { padding: 34px 6px 8px; text-align: center; }
+  .eyebrow {
+    margin: 0 0 10px; font-size: .78rem; font-weight: 700;
+    letter-spacing: .22em; text-transform: uppercase; color: var(--green);
+  }
+  .hero h2 {
+    margin: 0 auto 12px; max-width: 640px;
+    font-size: 2rem; line-height: 1.2; font-weight: 700; color: var(--ink);
+  }
+  .hero .lead {
+    margin: 0 auto 22px; max-width: 600px;
+    color: var(--muted); font-size: 1.02rem; line-height: 1.6;
+  }
+  .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-outline {
+    background: #fff; color: var(--green-dark); border: 1px solid var(--green);
+    transition: background .15s ease, color .15s ease;
+  }
+  .btn-outline:hover { background: #eef6f1; border-color: var(--green); }
+  .section-head { margin: 38px 0 16px; padding: 0 6px; }
+  .section-head .eyebrow { margin-bottom: 6px; }
+  .section-head h2 { margin: 0; font-size: 1.45rem; line-height: 1.25; }
+  .section-head p { margin: 6px 0 0; color: var(--muted); font-size: .95rem; max-width: 620px; line-height: 1.55; }
+
+  /* services grid */
+  .svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .svc {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 20px; display: flex; flex-direction: column;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .svc:hover {
+    transform: translateY(-3px); border-color: #bcd8c6;
+    box-shadow: 0 10px 24px rgba(20, 102, 60, .10);
+  }
+  .svc .icon {
+    width: 42px; height: 42px; border-radius: 12px; margin-bottom: 14px;
+    background: #eef6f1; color: var(--green);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .svc .icon svg { width: 22px; height: 22px; }
+  .svc h3 { margin: 0 0 8px; font-size: 1.05rem; line-height: 1.35; }
+  .svc p { margin: 0 0 14px; font-size: .94rem; line-height: 1.6; color: #3c4145; flex: 1; }
+  .svc .foot {
+    border-top: 1px solid var(--line); padding-top: 12px;
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .svc .price { color: var(--green-dark); font-weight: 700; font-size: .98rem; }
+  .svc .delivery { color: var(--muted); font-size: .86rem; line-height: 1.5; }
+  .svc a.tool-link { color: var(--green); font-weight: 600; text-decoration: none; }
+  .svc a.tool-link:hover { text-decoration: underline; }
+
+  /* portfolio */
+  .work-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .work {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .work:hover {
+    transform: translateY(-3px); border-color: #bcd8c6;
+    box-shadow: 0 10px 24px rgba(20, 102, 60, .10);
+  }
+  .work .thumb { background: #f0f3f0; display: block; }
+  .work .thumb img { width: 100%; height: 210px; object-fit: contain; display: block; }
+  .work .thumb.cover img { object-fit: cover; }
+  .work .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .work h3 { margin: 0; font-size: 1rem; line-height: 1.4; }
+  .work p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.55; flex: 1; }
+  .tag {
+    align-self: flex-start; font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--green-dark);
+    background: #eef6f1; border-radius: 999px; padding: 3px 10px;
+  }
+  .work.video .thumb {
+    height: 120px; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #17573a, #0e4d2c); color: #fff; text-decoration: none;
+  }
+  .work.video .thumb .play {
+    width: 52px; height: 52px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,.85);
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: transform .18s ease, background .18s ease;
+  }
+  .work.video:hover .thumb .play { transform: scale(1.08); background: rgba(255,255,255,.14); }
+  .work.video .thumb svg { width: 20px; height: 20px; margin-left: 3px; }
+  .work a.card-link { color: var(--green); font-weight: 600; font-size: .9rem; text-decoration: none; }
+  .work a.card-link:hover { text-decoration: underline; }
+  .fineprint { margin: 12px 6px 0; color: var(--muted); font-size: .84rem; line-height: 1.55; }
+
+  /* contact */
+  .contact-card { padding: 24px; }
+  .contact-card h2 { margin: 0 0 8px; font-size: 1.3rem; }
+  .contact-card > p { margin: 0 0 18px; color: var(--muted); line-height: 1.6; max-width: 560px; }
+  .contact-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .contact-row {
+    display: flex; gap: 12px; align-items: center;
+    border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+    text-decoration: none; color: var(--ink);
+    transition: border-color .15s ease, background .15s ease, transform .15s ease;
+  }
+  .contact-row:hover { border-color: #bcd8c6; background: #f4f9f5; transform: translateY(-2px); }
+  .contact-row .icon {
+    width: 38px; height: 38px; border-radius: 10px; flex: none;
+    background: #eef6f1; color: var(--green);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .contact-row .icon svg { width: 20px; height: 20px; }
+  .contact-row .label { display: block; font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .contact-row .value { display: block; font-weight: 600; font-size: .94rem; color: var(--green-dark); word-break: break-all; }
+
+  footer p a { color: var(--green); text-decoration: none; }
+  footer p a:hover { text-decoration: underline; }
+
+  @media (max-width: 680px) {
+    .hero { padding-top: 24px; }
+    .hero h2 { font-size: 1.55rem; }
+    .svc-grid, .work-grid, .contact-rows { grid-template-columns: 1fr; }
+    .work .thumb img { height: 190px; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="icons/icon-192.png" alt="" width="40" height="40">
+    <div>
+      <h1>Dreamforge Studio</h1>
+      <p>AI 媒体与工具工作室</p>
+    </div>
+  </div>
+  <p class="privacy">AI 视频 · 设计 · 工具 — 数字交付，服务全球</p>
+  <nav class="lang-switch" aria-label="Language">
+    <a href="studio.html" hreflang="en">EN</a><span class="sep">|</span><a href="studio-zh.html" class="active" hreflang="zh-CN">中文</a><span class="sep">|</span><a href="studio-ja.html" hreflang="ja">日本語</a><span class="sep">|</span><a href="studio-ko.html" hreflang="ko">한국어</a><span class="sep">|</span><a href="studio-fr.html" hreflang="fr">Français</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow">Dreamforge Studio</p>
+    <h2>AI 媒体与工具，按需定制</h2>
+    <p class="lead">我们制作短视频、竖屏短剧、企业宣传片、产品图与品牌设计，
+    也开发人人可用的浏览器小工具。每个项目在开工前都先通过邮件给出固定报价。</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#services">查看服务</a>
+      <a class="btn btn-outline" href="#work">看精选作品</a>
+    </div>
+  </section>
+
+  <div class="section-head" id="services">
+    <p class="eyebrow">服务</p>
+    <h2>我们做什么</h2>
+    <p>八条业务线，一个工作室。价格为起步价 — 最终报价取决于工作量，
+    都会先以书面形式确认。</p>
+  </div>
+
+  <section class="svc-grid">
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor" stroke="none"/></svg></span>
+      <h3>AI 短视频与产品广告</h3>
+      <p>为产品、应用和社媒推广打造的竖屏与横屏短视频，让人忍不住停下来看。</p>
+      <div class="foot">
+        <span class="price">$35 起</span>
+        <span class="delivery">可直接发布的 MP4 文件，按你的平台尺寸交付。</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M10.8 9.8v4.4L14.5 12z" fill="currentColor" stroke="none"/></svg></span>
+      <h3>AI 短剧 / 竖屏连续剧</h3>
+      <p>有剧本的竖屏短剧：人物形象统一、带配音和字幕，按系列连续制作。</p>
+      <div class="foot">
+        <span class="price">$120 起 / 集</span>
+        <span class="delivery">带字幕的 MP4 成片，逐集交付。</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9.5 21v-5h5v5"/></svg></span>
+      <h3>企业宣传片与品牌视频</h3>
+      <p>企业形象片、品牌故事与宣传片，采用电影化结构 — 开场、故事、品牌卡收尾。</p>
+      <div class="foot">
+        <span class="price">$250 起</span>
+        <span class="delivery">16:9 成片母版；可按需另出竖屏版。</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M4.5 18.5 10 13l3.5 3.5L17 13l2.5 2.5"/></svg></span>
+      <h3>AI 产品图与电商套图</h3>
+      <p>产品图、场景图，以及网店上架用的整套商品图。</p>
+      <div class="foot">
+        <span class="price">$25 起</span>
+        <span class="delivery">高清图片，按你的电商平台尺寸交付。</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7a4.6 4.6 0 0 0-6.5-6.5L5 13v6z"/><path d="M14.5 6.5l3 3"/><path d="M5 19l-1.5 1.5"/></svg></span>
+      <h3>Logo 与品牌视觉设计</h3>
+      <p>三个方向出 Logo 概念稿，与你一起打磨，最终交付干净的矢量成品。</p>
+      <div class="foot">
+        <span class="price">$45 起</span>
+        <span class="delivery">SVG/PDF 矢量文件加 PNG 导出；含 2 轮修改。</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19"/><path d="M6 15h4"/></svg></span>
+      <h3>礼品卡与二维码卡设计</h3>
+      <p>为店铺、咖啡馆和活动做的可直接印刷的礼品卡与二维码卡。二维码由你自己的链接生成，交付前实测可扫。</p>
+      <div class="foot">
+        <span class="price">$35 起</span>
+        <span class="delivery">带出血的印刷 PDF（CMYK）加屏幕版；含 2 轮修改。</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/></svg></span>
+      <h3>AI 工具 — 拼豆图纸生成器</h3>
+      <p>我们的浏览器工具能把任何照片变成 Perler / Hama 拼豆图纸，附每种颜色的豆子采购清单。100% 在浏览器里运行 — 照片不离开你的设备。</p>
+      <div class="foot">
+        <span class="price">免费 · Pro $4.99/月 · Studio $9.99/月</span>
+        <span class="delivery"><a class="tool-link" href="index-zh.html">打开拼豆图纸生成器 →</a></span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>
+      <h3>创作者技能包</h3>
+      <p>给创作者的可下载工作流包 — 视频切片、动画、字幕与音频质检、发布清单 — 在 WorkBuddy 技能市场以 Dreamforge Studio 名义出售。</p>
+      <div class="foot">
+        <span class="price">数字下载</span>
+        <span class="delivery">通过 WorkBuddy 市场出售；发邮件索取当前目录。</span>
+      </div>
+    </article>
+  </section>
+
+  <div class="section-head" id="work">
+    <p class="eyebrow">作品集</p>
+    <h2>精选作品</h2>
+    <p>几件代表作。完整的视频作品集在我们的 Contra 主页。</p>
+  </div>
+
+  <section class="work-grid">
+    <article class="work video">
+      <a class="thumb" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener" aria-label="在 Contra 观看">
+        <span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+      </a>
+      <div class="body">
+        <span class="tag">竖屏短剧 · 英文</span>
+        <h3>《末班车》— 竖屏短剧（英文版）</h3>
+        <p>英文竖屏短剧样片：有剧本的剧集，AI 表演、英文配音、内嵌字幕。</p>
+        <a class="card-link" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener">在 Contra 查看 →</a>
+      </div>
+    </article>
+
+    <article class="work video">
+      <a class="thumb" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener" aria-label="在 Contra 观看">
+        <span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+      </a>
+      <div class="body">
+        <span class="tag">剧本样稿 · 英文</span>
+        <h3>英文短剧 — 剧本样稿</h3>
+        <p>为海外平台写的原创英文短剧剧本样稿，每集带钩子，对白按竖屏观看习惯写。</p>
+        <a class="card-link" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener">在 Contra 查看 →</a>
+      </div>
+    </article>
+
+    <article class="work video">
+      <a class="thumb" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener" aria-label="在 Contra 观看">
+        <span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+      </a>
+      <div class="body">
+        <span class="tag">企业宣传片</span>
+        <h3>星澜集团 — 企业品牌片</h3>
+        <p>两分钟 16:9 企业形象片：航拍式开场、中间讲品牌故事、品牌卡收尾 — 我们的企业片代表作。</p>
+        <a class="card-link" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener">在 Contra 查看 →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb cover"><img src="assets/bead-before-after.jpg" alt="一张风景照片被拼豆图纸生成器转成拼豆图纸" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">AI 工具</span>
+        <h3>拼豆图纸生成器 — 照片变图纸</h3>
+        <p>左：原图。右：工具生成的拼豆图纸，附每种颜色的采购清单。</p>
+        <a class="card-link" href="index-zh.html">试试这个工具 →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb"><img src="assets/logo-novapulse.jpg" alt="NOVAPULSE 科技 Logo 设计展示板" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">Logo 设计</span>
+        <h3>NOVAPULSE — 科技品牌 Logo</h3>
+        <p>为科技品牌做的六边形加脉冲线标志，在浅色与深色背景上展示，附配色方案。</p>
+        <a class="card-link" href="#contact">订购 Logo →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb"><img src="assets/logo-shanwai.jpg" alt="山外山中式茶品牌 Logo 设计展示板" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">Logo 设计</span>
+        <h3>山外山 — 中式茶品牌 Logo</h3>
+        <p>层叠山峦配一片茶叶，书法字体，墨绿配金色。</p>
+        <a class="card-link" href="#contact">订购 Logo →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb"><img src="assets/logo-maixiang.jpg" alt="麦香日记烘焙 Logo 设计展示板" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">Logo 设计</span>
+        <h3>麦香日记 — 烘焙品牌 Logo</h3>
+        <p>圆形徽章：麦穗环绕面包，陶土红配麦穗金 — 温暖、上架好看的烘焙品牌形象。</p>
+        <a class="card-link" href="#contact">订购 Logo →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb"><img src="assets/giftcard-sunbeam.jpg" alt="日光咖啡礼品卡设计，正反面" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">礼品卡设计</span>
+        <h3>日光咖啡 — 礼品卡</h3>
+        <p>可直接印刷的礼品卡正反面，带实测可扫的二维码，按印刷规格制作（85 × 55 mm、300 dpi、带出血）。</p>
+        <a class="card-link" href="#contact">订购礼品卡 →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb"><img src="assets/giftcard-leafpage.jpg" alt="拾页书店礼品卡设计，正反面" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">礼品卡设计</span>
+        <h3>拾页书店 — 礼品卡</h3>
+        <p>为独立书店做的安静书卷气礼品卡，正反面，带二维码和印刷文件。</p>
+        <a class="card-link" href="#contact">订购礼品卡 →</a>
+      </div>
+    </article>
+  </section>
+  <p class="fineprint">以上设计作品是工作室的演示样板，用于展示风格与制作水准。
+  视频样片托管在 Contra，可在那里看完整作品。</p>
+
+  <div class="section-head" id="contact">
+    <p class="eyebrow">联系</p>
+    <h2>下单与联系</h2>
+  </div>
+
+  <section class="card contact-card">
+    <h2>先发一封邮件</h2>
+    <p>告诉我们你需要什么 — 形式、时长、截止时间 — 我们会先回复工作范围、
+    固定报价和交付日期，你再决定付不付款。</p>
+    <div class="contact-rows">
+      <a class="contact-row" href="mailto:a13259605261@163.com">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg></span>
+        <span><span class="label">支持与下单</span><span class="value">a13259605261@163.com</span></span>
+      </a>
+      <a class="contact-row" href="mailto:sirlin367@gmail.com">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg></span>
+        <span><span class="label">备用邮箱</span><span class="value">sirlin367@gmail.com</span></span>
+      </a>
+      <a class="contact-row" href="https://dreamforgestudioshop.gumroad.com/" target="_blank" rel="noopener">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16l-1.3 11a2 2 0 0 1-2 1.8H7.3a2 2 0 0 1-2-1.8z"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/></svg></span>
+        <span><span class="label">Gumroad 商店</span><span class="value">dreamforgestudioshop.gumroad.com</span></span>
+      </a>
+      <a class="contact-row" href="https://dreamforge-lab.itch.io/" target="_blank" rel="noopener">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m7.5 9.5 4.5 4.5 4.5-4.5"/><path d="M4 19.5h16"/></svg></span>
+        <span><span class="label">itch.io 下载</span><span class="value">dreamforge-lab.itch.io</span></span>
+      </a>
+      <a class="contact-row" href="https://t.me/DreamforgeBeadBot" target="_blank" rel="noopener">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3.5 3 10.8l6.5 2.7L12 20l3.2-4.3 4.3 3z"/><path d="M9.5 13.5 21 3.5"/></svg></span>
+        <span><span class="label">Telegram 店铺机器人</span><span class="value">t.me/DreamforgeBeadBot</span></span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <nav class="footer-nav" aria-label="Site links">
+    <a href="index-zh.html">Bead Pattern Maker</a> · <a href="studio-zh.html">全部服务</a> ·
+    <a href="privacy.html">隐私政策</a> · <a href="terms.html">服务条款</a> ·
+    <a href="index-zh.html#pricing">价格</a> ·
+    <a href="mailto:a13259605261@163.com">Support: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+  </nav>
+  <p>商务咨询邮箱：<a href="mailto:a13259605261@163.com">a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a></p>
+  <p>© 2026 Dreamforge Studio</p>
+</footer>
+
+</body>
+</html>

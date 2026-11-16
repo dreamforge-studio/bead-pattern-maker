@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dreamforge Studio — AI 미디어 & 도구 스튜디오</title>
+<meta name="description" content="Dreamforge Studio는 AI 미디어 & 도구 스튜디오입니다: AI 숏폼 영상과 제품 광고, 세로형 숏드라마, 기업 홍보 영화, 제품 이미지, 로고와 기프트 카드 디자인, 브라우저 기반 크리에이터 도구.">
+<link rel="canonical" href="https://dreamforge-studio.github.io/bead-pattern-maker/studio-ko.html">
+<meta name="theme-color" content="#14663c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* --- studio page --- */
+  .hero { padding: 34px 6px 8px; text-align: center; }
+  .eyebrow {
+    margin: 0 0 10px; font-size: .78rem; font-weight: 700;
+    letter-spacing: .22em; text-transform: uppercase; color: var(--green);
+  }
+  .hero h2 {
+    margin: 0 auto 12px; max-width: 640px;
+    font-size: 2rem; line-height: 1.2; font-weight: 700; color: var(--ink);
+  }
+  .hero .lead {
+    margin: 0 auto 22px; max-width: 600px;
+    color: var(--muted); font-size: 1.02rem; line-height: 1.6;
+  }
+  .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-outline {
+    background: #fff; color: var(--green-dark); border: 1px solid var(--green);
+    transition: background .15s ease, color .15s ease;
+  }
+  .btn-outline:hover { background: #eef6f1; border-color: var(--green); }
+  .section-head { margin: 38px 0 16px; padding: 0 6px; }
+  .section-head .eyebrow { margin-bottom: 6px; }
+  .section-head h2 { margin: 0; font-size: 1.45rem; line-height: 1.25; }
+  .section-head p { margin: 6px 0 0; color: var(--muted); font-size: .95rem; max-width: 620px; line-height: 1.55; }
+
+  /* services grid */
+  .svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .svc {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 20px; display: flex; flex-direction: column;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .svc:hover {
+    transform: translateY(-3px); border-color: #bcd8c6;
+    box-shadow: 0 10px 24px rgba(20, 102, 60, .10);
+  }
+  .svc .icon {
+    width: 42px; height: 42px; border-radius: 12px; margin-bottom: 14px;
+    background: #eef6f1; color: var(--green);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .svc .icon svg { width: 22px; height: 22px; }
+  .svc h3 { margin: 0 0 8px; font-size: 1.05rem; line-height: 1.35; }
+  .svc p { margin: 0 0 14px; font-size: .94rem; line-height: 1.6; color: #3c4145; flex: 1; }
+  .svc .foot {
+    border-top: 1px solid var(--line); padding-top: 12px;
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .svc .price { color: var(--green-dark); font-weight: 700; font-size: .98rem; }
+  .svc .delivery { color: var(--muted); font-size: .86rem; line-height: 1.5; }
+  .svc a.tool-link { color: var(--green); font-weight: 600; text-decoration: none; }
+  .svc a.tool-link:hover { text-decoration: underline; }
+
+  /* portfolio */
+  .work-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .work {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .work:hover {
+    transform: translateY(-3px); border-color: #bcd8c6;
+    box-shadow: 0 10px 24px rgba(20, 102, 60, .10);
+  }
+  .work .thumb { background: #f0f3f0; display: block; }
+  .work .thumb img { width: 100%; height: 210px; object-fit: contain; display: block; }
+  .work .thumb.cover img { object-fit: cover; }
+  .work .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .work h3 { margin: 0; font-size: 1rem; line-height: 1.4; }
+  .work p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.55; flex: 1; }
+  .tag {
+    align-self: flex-start; font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--green-dark);
+    background: #eef6f1; border-radius: 999px; padding: 3px 10px;
+  }
+  .work.video .thumb {
+    height: 120px; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #17573a, #0e4d2c); color: #fff; text-decoration: none;
+  }
+  .work.video .thumb .play {
+    width: 52px; height: 52px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,.85);
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: transform .18s ease, background .18s ease;
+  }
+  .work.video:hover .thumb .play { transform: scale(1.08); background: rgba(255,255,255,.14); }
+  .work.video .thumb svg { width: 20px; height: 20px; margin-left: 3px; }
+  .work a.card-link { color: var(--green); font-weight: 600; font-size: .9rem; text-decoration: none; }
+  .work a.card-link:hover { text-decoration: underline; }
+  .fineprint { margin: 12px 6px 0; color: var(--muted); font-size: .84rem; line-height: 1.55; }
+
+  /* contact */
+  .contact-card { padding: 24px; }
+  .contact-card h2 { margin: 0 0 8px; font-size: 1.3rem; }
+  .contact-card > p { margin: 0 0 18px; color: var(--muted); line-height: 1.6; max-width: 560px; }
+  .contact-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .contact-row {
+    display: flex; gap: 12px; align-items: center;
+    border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+    text-decoration: none; color: var(--ink);
+    transition: border-color .15s ease, background .15s ease, transform .15s ease;
+  }
+  .contact-row:hover { border-color: #bcd8c6; background: #f4f9f5; transform: translateY(-2px); }
+  .contact-row .icon {
+    width: 38px; height: 38px; border-radius: 10px; flex: none;
+    background: #eef6f1; color: var(--green);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .contact-row .icon svg { width: 20px; height: 20px; }
+  .contact-row .label { display: block; font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .contact-row .value { display: block; font-weight: 600; font-size: .94rem; color: var(--green-dark); word-break: break-all; }
+
+  footer p a { color: var(--green); text-decoration: none; }
+  footer p a:hover { text-decoration: underline; }
+
+  @media (max-width: 680px) {
+    .hero { padding-top: 24px; }
+    .hero h2 { font-size: 1.55rem; }
+    .svc-grid, .work-grid, .contact-rows { grid-template-columns: 1fr; }
+    .work .thumb img { height: 190px; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="icons/icon-192.png" alt="" width="40" height="40">
+    <div>
+      <h1>Dreamforge Studio</h1>
+      <p>AI 미디어 & 도구 스튜디오</p>
+    </div>
+  </div>
+  <p class="privacy">AI 영상 · 디자인 · 도구 — 디지털 납품, 전 세계 배송</p>
+  <nav class="lang-switch" aria-label="Language">
+    <a href="studio.html" hreflang="en">EN</a><span class="sep">|</span><a href="studio-zh.html" hreflang="zh-CN">中文</a><span class="sep">|</span><a href="studio-ja.html" hreflang="ja">日本語</a><span class="sep">|</span><a href="studio-ko.html" class="active" hreflang="ko">한국어</a><span class="sep">|</span><a href="studio-fr.html" hreflang="fr">Français</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow">Dreamforge Studio</p>
+    <h2>AI 미디어와 도구, 주문 제작으로</h2>
+    <p class="lead">숏폼 영상, 세로형 드라마, 기업 홍보 영화, 제품 이미지와 브랜드 디자인을 제작하고,
+    누구나 쓸 수 있는 작은 브라우저 도구도 만듭니다. 모든 의뢰는 작업 시작 전에
+    이메일로 고정 견적을 드리는 것부터 시작합니다.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#services">서비스 보기</a>
+      <a class="btn btn-outline" href="#work">대표 작업 보기</a>
+    </div>
+  </section>
+
+  <div class="section-head" id="services">
+    <p class="eyebrow">서비스</p>
+    <h2>하는 일</h2>
+    <p>여덟 가지 사업 분야, 하나의 스튜디오. 가격은 시작가입니다 — 최종 견적은
+    작업 범위에 따라 달라지며, 항상 먼저 서면으로 확인합니다.</p>
+  </div>
+
+  <section class="svc-grid">
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor" stroke="none"/></svg></span>
+      <h3>AI 숏폼 영상 & 제품 광고</h3>
+      <p>제품, 앱, 소셜 캠페인을 위한, 스크롤을 멈추게 하는 세로형·가로형 숏폼 영상.</p>
+      <div class="foot">
+        <span class="price">$35부터</span>
+        <span class="delivery">바로 게시할 수 있는 MP4 파일, 플랫폼에 맞는 크기로 납품.</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M10.8 9.8v4.4L14.5 12z" fill="currentColor" stroke="none"/></svg></span>
+      <h3>AI 숏드라마 / 세로형 시리즈</h3>
+      <p>인물 외형이 일관된 대본 있는 세로형 드라마. 내레이션과 자막을 넣어 시리즈로 제작합니다.</p>
+      <div class="foot">
+        <span class="price">에피소드당 $120부터</span>
+        <span class="delivery">자막이 들어간 MP4 완성본을 에피소드별로 납품.</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9.5 21v-5h5v5"/></svg></span>
+      <h3>기업 홍보 영화 & 브랜드 영상</h3>
+      <p>영화 같은 구성 — 오프닝, 스토리, 마무리 브랜드 카드 — 의 회사 소개, 브랜드 스토리, 홍보 영화.</p>
+      <div class="foot">
+        <span class="price">$250부터</span>
+        <span class="delivery">16:9 완성 마스터 파일. 요청 시 세로형 편집본도 제공.</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M4.5 18.5 10 13l3.5 3.5L17 13l2.5 2.5"/></svg></span>
+      <h3>AI 제품 이미지 & 이커머스 세트</h3>
+      <p>온라인 스토어를 위한 제품 사진, 장면 사진, 상품 페이지 이미지 전체 세트.</p>
+      <div class="foot">
+        <span class="price">$25부터</span>
+        <span class="delivery">고해상도 이미지, 마켓플레이스에 맞는 크기로 납품.</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7a4.6 4.6 0 0 0-6.5-6.5L5 13v6z"/><path d="M14.5 6.5l3 3"/><path d="M5 19l-1.5 1.5"/></svg></span>
+      <h3>로고 & 브랜드 아이덴티티 디자인</h3>
+      <p>세 가지 방향의 로고 콘셉트를 제안하고, 함께 다듬어, 깔끔한 벡터 파일로 완성합니다.</p>
+      <div class="foot">
+        <span class="price">$45부터</span>
+        <span class="delivery">SVG/PDF 벡터 파일과 PNG 내보내기. 수정 2회 포함.</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19"/><path d="M6 15h4"/></svg></span>
+      <h3>기프트 카드 & QR 카드 디자인</h3>
+      <p>매장, 카페, 행사를 위한 인쇄용 기프트 카드와 QR 코드 카드. QR 코드는 고객 본인의 링크로 생성하고, 납품 전에 스캔 테스트를 합니다.</p>
+      <div class="foot">
+        <span class="price">$35부터</span>
+        <span class="delivery">재단 여백이 있는 인쇄용 PDF(CMYK)와 화면용 버전. 수정 2회 포함.</span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/></svg></span>
+      <h3>AI 도구 — 비즈 도안 메이커</h3>
+      <p>브라우저 도구가 어떤 사진이든 Perler / Hama 비즈 도안으로 바꾸고, 색상별 구매 목록도 만들어 줍니다. 100% 브라우저에서 실행 — 사진이 기기를 벗어나지 않습니다.</p>
+      <div class="foot">
+        <span class="price">무료 · Pro $4.99/월 · Studio $9.99/월</span>
+        <span class="delivery"><a class="tool-link" href="index-ko.html">비즈 도안 메이커 열기 →</a></span>
+      </div>
+    </article>
+
+    <article class="svc">
+      <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>
+      <h3>크리에이터 스킬 팩</h3>
+      <p>크리에이터를 위한 다운로드형 워크플로 팩 — 영상 클리핑, 애니메이션, 자막·오디오 품질 검사, 게시 체크리스트 — 을 WorkBuddy 스킬 마켓에서 Dreamforge Studio 이름으로 판매합니다.</p>
+      <div class="foot">
+        <span class="price">디지털 다운로드</span>
+        <span class="delivery">WorkBuddy 마켓에서 판매 중. 현재 카탈로그는 이메일로 문의하세요.</span>
+      </div>
+    </article>
+  </section>
+
+  <div class="section-head" id="work">
+    <p class="eyebrow">포트폴리오</p>
+    <h2>대표 작업</h2>
+    <p>대표작 몇 점. 전체 영상 포트폴리오는 Contra 페이지에 있습니다.</p>
+  </div>
+
+  <section class="work-grid">
+    <article class="work video">
+      <a class="thumb" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener" aria-label="Contra에서 보기">
+        <span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+      </a>
+      <div class="body">
+        <span class="tag">세로형 드라마 · 영어</span>
+        <h3>《The Last Train》— 세로형 드라마(영어)</h3>
+        <p>영어 세로형 숏드라마 샘플: 대본 있는 에피소드, AI 연기, 영어 내레이션, 하드코딩 자막.</p>
+        <a class="card-link" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener">Contra에서 보기 →</a>
+      </div>
+    </article>
+
+    <article class="work video">
+      <a class="thumb" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener" aria-label="Contra에서 보기">
+        <span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+      </a>
+      <div class="body">
+        <span class="tag">대본 샘플 · 영어</span>
+        <h3>영어 숏드라마 — 대본 샘플</h3>
+        <p>해외 플랫폼을 위해 쓴 오리지널 영어 숏드라마 대본 샘플. 에피소드마다 후킹과 세로 시청에 맞춘 대사.</p>
+        <a class="card-link" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener">Contra에서 보기 →</a>
+      </div>
+    </article>
+
+    <article class="work video">
+      <a class="thumb" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener" aria-label="Contra에서 보기">
+        <span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+      </a>
+      <div class="body">
+        <span class="tag">기업 홍보 영화</span>
+        <h3>싱란 그룹 — 기업 브랜드 영화</h3>
+        <p>2분 16:9 기업 이미지 영화: 항공 촬영 스타일 오프닝, 중간의 브랜드 스토리, 마무리 브랜드 카드 — 기업 영화의 기준작입니다.</p>
+        <a class="card-link" href="https://contra.com/linkai_ren_azap2se3/work" target="_blank" rel="noopener">Contra에서 보기 →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb cover"><img src="assets/bead-before-after.jpg" alt="풍경 사진이 비즈 도안 메이커로 비즈 도안으로 변환된 이미지" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">AI 도구</span>
+        <h3>비즈 도안 메이커 — 사진을 도안으로</h3>
+        <p>왼쪽: 원본 사진. 오른쪽: 도구가 생성한 비즈 도안(색상별 구매 목록 포함).</p>
+        <a class="card-link" href="index-ko.html">도구 써보기 →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb"><img src="assets/logo-novapulse.jpg" alt="NOVAPULSE 테크놀로지 로고 디자인 프레젠테이션 보드" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">로고 디자인</span>
+        <h3>NOVAPULSE — 테크놀로지 로고</h3>
+        <p>테크 브랜드를 위한 육각형과 펄스를 결합한 기하학 마크. 밝은 배경과 어두운 배경에서의 모습과 색상 팔레트를 함께 보여 줍니다.</p>
+        <a class="card-link" href="#contact">로고 주문하기 →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb"><img src="assets/logo-shanwai.jpg" alt="산와이산 중국 차 브랜드 로고 디자인 프레젠테이션 보드" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">로고 디자인</span>
+        <h3>산와이산 — 중국 차 브랜드 로고</h3>
+        <p>겹겹이 쌓인 산등성이와 찻잎, 먹빛 녹색과 금색의 서예체 레터링.</p>
+        <a class="card-link" href="#contact">로고 주문하기 →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb"><img src="assets/logo-maixiang.jpg" alt="마이샹 일기 베이커리 로고 디자인 프레젠테이션 보드" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">로고 디자인</span>
+        <h3>마이샹 일기 — 베이커리 로고</h3>
+        <p>빵을 밀 이삭이 감싼 둥근 배지, 테라코타와 밀 금색 — 따뜻하고 진열대에서 돋보이는 베이커리 브랜딩.</p>
+        <a class="card-link" href="#contact">로고 주문하기 →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb"><img src="assets/giftcard-sunbeam.jpg" alt="선빔 커피 기프트 카드 디자인, 앞면과 뒷면" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">기프트 카드 디자인</span>
+        <h3>선빔 커피 — 기프트 카드</h3>
+        <p>스캔 테스트를 마친 QR 코드가 있는 인쇄용 기프트 카드의 앞면과 뒷면. 인쇄 규격(85 × 55 mm, 300 dpi, 재단 여백 포함)으로 제작.</p>
+        <a class="card-link" href="#contact">기프트 카드 주문하기 →</a>
+      </div>
+    </article>
+
+    <article class="work">
+      <span class="thumb"><img src="assets/giftcard-leafpage.jpg" alt="리프 앤 페이지 서점 기프트 카드 디자인, 앞면과 뒷면" loading="lazy"></span>
+      <div class="body">
+        <span class="tag">기프트 카드 디자인</span>
+        <h3>리프 앤 페이지 서점 — 기프트 카드</h3>
+        <p>독립 서점을 위한 차분하고 책 분위기가 나는 기프트 카드 디자인. 앞면과 뒷면, QR 코드와 인쇄용 파일 포함.</p>
+        <a class="card-link" href="#contact">기프트 카드 주문하기 →</a>
+      </div>
+    </article>
+  </section>
+  <p class="fineprint">위 디자인 작품은 스타일과 제작 품질을 보여 주기 위한 스튜디오 데모 샘플입니다.
+  영상 샘플은 Contra에 있으며, 전체 작품을 보실 수 있습니다.</p>
+
+  <div class="section-head" id="contact">
+    <p class="eyebrow">문의</p>
+    <h2>주문 & 문의</h2>
+  </div>
+
+  <section class="card contact-card">
+    <h2>이메일로 시작하세요</h2>
+    <p>필요한 것을 알려 주세요 — 형식, 길이, 마감일 — 작업 범위, 고정 견적,
+    납품일을 결제 전에 회신해 드립니다.</p>
+    <div class="contact-rows">
+      <a class="contact-row" href="mailto:a13259605261@163.com">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg></span>
+        <span><span class="label">지원 & 주문</span><span class="value">a13259605261@163.com</span></span>
+      </a>
+      <a class="contact-row" href="mailto:sirlin367@gmail.com">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg></span>
+        <span><span class="label">예비 이메일</span><span class="value">sirlin367@gmail.com</span></span>
+      </a>
+      <a class="contact-row" href="https://dreamforgestudioshop.gumroad.com/" target="_blank" rel="noopener">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16l-1.3 11a2 2 0 0 1-2 1.8H7.3a2 2 0 0 1-2-1.8z"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/></svg></span>
+        <span><span class="label">Gumroad 스토어</span><span class="value">dreamforgestudioshop.gumroad.com</span></span>
+      </a>
+      <a class="contact-row" href="https://dreamforge-lab.itch.io/" target="_blank" rel="noopener">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m7.5 9.5 4.5 4.5 4.5-4.5"/><path d="M4 19.5h16"/></svg></span>
+        <span><span class="label">itch.io 다운로드</span><span class="value">dreamforge-lab.itch.io</span></span>
+      </a>
+      <a class="contact-row" href="https://t.me/DreamforgeBeadBot" target="_blank" rel="noopener">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3.5 3 10.8l6.5 2.7L12 20l3.2-4.3 4.3 3z"/><path d="M9.5 13.5 21 3.5"/></svg></span>
+        <span><span class="label">Telegram 상점 봇</span><span class="value">t.me/DreamforgeBeadBot</span></span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <nav class="footer-nav" aria-label="Site links">
+    <a href="index-ko.html">Bead Pattern Maker</a> · <a href="studio-ko.html">전체 서비스</a> ·
+    <a href="privacy.html">개인정보 처리방침</a> · <a href="terms.html">이용약관</a> ·
+    <a href="index-ko.html#pricing">가격</a> ·
+    <a href="mailto:a13259605261@163.com">Support: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+  </nav>
+  <p>비즈니스 문의 이메일: <a href="mailto:a13259605261@163.com">a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a></p>
+  <p>© 2026 Dreamforge Studio</p>
+</footer>
+
+</body>
+</html>

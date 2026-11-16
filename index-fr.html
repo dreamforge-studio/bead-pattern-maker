@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Générateur de motifs en perles — Motifs Perler &amp; Hama gratuits</title>
+<meta name="description" content="Transformez n’importe quelle photo en motif de perles à repasser (Perler / Hama) avec nuancier et nombre de perles. Gratuit, 100 % dans votre navigateur — votre photo ne quitte jamais votre appareil.">
+<link rel="canonical" href="https://dreamforge-studio.github.io/bead-pattern-maker/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bead Pattern Maker">
+<meta property="og:title" content="Générateur de motifs en perles — Motifs Perler &amp; Hama gratuits">
+<meta property="og:description" content="Transformez n’importe quelle photo en motif de perles à repasser (Perler / Hama) avec nuancier et nombre exact de perles. Gratuit, 100 % dans votre navigateur — votre photo ne quitte jamais votre appareil.">
+<meta property="og:url" content="https://dreamforge-studio.github.io/bead-pattern-maker/">
+<meta property="og:image" content="https://dreamforge-studio.github.io/bead-pattern-maker/examples/cat-pattern.png">
+<meta property="og:image:width" content="800">
+<meta property="og:image:height" content="800">
+<meta property="og:image:alt" content="Un portrait de chat converti en motif de perles Perler avec codes couleur">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Générateur de motifs en perles — Motifs Perler &amp; Hama gratuits">
+<meta name="twitter:description" content="Transformez n’importe quelle photo en motif de perles à repasser avec nuancier et nombre exact de perles. Gratuit, 100 % dans votre navigateur — aucun envoi, aucune inscription.">
+<meta name="twitter:image" content="https://dreamforge-studio.github.io/bead-pattern-maker/examples/cat-pattern.png">
+<meta name="twitter:image:alt" content="Un portrait de chat converti en motif de perles Perler avec codes couleur">
+<meta name="theme-color" content="#14663c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="icons/icon-192.png" alt="" width="40" height="40">
+    <div>
+      <h1>Bead Pattern Maker</h1>
+      <p>Transformez n’importe quelle photo en motif de perles Perler / Hama — gratuitement, directement dans votre navigateur.</p>
+    </div>
+  </div>
+  <p class="privacy">🔒 Votre photo ne quitte jamais votre appareil. Tout fonctionne en local.</p>
+  <nav class="lang-switch" aria-label="Language">
+    <a href="index.html" hreflang="en">EN</a><span class="sep">|</span><a href="index-zh.html" hreflang="zh-CN">中文</a><span class="sep">|</span><a href="index-ja.html" hreflang="ja">日本語</a><span class="sep">|</span><a href="index-ko.html" hreflang="ko">한국어</a><span class="sep">|</span><a href="index-fr.html" class="active" hreflang="fr">Français</a>
+  </nav>
+</header>
+
+<main>
+  <section class="card hero" id="hero">
+    <h2 class="hero-title">Votre photo, transformée en un motif de perles que vous pouvez vraiment réaliser</h2>
+    <p class="hero-sub">Faites glisser le curseur pour comparer. C’est un vrai motif créé par cet outil, pas une maquette —
+    <strong>40 × 40 perles · 21 couleurs · 1 600 perles</strong>, avec une liste d’achat exacte.</p>
+    <div class="compare" id="heroCompare">
+      <img class="cmp-base" src="examples/cat-pattern.png" alt="Motif de perles généré à partir de la photo du chat">
+      <img class="cmp-top" id="cmpTop" src="examples/cat-original.png" alt="Photo originale : visage de chat en dessin animé">
+      <span class="cmp-label cmp-label-l">Photo</span>
+      <span class="cmp-label cmp-label-r">Motif</span>
+      <div class="cmp-handle" id="cmpHandle"><span class="cmp-grip">⇔</span></div>
+      <input type="range" class="cmp-range" id="cmpRange" min="0" max="100" value="50"
+             aria-label="Faire glisser pour comparer la photo originale et le motif de perles">
+    </div>
+    <div class="bead-strip" aria-hidden="true">
+      <span style="background:#BE1E2D"></span><span style="background:#EE6A24"></span>
+      <span style="background:#F6C90E"></span><span style="background:#1E9E4A"></span>
+      <span style="background:#2456A6"></span><span style="background:#6E4B9E"></span>
+      <span style="background:#E38CA6"></span><span style="background:#7BA7D9"></span>
+      <span style="background:#8CC63E"></span><span style="background:#6E3B26"></span>
+      <span style="background:#F1E4C3"></span><span style="background:#17181A"></span>
+    </div>
+    <ul class="trust-strip">
+      <li>✓ Aucune inscription</li>
+      <li>✓ 100 % dans votre navigateur — les photos ne sont jamais envoyées</li>
+      <li>✓ Gratuit pour commencer</li>
+    </ul>
+    <p class="hero-cta"><a href="#step-upload" class="btn btn-primary">Créer mon motif ↓</a></p>
+  </section>
+
+  <section class="card" id="step-upload">
+    <h2><span class="step">1</span> Choisissez une photo</h2>
+    <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Importer une image">
+      <p class="dz-big">Déposez une image ici, ou touchez pour choisir</p>
+      <p class="dz-small">PNG, JPG ou WebP. Les images simples et contrastées donnent les meilleurs résultats.</p>
+      <input type="file" id="fileInput" accept="image/*" hidden>
+    </div>
+    <button id="sampleBtn" class="btn btn-ghost" type="button">Pas de photo sous la main ? Essayez une image d’exemple</button>
+    <button id="batchBtn" class="btn btn-ghost" type="button">🔒 Lot : convertir plusieurs photos d’un coup (Studio)</button>
+    <input type="file" id="batchInput" accept="image/*" multiple hidden>
+  </section>
+
+  <section class="card hidden" id="step-settings">
+    <h2><span class="step">2</span> Réglez la taille</h2>
+    <div class="controls">
+      <label class="control-wide">
+        Largeur du motif : <strong><span id="widthLabel">29</span> perles</strong>
+        <input type="range" id="widthRange" min="8" max="48" value="29" step="1">
+      </label>
+      <label>
+        Largeur (perles)
+        <input type="number" id="widthNumber" min="8" max="48" value="29">
+      </label>
+      <label class="check"><input type="checkbox" id="toggleGrid" checked> Lignes de grille</label>
+      <label class="check"><input type="checkbox" id="toggleCodes" checked> Codes couleur</label>
+    </div>
+    <p class="hint" id="sizeInfo"></p>
+    <p class="hint" id="freeNote"></p>
+  </section>
+
+  <section class="card hidden" id="step-result">
+    <h2><span class="step">3</span> Votre motif</h2>
+    <div class="canvas-wrap"><canvas id="preview"></canvas></div>
+    <div class="actions">
+      <button id="exportBtn" class="btn btn-primary" type="button">⬇ Télécharger le motif (PNG)</button>
+      <button id="csvBtn" class="btn" type="button">⬇ Liste de perles (CSV) 🔒 Pro</button>
+      <button id="pdfBtn" class="btn" type="button">🖨 Imprimer / planches PDF 🔒 Studio</button>
+    </div>
+    <h3>Liste d’achat — les perles qu’il vous faut</h3>
+    <p class="hint" id="statsSummary"></p>
+    <div class="table-wrap">
+      <table id="statsTable">
+        <thead><tr><th></th><th>Code</th><th>Couleur</th><th>Perles</th><th>%</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card hidden" id="batch">
+    <h2>Résultats du lot</h2>
+    <div id="batchList"></div>
+  </section>
+
+  <section class="card" id="examples">
+    <h2>Exemples — de vrais résultats de cet outil</h2>
+    <p>Chaque motif ci-dessous a été produit par ce générateur à partir de l’image à côté.
+    Ce que vous voyez est ce que vous obtenez : mêmes couleurs, mêmes codes, mêmes nombres.</p>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/cat-original.png" alt="Image originale : visage de chat en dessin animé" loading="lazy">
+          <span class="img-label">Original</span></div>
+        <div><img src="examples/cat-pattern.png" alt="Motif de perles généré à partir de l’image du chat" loading="lazy">
+          <span class="img-label">Motif</span></div>
+      </div>
+      <figcaption>Portrait de chat — 40 × 40 perles · 21 couleurs · 1 600 perles au total</figcaption>
+      <p class="example-tip">💡 Portraits d’animaux et visages : utilisez <strong>40 perles de large ou plus</strong> —
+      les yeux, les moustaches et les nuances du pelage ont besoin de ce détail en plus.</p>
+    </figure>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/landscape-original.png" alt="Image originale : paysage de montagne" loading="lazy">
+          <span class="img-label">Original</span></div>
+        <div><img src="examples/landscape-pattern.png" alt="Motif de perles généré à partir de l’image du paysage" loading="lazy">
+          <span class="img-label">Motif</span></div>
+      </div>
+      <figcaption>Paysage de montagne — 40 × 30 perles · 29 couleurs · 1 200 perles au total</figcaption>
+      <p class="example-tip">💡 Les paysages sont riches en détails. Les grandes formes — ciel, montagnes, eau —
+      restent lisibles à 40 de large ; pour un rendu photo, allez plus large (Pro ou Studio).</p>
+    </figure>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/flower-original.png" alt="Image originale : tournesol" loading="lazy">
+          <span class="img-label">Original</span></div>
+        <div><img src="examples/flower-pattern.png" alt="Motif de perles généré à partir de l’image du tournesol" loading="lazy">
+          <span class="img-label">Motif</span></div>
+      </div>
+      <figcaption>Tournesol — 32 × 43 perles · 25 couleurs · 1 376 perles au total</figcaption>
+      <p class="example-tip">💡 Un sujet bien marqué sur fond uni est la réussite la plus facile —
+      il reste net même aux petites largeurs.</p>
+    </figure>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/smiley-original.png" alt="Image originale : visage souriant en dessin animé" loading="lazy">
+          <span class="img-label">Original</span></div>
+        <div><img src="examples/smiley-pattern.png" alt="Motif de perles généré à partir de l’image du smiley" loading="lazy">
+          <span class="img-label">Motif</span></div>
+      </div>
+      <figcaption>Visage souriant — 36 × 36 perles · 30 couleurs · 1 296 perles au total</figcaption>
+      <p class="example-tip">💡 Logos, icônes et dessins animés se convertissent proprement à presque toutes les tailles —
+      les aplats de couleur et les contours marqués sont parfaits pour les perles.</p>
+    </figure>
+  </section>
+
+  <section class="card" id="size-guide">
+    <h2>Guide des tailles — ce qu’une largeur veut vraiment dire</h2>
+    <p>La largeur que vous réglez est le nombre de perles en travers. Les perles midi standard
+    font 5&nbsp;mm chacune, donc la taille finie se calcule facilement avant de commencer :</p>
+    <div class="table-wrap">
+      <table class="size-table">
+        <thead><tr>
+          <th>Largeur réglée</th><th>Taille finie*</th><th>Perles nécessaires†</th>
+          <th>Niveau de détail</th><th>Idéal pour</th>
+        </tr></thead>
+        <tbody>
+          <tr><td><strong>20 perles</strong></td><td>≈ 10 cm (4″)</td><td>≈ 400</td>
+            <td>Massif — grandes formes seulement</td><td>Porte-clés, breloques, magnets</td></tr>
+          <tr><td><strong>29 perles</strong></td><td>≈ 14.5 cm (5.7″)</td><td>841</td>
+            <td>Net pour les motifs simples</td><td>Exactement une plaque standard — dessous de verre, objets de bureau</td></tr>
+          <tr><td><strong>48 perles</strong></td><td>≈ 24 cm (9.4″)</td><td>≈ 2,300</td>
+            <td>Bon — les portraits fonctionnent</td><td>Petites décorations murales, cadeaux encadrés <em>(max. de l’offre gratuite)</em></td></tr>
+          <tr><td><strong>100 perles</strong></td><td>≈ 50 cm (20″)</td><td>≈ 10,000</td>
+            <td>Détail quasi photo</td><td>Grandes décorations murales <em>(Pro)</em></td></tr>
+          <tr><td><strong>200 perles</strong></td><td>≈ 100 cm (39″)</td><td>≈ 40,000</td>
+            <td>Détail maximal</td><td>Pièces format poster <em>(Studio)</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">* Largeur en travers ; la hauteur suit les proportions de votre photo.
+    † Pour un motif carré entièrement rempli — votre nombre exact figure dans la liste d’achat
+    sous chaque motif que vous créez.</p>
+    <p class="example-tip">💡 Règle de base : plus le motif est petit, plus votre photo doit être
+    marquée — un grand sujet et un fort contraste. Une photo chargée superbe à
+    100 perles de large deviendra de la bouillie à 20.</p>
+  </section>
+
+  <section class="card" id="guide">
+    <h2>Guide pas à pas — de la photo à la pièce finie</h2>
+    <p>Nouveau dans les perles à repasser ? Suivez ces cinq étapes et vous ne pouvez pas vous tromper.</p>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">1</span> Choisissez une bonne photo</h3>
+        <p>Choisissez une image avec <strong>un sujet net, un fond uni et un fort
+        contraste</strong>. Les visages, les animaux, les logos et les dessins animés donnent les meilleurs
+        résultats. Les scènes chargées de petits détails se mélangent à la taille d’une perle —
+        si votre photo est chargée, recadrez d’abord serré autour du sujet.</p>
+      </div>
+      <img src="examples/guide-photo-good-vs-busy.png" loading="lazy"
+           alt="Comparaison : un portrait de chat simple marqué bon, une image chargée marquée mauvaise">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">2</span> Réglez la largeur</h3>
+        <p>La largeur est le nombre de perles en travers de votre pièce finie ; la hauteur
+        suit automatiquement votre photo. Plus de perles = plus de détail, mais aussi plus de perles,
+        plus de temps et plus de coût. À titre indicatif : <strong>porte-clés 20–30 perles de large ; un dessous
+        de verre fait exactement une plaque à 29 ; objets de bureau 40–60 ; pièces murales 80 et plus</strong>.
+        Voir le guide des tailles ci-dessus pour les tailles finies.</p>
+      </div>
+      <img src="examples/guide-widths.png" loading="lazy"
+           alt="La même image de smiley convertie à 16, 29 et 48 perles de large, montrant un détail croissant">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">3</span> Lisez la grille</h3>
+        <p><strong>Chaque case est une perle.</strong> Le code imprimé dans chaque case
+        (comme <strong>P01</strong>) est le code couleur de cette perle — le même code que dans
+        la liste d’achat. Les <strong>lignes épaisses toutes les 5 perles</strong> vous permettent de compter
+        de cinq en cinq au lieu d’une par une. Vous pouvez activer ou désactiver les lignes de grille
+        et les codes au-dessus de votre motif.</p>
+      </div>
+      <img src="examples/guide-read-chart.png" loading="lazy"
+           alt="Grille de perles agrandie avec légendes : une case égale une perle, un code couleur dans chaque case, des lignes épaisses toutes les cinq perles">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">4</span> Achetez les perles d’après la liste</h3>
+        <p>Sous votre motif, vous trouverez la liste d’achat : chaque couleur avec son code,
+        son nom et son <strong>nombre exact</strong>, le nombre total de perles, et le nombre de
+        plaques standard 29 × 29 nécessaires. Achetez environ <strong>10 % de plus</strong>
+        de chaque couleur — quelques perles roulent toujours au loin.</p>
+      </div>
+      <img src="examples/guide-shopping-list.png" loading="lazy"
+           alt="Exemple de liste d’achat pour le motif du chat : principales couleurs avec nombres, 1 600 perles au total, 4 plaques">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">5</span> Téléchargez, imprimez et réalisez</h3>
+        <p>Téléchargez le motif en PNG et réalisez-le depuis votre écran, ou imprimez-le.
+        À l’impression, choisissez <strong>100 % / « Taille réelle »</strong> — « Ajuster à la page »
+        rétrécit la grille et elle ne correspond plus à votre plaque. Avec l’offre Studio,
+        les planches PDF divisent les grands motifs en une page par plaque, avec numéros de
+        rangées et de colonnes sur chaque page.</p>
+      </div>
+      <img src="examples/guide-print.png" loading="lazy"
+           alt="Schéma d’impression : imprimer à 100 % en taille réelle, pas ajusté à la page">
+    </div>
+
+    <div class="finish-note">
+      <h3>🏁 Terminez : l’étape du repassage</h3>
+      <p>Une fois toutes les perles placées, couvrez la pièce de papier sulfurisé (papier de
+      repassage) et repassez à chaleur moyenne, en cercles lents, jusqu’à ce que le dessus des perles
+      fonde et se soude. Laissez refroidir à plat — un livre lourd dessus l’empêche de se recourber.
+      C’est tout le métier : placer, repasser, refroidir, terminé.</p>
+    </div>
+  </section>
+
+  <section class="card" id="features">
+    <h2>Ce que ça fait</h2>
+    <p>Le générateur de motifs convertit n’importe quelle image en motif de perles à repasser prêt à
+    réaliser — le même genre de grille que vous suivriez sur une plaque, générée en quelques secondes.</p>
+    <ul class="feature-list">
+      <li><strong>Photo → motif, automatiquement.</strong> Importez une image et chaque pixel est associé à la couleur de perle la plus proche — aucun travail manuel pixel par pixel.</li>
+      <li><strong>Vraie palette de 64 couleurs de perles.</strong> Les couleurs viennent d’une palette Perler / Hama standard, chacune avec son code et son nom (comme H05 Rouge), associées par distance perceptuelle (Lab) pour que le résultat soit juste à l’œil, pas seulement proche en chiffres.</li>
+      <li><strong>Liste d’achat de perles.</strong> Vous obtenez un nombre exact pour chaque couleur — combien de perles de chaque code il vous faut — plus le nombre total de perles.</li>
+      <li><strong>Estimation des plaques.</strong> L’outil vous dit combien de plaques standard 29×29 la pièce finie demandera.</li>
+      <li><strong>Grille téléchargeable.</strong> Exportez le motif fini en PNG avec lignes de grille et codes couleur imprimés dans chaque case, prêt à réaliser.</li>
+      <li><strong>100 % privé.</strong> Tout fonctionne en local dans votre navigateur. Votre photo n’est jamais envoyée sur un serveur.</li>
+      <li><strong>Trois offres.</strong> L’offre gratuite couvre les motifs jusqu’à 48 perles de large avec la palette de base et des exports filigranés. Pro et Studio relèvent la limite de largeur et débloquent la palette complète, les listes de perles CSV, les planches PDF imprimables et le mode lot — voir les tarifs ci-dessous pour le détail de chaque offre.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="how">
+    <h2>Comment ça marche</h2>
+    <ol class="how-steps">
+      <li><span class="step">1</span><div><strong>Choisissez une photo</strong><br>
+        Déposez n’importe quel PNG, JPG ou WebP. Les images simples et contrastées donnent les meilleurs résultats.</div></li>
+      <li><span class="step">2</span><div><strong>Réglez la largeur</strong><br>
+        Choisissez la largeur de la pièce finie en perles — la hauteur suit automatiquement.</div></li>
+      <li><span class="step">3</span><div><strong>Recevez votre motif</strong><br>
+        Voyez la grille avec les codes couleur, vérifiez le nombre de perles par couleur, et téléchargez le PNG.</div></li>
+    </ol>
+  </section>
+
+  <section class="card" id="pricing">
+    <h2>Tarifs</h2>
+    <p>Commencez gratuitement. Passez à l’offre supérieure quand il vous faut de plus grands motifs,
+    la palette de couleurs complète, ou des fichiers à imprimer pour réaliser.</p>
+    <div class="pricing-grid">
+      <div class="price-card" data-tier="free">
+        <h3>Gratuit</h3>
+        <p class="price">$0</p>
+        <ul>
+          <li>Motifs jusqu’à <strong>48 perles de large</strong></li>
+          <li>Palette de base de <strong>64 couleurs</strong> (codes Perler / Hama)</li>
+          <li>Nombre de perles dans la grille à l’écran</li>
+          <li>Export PNG avec un petit filigrane</li>
+          <li>Aucun compte, fonctionne pour toujours</li>
+        </ul>
+        <a href="#" class="btn plan-btn">Offre actuelle</a>
+      </div>
+      <div class="price-card popular" data-tier="pro">
+        <span class="badge">Le plus populaire</span>
+        <h3>Pro</h3>
+        <p class="price">$4.99<span class="per">/month</span></p>
+        <ul>
+          <li>Motifs jusqu’à <strong>120 perles de large</strong></li>
+          <li><strong>Palette complète de 100 couleurs</strong> (Perler + Hama + Artkal)</li>
+          <li>Exports PNG haute résolution <strong>sans filigrane</strong></li>
+          <li>Liste de perles en <strong>CSV téléchargeable</strong> — liste d’achat imprimable</li>
+          <li>Tout ce qu’il y a dans l’offre gratuite</li>
+        </ul>
+        <a href="https://dreamforgestudioshop.gumroad.com/l/bead-pattern-maker-pro" target="_blank" rel="noopener" class="btn plan-btn btn-primary">Passer à Pro</a>
+      </div>
+      <div class="price-card" data-tier="studio">
+        <h3>Studio</h3>
+        <p class="price">$9.99<span class="per">/month</span></p>
+        <ul>
+          <li>Motifs jusqu’à <strong>200 perles de large</strong></li>
+          <li><strong>Planches PDF</strong> — paginées par plaque, avec coordonnées de rangées/colonnes pour l’impression</li>
+          <li><strong>Génération par lot</strong> — convertissez plusieurs photos d’un coup</li>
+          <li><strong>Licence commerciale</strong> pour les motifs que vous créez</li>
+          <li>Tout ce qu’il y a dans Pro</li>
+        </ul>
+        <a href="https://dreamforgestudioshop.gumroad.com/l/bead-pattern-maker-studio" target="_blank" rel="noopener" class="btn plan-btn btn-primary">Passer à Studio</a>
+      </div>
+    </div>
+    <div class="license-row">
+      <label for="licenseInput"><strong>Vous avez déjà une clé de licence ?</strong></label>
+      <div class="license-controls">
+        <input type="text" id="licenseInput" placeholder="BPM-PRO-XXXX-XXXX" autocomplete="off" spellcheck="false">
+        <button id="licenseApply" class="btn" type="button">Activer</button>
+        <button id="licenseReset" class="btn btn-ghost" type="button">Revenir au gratuit</button>
+      </div>
+      <p class="hint" id="licenseStatus">Les clés sont stockées uniquement sur cet appareil et activent l’offre instantanément.</p>
+    </div>
+  </section>
+
+  <section class="card" id="faq">
+    <h2>Questions fréquentes</h2>
+
+    <details class="faq-item">
+      <summary>Combien de perles et de plaques me faudra-t-il ?</summary>
+      <p>La liste d’achat sous votre motif compte chaque couleur exactement, plus le nombre
+      total de perles et le nombre de plaques standard 29 × 29 nécessaires. Par exemple,
+      le motif du chat ci-dessus demande 1 600 perles en 21 couleurs et 4 plaques. Astuce :
+      achetez environ 10 % de plus de chaque couleur — quelques perles roulent toujours au loin.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Ma photo est-elle envoyée sur un serveur ?</summary>
+      <p>Non. Tout fonctionne en local dans votre navigateur — votre photo ne quitte jamais
+      votre appareil, rien n’est stocké, et il n’y a aucun compte. Fermez l’onglet et tout disparaît.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Quelle est la différence entre Gratuit, Pro et Studio ?</summary>
+      <p>Gratuit : motifs jusqu’à 48 perles de large, palette de base de 64 couleurs, et exports PNG
+      avec un petit filigrane. Pro ($4.99/mois) : jusqu’à 120 de large, palette complète de 100 couleurs,
+      exports sans filigrane et liste de perles CSV téléchargeable. Studio ($9.99/mois) : jusqu’à
+      200 de large, planches PDF imprimables, génération par lot et licence commerciale.
+      Voir les tarifs ci-dessus pour la comparaison complète.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Pourquoi mon PNG téléchargé a-t-il un filigrane ?</summary>
+      <p>Les exports de l’offre gratuite portent une petite bande « Made with Bead Pattern Maker » en
+      bas, pour que les gens trouvent l’outil. Les exports Pro et Studio sont complètement propres.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Ma grille imprimée ne s’aligne pas avec ma plaque. Qu’est-ce qui cloche ?</summary>
+      <p>Votre imprimante a mis la page à l’échelle. Réimprimez à <strong>100 % / « Taille réelle »</strong>
+      et désactivez « Ajuster à la page » — un carré imprimé doit égaler une perle. Ou réalisez
+      simplement depuis l’écran, ou utilisez les planches PDF de Studio, paginées pour
+      correspondre à une plaque par page avec numéros de rangées et de colonnes.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Puis-je l’utiliser sur mon téléphone ?</summary>
+      <p>Oui — ça fonctionne dans tout navigateur mobile moderne, et vous pouvez l’installer comme une appli
+      (cherchez « Ajouter à l’écran d’accueil ») ; ensuite, ça fonctionne même hors ligne. Vos photos
+      restent sur votre téléphone, exactement comme sur un ordinateur.</p>
+    </details>
+  </section>
+</main>
+
+<footer>
+  <nav class="footer-nav" aria-label="Page sections">
+    <a href="#examples">Exemples</a> · <a href="#size-guide">Guide des tailles</a> ·
+    <a href="#guide">Guide</a> · <a href="#pricing">Tarifs</a> · <a href="#faq">FAQ</a>
+  </nav>
+  <p>Version gratuite : motifs jusqu’à 48 perles de large, exports avec un petit filigrane.
+  Les couleurs sont associées à une palette Perler / Hama standard (64 couleurs en gratuit, 100 en
+  offres payantes) par distance perceptuelle (Lab). Sans affiliation avec Perler® ou Hama®.</p>
+  <nav class="footer-nav" aria-label="Legal and support">
+    <a href="studio-fr.html">Dreamforge Studio — Tous les services</a> ·
+    <a href="privacy.html">Politique de confidentialité</a> · <a href="terms.html">Conditions d’utilisation</a> ·
+    <a href="#pricing">Tarifs</a> ·
+    <a href="mailto:a13259605261@163.com">Support: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+  </nav>
+  <p>© 2026 Bead Pattern Maker · Dreamforge Studio</p>
+</footer>
+
+<div id="upgradeModal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <p id="upgradeText"></p>
+    <div class="modal-actions">
+      <a href="#pricing" class="btn btn-primary" id="upgradeGo">Voir les offres</a>
+      <button id="upgradeClose" class="btn" type="button">Fermer</button>
+    </div>
+    <p class="hint">Abonnez-vous sur Gumroad et votre clé de licence arrive par e-mail — saisissez-la dans la section Tarifs pour activer l’offre sur cet appareil tout de suite.</p>
+  </div>
+</div>
+
+<div id="printArea"></div>
+
+<script src="palette.js"></script>
+<script src="core.js"></script>
+<script src="app-fr.js"></script>
+<script>
+/* Hero before/after compare slider (photo vs pattern). */
+(function () {
+  var range = document.getElementById('cmpRange');
+  var top = document.getElementById('cmpTop');
+  var handle = document.getElementById('cmpHandle');
+  if (!range || !top || !handle) return;
+  function apply() {
+    var v = Number(range.value);
+    top.style.clipPath = 'inset(0 ' + (100 - v) + '% 0 0)';
+    handle.style.left = v + '%';
+  }
+  range.addEventListener('input', apply);
+  apply();
+})();
+</script>
+</body>
+</html>

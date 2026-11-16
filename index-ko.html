@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>비즈 도안 메이커 — 무료 Perler / Hama 비즈 도안 생성기</title>
+<meta name="description" content="어떤 사진이든 퓨즈 비즈(Perler / Hama) 도안으로 바꿔 드립니다. 색상표와 색상별 개수 포함. 무료, 100% 브라우저에서 실행 — 사진이 기기를 벗어나지 않습니다.">
+<link rel="canonical" href="https://dreamforge-studio.github.io/bead-pattern-maker/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bead Pattern Maker">
+<meta property="og:title" content="비즈 도안 메이커 — 무료 Perler / Hama 비즈 도안 생성기">
+<meta property="og:description" content="어떤 사진이든 퓨즈 비즈(Perler / Hama) 도안으로 바꿔 드립니다. 색상표와 정확한 개수 포함. 무료, 100% 브라우저에서 실행 — 사진이 기기를 벗어나지 않습니다.">
+<meta property="og:url" content="https://dreamforge-studio.github.io/bead-pattern-maker/">
+<meta property="og:image" content="https://dreamforge-studio.github.io/bead-pattern-maker/examples/cat-pattern.png">
+<meta property="og:image:width" content="800">
+<meta property="og:image:height" content="800">
+<meta property="og:image:alt" content="고양이 초상이 색상 코드가 있는 Perler 비즈 도안으로 변환된 이미지">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="비즈 도안 메이커 — 무료 Perler / Hama 비즈 도안 생성기">
+<meta name="twitter:description" content="어떤 사진이든 비즈 도안으로 바꿔 드립니다. 색상표와 정확한 개수 포함. 무료, 100% 브라우저에서 실행 — 업로드 없음, 가입 없음.">
+<meta name="twitter:image" content="https://dreamforge-studio.github.io/bead-pattern-maker/examples/cat-pattern.png">
+<meta name="twitter:image:alt" content="고양이 초상이 색상 코드가 있는 Perler 비즈 도안으로 변환된 이미지">
+<meta name="theme-color" content="#14663c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="icons/icon-192.png" alt="" width="40" height="40">
+    <div>
+      <h1>Bead Pattern Maker</h1>
+      <p>어떤 사진이든 Perler / Hama 비즈 도안으로 — 무료로, 브라우저 안에서 바로.</p>
+    </div>
+  </div>
+  <p class="privacy">🔒 사진이 기기를 벗어나지 않습니다. 모든 것이 로컬에서 실행됩니다.</p>
+  <nav class="lang-switch" aria-label="Language">
+    <a href="index.html" hreflang="en">EN</a><span class="sep">|</span><a href="index-zh.html" hreflang="zh-CN">中文</a><span class="sep">|</span><a href="index-ja.html" hreflang="ja">日本語</a><span class="sep">|</span><a href="index-ko.html" class="active" hreflang="ko">한국어</a><span class="sep">|</span><a href="index-fr.html" hreflang="fr">Français</a>
+  </nav>
+</header>
+
+<main>
+  <section class="card hero" id="hero">
+    <h2 class="hero-title">당신의 사진을, 실제로 만들 수 있는 비즈 도안으로</h2>
+    <p class="hero-sub">슬라이더를 드래그해 비교해 보세요. 목업이 아니라 이 도구가 실제로 만든 도안입니다 —
+    <strong>40 × 40 비즈 · 21가지 색상 · 비즈 1,600개</strong>, 정확한 구매 목록 포함.</p>
+    <div class="compare" id="heroCompare">
+      <img class="cmp-base" src="examples/cat-pattern.png" alt="고양이 사진으로 생성된 비즈 도안">
+      <img class="cmp-top" id="cmpTop" src="examples/cat-original.png" alt="원본 사진: 만화 고양이 얼굴">
+      <span class="cmp-label cmp-label-l">사진</span>
+      <span class="cmp-label cmp-label-r">도안</span>
+      <div class="cmp-handle" id="cmpHandle"><span class="cmp-grip">⇔</span></div>
+      <input type="range" class="cmp-range" id="cmpRange" min="0" max="100" value="50"
+             aria-label="슬라이드하여 원본 사진과 비즈 도안 비교">
+    </div>
+    <div class="bead-strip" aria-hidden="true">
+      <span style="background:#BE1E2D"></span><span style="background:#EE6A24"></span>
+      <span style="background:#F6C90E"></span><span style="background:#1E9E4A"></span>
+      <span style="background:#2456A6"></span><span style="background:#6E4B9E"></span>
+      <span style="background:#E38CA6"></span><span style="background:#7BA7D9"></span>
+      <span style="background:#8CC63E"></span><span style="background:#6E3B26"></span>
+      <span style="background:#F1E4C3"></span><span style="background:#17181A"></span>
+    </div>
+    <ul class="trust-strip">
+      <li>✓ 가입 불필요</li>
+      <li>✓ 100% 브라우저에서 실행 — 사진이 업로드되지 않습니다</li>
+      <li>✓ 무료로 시작</li>
+    </ul>
+    <p class="hero-cta"><a href="#step-upload" class="btn btn-primary">내 도안 만들기 ↓</a></p>
+  </section>
+
+  <section class="card" id="step-upload">
+    <h2><span class="step">1</span> 사진 선택</h2>
+    <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="이미지 업로드">
+      <p class="dz-big">여기에 이미지를 놓거나, 탭해서 선택하세요</p>
+      <p class="dz-small">PNG, JPG, WebP 지원. 단순하고 대비가 강한 사진이 가장 좋습니다.</p>
+      <input type="file" id="fileInput" accept="image/*" hidden>
+    </div>
+    <button id="sampleBtn" class="btn btn-ghost" type="button">사진이 없나요? 샘플 이미지로 해보기</button>
+    <button id="batchBtn" class="btn btn-ghost" type="button">🔒 일괄 변환: 여러 사진을 한 번에 변환 (Studio)</button>
+    <input type="file" id="batchInput" accept="image/*" multiple hidden>
+  </section>
+
+  <section class="card hidden" id="step-settings">
+    <h2><span class="step">2</span> 크기 설정</h2>
+    <div class="controls">
+      <label class="control-wide">
+        도안 너비: <strong><span id="widthLabel">29</span>개 비즈</strong>
+        <input type="range" id="widthRange" min="8" max="48" value="29" step="1">
+      </label>
+      <label>
+        너비 (비즈 수)
+        <input type="number" id="widthNumber" min="8" max="48" value="29">
+      </label>
+      <label class="check"><input type="checkbox" id="toggleGrid" checked> 격자선</label>
+      <label class="check"><input type="checkbox" id="toggleCodes" checked> 색상 코드</label>
+    </div>
+    <p class="hint" id="sizeInfo"></p>
+    <p class="hint" id="freeNote"></p>
+  </section>
+
+  <section class="card hidden" id="step-result">
+    <h2><span class="step">3</span> 내 도안</h2>
+    <div class="canvas-wrap"><canvas id="preview"></canvas></div>
+    <div class="actions">
+      <button id="exportBtn" class="btn btn-primary" type="button">⬇ 도안 다운로드 (PNG)</button>
+      <button id="csvBtn" class="btn" type="button">⬇ 비즈 목록 (CSV) 🔒 Pro</button>
+      <button id="pdfBtn" class="btn" type="button">🖨 인쇄 / PDF 보드 시트 🔒 Studio</button>
+    </div>
+    <h3>구매 목록 — 필요한 비즈</h3>
+    <p class="hint" id="statsSummary"></p>
+    <div class="table-wrap">
+      <table id="statsTable">
+        <thead><tr><th></th><th>코드</th><th>색상</th><th>개수</th><th>%</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card hidden" id="batch">
+    <h2>일괄 변환 결과</h2>
+    <div id="batchList"></div>
+  </section>
+
+  <section class="card" id="examples">
+    <h2>예시 — 이 도구의 실제 결과물</h2>
+    <p>아래 도안은 모두 옆 사진으로 이 생성기가 실제로 만든 것입니다.
+    보이는 그대로 얻습니다: 같은 색상, 같은 코드, 같은 개수.</p>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/cat-original.png" alt="원본 이미지: 만화 고양이 얼굴" loading="lazy">
+          <span class="img-label">원본</span></div>
+        <div><img src="examples/cat-pattern.png" alt="고양이 이미지로 생성된 비즈 도안" loading="lazy">
+          <span class="img-label">도안</span></div>
+      </div>
+      <figcaption>고양이 초상 — 40 × 40 비즈 · 21가지 색상 · 총 1,600개</figcaption>
+      <p class="example-tip">💡 반려동물 초상과 얼굴: <strong>너비 40개 이상</strong>을 쓰세요 —
+      눈, 수염, 털의 음영이 살아남으려면 디테일이 더 필요합니다.</p>
+    </figure>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/landscape-original.png" alt="원본 이미지: 산 풍경" loading="lazy">
+          <span class="img-label">원본</span></div>
+        <div><img src="examples/landscape-pattern.png" alt="풍경 이미지로 생성된 비즈 도안" loading="lazy">
+          <span class="img-label">도안</span></div>
+      </div>
+      <figcaption>산 풍경 — 40 × 30 비즈 · 29가지 색상 · 총 1,200개</figcaption>
+      <p class="example-tip">💡 풍경은 디테일이 많습니다. 하늘, 산, 물 같은 큰 형태는
+      너비 40에서도 잘 읽힙니다. 사진 같은 풍경은 더 넓게 (Pro 또는 Studio).</p>
+    </figure>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/flower-original.png" alt="원본 이미지: 해바라기" loading="lazy">
+          <span class="img-label">원본</span></div>
+        <div><img src="examples/flower-pattern.png" alt="해바라기 이미지로 생성된 비즈 도안" loading="lazy">
+          <span class="img-label">도안</span></div>
+      </div>
+      <figcaption>해바라기 — 32 × 43 비즈 · 25가지 색상 · 총 1,376개</figcaption>
+      <p class="example-tip">💡 단색 배경에 강렬한 피사체 하나가 가장 쉬운 성공법 —
+      작은 너비에서도 선명하게 유지됩니다.</p>
+    </figure>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/smiley-original.png" alt="원본 이미지: 만화 스마일 얼굴" loading="lazy">
+          <span class="img-label">원본</span></div>
+        <div><img src="examples/smiley-pattern.png" alt="스마일 이미지로 생성된 비즈 도안" loading="lazy">
+          <span class="img-label">도안</span></div>
+      </div>
+      <figcaption>스마일 얼굴 — 36 × 36 비즈 · 30가지 색상 · 총 1,296개</figcaption>
+      <p class="example-tip">💡 로고, 아이콘, 만화풍 아트는 거의 모든 크기에서 깔끔하게 변환됩니다 —
+      평평한 색상과 굵은 윤곽은 비즈에 완벽합니다.</p>
+    </figure>
+  </section>
+
+  <section class="card" id="size-guide">
+    <h2>크기 가이드 — 너비가 실제로 뜻하는 것</h2>
+    <p>설정하는 너비는 가로 방향 비즈 수입니다. 표준 미디 비즈는 개당 5&nbsp;mm라서,
+    시작 전에 완성 크기를 쉽게 계산할 수 있습니다:</p>
+    <div class="table-wrap">
+      <table class="size-table">
+        <thead><tr>
+          <th>설정 너비</th><th>완성 크기*</th><th>필요한 비즈†</th>
+          <th>디테일 수준</th><th>적합한 용도</th>
+        </tr></thead>
+        <tbody>
+          <tr><td><strong>비즈 20개</strong></td><td>≈ 10 cm (4″)</td><td>≈ 400</td>
+            <td>큼직함 — 큰 형태만 가능</td><td>키링, 참, 자석</td></tr>
+          <tr><td><strong>비즈 29개</strong></td><td>≈ 14.5 cm (5.7″)</td><td>841</td>
+            <td>단순한 그림에 선명</td><td>표준 페그보드 정확히 1장 — 코스터, 책상 소품</td></tr>
+          <tr><td><strong>비즈 48개</strong></td><td>≈ 24 cm (9.4″)</td><td>≈ 2,300</td>
+            <td>좋음 — 초상 가능</td><td>작은 벽 장식, 액자 선물 <em>(무료 플랜 최대)</em></td></tr>
+          <tr><td><strong>비즈 100개</strong></td><td>≈ 50 cm (20″)</td><td>≈ 10,000</td>
+            <td>사진 같은 디테일</td><td>큰 벽 장식 <em>(Pro)</em></td></tr>
+          <tr><td><strong>비즈 200개</strong></td><td>≈ 100 cm (39″)</td><td>≈ 40,000</td>
+            <td>최대 디테일</td><td>포스터 크기 작품 <em>(Studio)</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">* 가로 너비 기준이며, 높이는 사진 비율을 따릅니다.
+    † 정사각형으로 완전히 채운 도안 기준 — 정확한 개수는 만드는 도안마다 아래 구매 목록에 표시됩니다.</p>
+    <p class="example-tip">💡 경험 법칙: 도안이 작을수록 사진은 더 강렬해야 합니다 — 큰 피사체 하나와 강한 대비.
+    너비 100에서 멋진 복잡한 사진도 너비 20에서는 뭉개집니다.</p>
+  </section>
+
+  <section class="card" id="guide">
+    <h2>단계별 가이드 — 사진에서 완성품까지</h2>
+    <p>퓨즈 비즈가 처음인가요? 이 다섯 단계를 따르면 실패하지 않습니다.</p>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">1</span> 좋은 사진 고르기</h3>
+        <p><strong>피사체 하나가 뚜렷하고, 배경이 단순하며, 대비가 강한</strong> 사진을 고르세요.
+        얼굴, 반려동물, 로고, 만화풍 아트가 가장 좋습니다. 작은 디테일이 많은 복잡한 장면은
+        비즈 크기에서 뭉개집니다 — 사진이 복잡하면 먼저 피사체 주변을 바짝 자르세요.</p>
+      </div>
+      <img src="examples/guide-photo-good-vs-busy.png" loading="lazy"
+           alt="비교: 좋음으로 표시된 단순한 고양이 초상과 나쁨으로 표시된 복잡한 사진">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">2</span> 너비 설정</h3>
+        <p>너비는 완성품의 가로 비즈 수이며, 높이는 사진을 따라 자동으로 정해집니다.
+        비즈가 많을수록 디테일은 늘지만, 비즈도 시간도 비용도 늘어납니다. 기준:
+        <strong>키링은 너비 20–30, 코스터는 페그보드 1장에 정확히 29, 책상 소품은 40–60, 벽 작품은 80 이상</strong>.
+        완성 크기는 위 크기 가이드를 보세요.</p>
+      </div>
+      <img src="examples/guide-widths.png" loading="lazy"
+           alt="같은 스마일 사진을 너비 16, 29, 48 비즈로 변환해 디테일 차이를 보여 주는 그림">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">3</span> 도안 읽기</h3>
+        <p><strong>칸 하나가 비즈 하나입니다.</strong> 각 칸에 인쇄된 코드
+        (<strong>P01</strong> 같은)는 그 비즈의 색상 코드로, 구매 목록의 코드와 같습니다.
+        <strong>비즈 5개마다 굵은 선</strong>이 있어 하나씩이 아니라 다섯 개씩 셀 수 있습니다.
+        격자선과 코드는 도안 위에서 켜고 끌 수 있습니다.</p>
+      </div>
+      <img src="examples/guide-read-chart.png" loading="lazy"
+           alt="확대한 비즈 도안: 칸 하나는 비즈 하나, 각 칸의 색상 코드, 다섯 개마다 굵은 선 표시">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">4</span> 목록으로 비즈 구매</h3>
+        <p>도안 아래에 구매 목록이 있습니다: 모든 색상의 코드, 이름, <strong>정확한 개수</strong>,
+        전체 비즈 수, 표준 29 × 29 페그보드가 몇 장 필요한지. 색상마다 약 <strong>10% 여유</strong>를
+        사세요 — 비즈 몇 개는 항상 굴러다닙니다.</p>
+      </div>
+      <img src="examples/guide-shopping-list.png" loading="lazy"
+           alt="고양이 도안 구매 목록 예시: 주요 색상과 개수, 총 1,600개, 페그보드 4장">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">5</span> 다운로드, 인쇄, 만들기</h3>
+        <p>도안을 PNG로 다운로드해 화면을 보며 만들거나, 인쇄하세요.
+        인쇄할 때는 <strong>100% / "실제 크기"</strong>를 선택하세요 — "페이지에 맞춤"은
+        격자를 줄여 페그보드와 맞지 않게 됩니다. Studio 플랜의 PDF 보드 시트는
+        큰 도안을 페그보드 1장당 1페이지로 나누고, 모든 페이지에 행·열 번호가 있습니다.</p>
+      </div>
+      <img src="examples/guide-print.png" loading="lazy"
+           alt="인쇄 도해: 페이지에 맞춤이 아니라 100% 실제 크기로 인쇄">
+    </div>
+
+    <div class="finish-note">
+      <h3>🏁 마무리: 다림질 단계</h3>
+      <p>비즈를 다 놓으면 유산지(다림질 종이)를 덮고 중간 온도로 다리미를 천천히 원을 그리며 움직여,
+      비즈 윗부분이 녹아 붙을 때까지 다립니다. 평평하게 식히세요 — 무거운 책을 올리면 말리지 않습니다.
+      공예는 이게 전부입니다: 놓기, 다리기, 식히기, 완성.</p>
+    </div>
+  </section>
+
+  <section class="card" id="features">
+    <h2>기능 소개</h2>
+    <p>비즈 도안 메이커는 어떤 사진이든 바로 만들 수 있는 퓨즈 비즈 도안으로 바꿉니다 —
+    페그보드에서 따라 만드는 바로 그 도안을 몇 초 만에 생성합니다.</p>
+    <ul class="feature-list">
+      <li><strong>사진 → 도안, 자동으로.</strong> 사진을 올리면 모든 픽셀이 가장 가까운 비즈 색상에 매칭됩니다 — 픽셀 단위 수작업이 없습니다.</li>
+      <li><strong>실제 64색 비즈 팔레트.</strong> 색상은 표준 Perler / Hama 팔레트에서 오며, 각 색상에 코드와 이름(H05 빨강 같은)이 있고, 지각(Lab) 거리로 매칭해 숫자만이 아니라 눈으로 봐도 맞습니다.</li>
+      <li><strong>비즈 구매 목록.</strong> 모든 색상의 정확한 개수 — 코드마다 몇 개가 필요한지 — 와 전체 비즈 수를 받습니다.</li>
+      <li><strong>페그보드 추정.</strong> 완성품에 표준 29×29 페그보드가 몇 장 필요한지 알려 줍니다.</li>
+      <li><strong>다운로드 가능한 도안.</strong> 완성 도안을 격자선과 모든 칸의 색상 코드가 인쇄된 PNG로 내보내 바로 만들 수 있습니다.</li>
+      <li><strong>100% 프라이빗.</strong> 모든 것이 브라우저에서 로컬로 실행됩니다. 사진이 서버에 업로드되지 않습니다.</li>
+      <li><strong>세 가지 플랜.</strong> 무료는 너비 48개까지의 도안, 기본 팔레트, 워터마크 있는 내보내기를 제공합니다. Pro와 Studio는 너비 한도를 높이고 전체 팔레트, CSV 비즈 목록, 인쇄용 PDF 보드 시트, 일괄 모드를 엽니다 — 각 플랜 내용은 아래 가격을 보세요.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="how">
+    <h2>사용 방법</h2>
+    <ol class="how-steps">
+      <li><span class="step">1</span><div><strong>사진 선택</strong><br>
+        PNG, JPG, WebP 아무거나 넣으세요. 단순하고 대비가 강한 사진이 가장 좋습니다.</div></li>
+      <li><span class="step">2</span><div><strong>너비 설정</strong><br>
+        완성품이 몇 개 비즈 너비일지 고르세요 — 높이는 자동으로 정해집니다.</div></li>
+      <li><span class="step">3</span><div><strong>도안 받기</strong><br>
+        색상 코드가 있는 도안을 보고, 색상별 개수를 확인하고, PNG를 다운로드하세요.</div></li>
+    </ol>
+  </section>
+
+  <section class="card" id="pricing">
+    <h2>가격</h2>
+    <p>무료로 시작하세요. 더 큰 도안, 전체 색상 팔레트,
+    인쇄해서 만들 수 있는 파일이 필요할 때 업그레이드하세요.</p>
+    <div class="pricing-grid">
+      <div class="price-card" data-tier="free">
+        <h3>무료</h3>
+        <p class="price">$0</p>
+        <ul>
+          <li>도안 너비 최대 <strong>비즈 48개</strong></li>
+          <li>기본 <strong>64색</strong> 팔레트 (Perler / Hama 코드)</li>
+          <li>페이지 도안에서 개수 확인</li>
+          <li>작은 워터마크가 있는 PNG 내보내기</li>
+          <li>계정 불필요, 영구 사용</li>
+        </ul>
+        <a href="#" class="btn plan-btn">현재 플랜</a>
+      </div>
+      <div class="price-card popular" data-tier="pro">
+        <span class="badge">가장 인기</span>
+        <h3>Pro</h3>
+        <p class="price">$4.99<span class="per">/month</span></p>
+        <ul>
+          <li>도안 너비 최대 <strong>비즈 120개</strong></li>
+          <li><strong>전체 100색 팔레트</strong> (Perler + Hama + Artkal)</li>
+          <li><strong>워터마크 없음</strong>, 고해상도 PNG 내보내기</li>
+          <li>비즈 목록을 <strong>다운로드 가능한 CSV</strong>로 — 인쇄용 구매 목록</li>
+          <li>무료의 모든 기능 포함</li>
+        </ul>
+        <a href="https://dreamforgestudioshop.gumroad.com/l/bead-pattern-maker-pro" target="_blank" rel="noopener" class="btn plan-btn btn-primary">Pro로 업그레이드</a>
+      </div>
+      <div class="price-card" data-tier="studio">
+        <h3>Studio</h3>
+        <p class="price">$9.99<span class="per">/month</span></p>
+        <ul>
+          <li>도안 너비 최대 <strong>비즈 200개</strong></li>
+          <li><strong>PDF 보드 시트</strong> — 페그보드별 페이지 나누기, 인쇄용 행·열 좌표 포함</li>
+          <li><strong>일괄 변환</strong> — 여러 사진을 한 번에 변환</li>
+          <li>만든 도안에 대한 <strong>상업 라이선스</strong></li>
+          <li>Pro의 모든 기능 포함</li>
+        </ul>
+        <a href="https://dreamforgestudioshop.gumroad.com/l/bead-pattern-maker-studio" target="_blank" rel="noopener" class="btn plan-btn btn-primary">Studio로 업그레이드</a>
+      </div>
+    </div>
+    <div class="license-row">
+      <label for="licenseInput"><strong>이미 라이선스 키가 있나요?</strong></label>
+      <div class="license-controls">
+        <input type="text" id="licenseInput" placeholder="BPM-PRO-XXXX-XXXX" autocomplete="off" spellcheck="false">
+        <button id="licenseApply" class="btn" type="button">활성화</button>
+        <button id="licenseReset" class="btn btn-ghost" type="button">무료로 돌아가기</button>
+      </div>
+      <p class="hint" id="licenseStatus">키는 이 기기에만 저장되며, 플랜이 즉시 활성화됩니다.</p>
+    </div>
+  </section>
+
+  <section class="card" id="faq">
+    <h2>자주 묻는 질문</h2>
+
+    <details class="faq-item">
+      <summary>비즈와 페그보드가 얼마나 필요한가요?</summary>
+      <p>도안 아래 구매 목록이 모든 색상을 정확히 세고, 전체 비즈 수와 표준 29 × 29 페그보드가
+      몇 장 필요한지도 알려 줍니다. 예를 들어 위 고양이 도안은 21가지 색상에 비즈 1,600개,
+      페그보드 4장이 필요합니다. 팁: 색상마다 약 10% 여유를 사세요 — 비즈 몇 개는 항상 굴러다닙니다.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>사진이 서버에 업로드되나요?</summary>
+      <p>아니요. 모든 것이 브라우저에서 로컬로 실행됩니다 — 사진이 기기를 벗어나지 않고,
+      아무것도 저장되지 않으며, 계정도 없습니다. 탭을 닫으면 사라집니다.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>무료, Pro, Studio의 차이는 무엇인가요?</summary>
+      <p>무료: 너비 48개까지의 도안, 기본 64색 팔레트, 작은 워터마크가 있는 PNG 내보내기.
+      Pro($4.99/월): 너비 120까지, 전체 100색 팔레트, 워터마크 없는 내보내기, 다운로드 가능한 CSV 비즈 목록.
+      Studio($9.99/월): 너비 200까지, 인쇄용 PDF 보드 시트, 일괄 변환, 상업 라이선스.
+      전체 비교는 위 가격을 보세요.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>다운로드한 PNG에 왜 워터마크가 있나요?</summary>
+      <p>무료 플랜 내보내기에는 사람들이 도구를 찾을 수 있도록 아래쪽에 작은
+      "Made with Bead Pattern Maker" 띠가 들어갑니다. Pro와 Studio 내보내기는 완전히 깨끗합니다.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>인쇄한 격자가 페그보드와 맞지 않습니다. 무엇이 잘못됐나요?</summary>
+      <p>프린터가 페이지를 확대/축소했습니다. <strong>100% / "실제 크기"</strong>로 다시 인쇄하고
+      "페이지에 맞춤"을 끄세요 — 인쇄된 칸 하나가 비즈 하나와 같아야 합니다. 아니면 화면을 보며 만들거나,
+      Studio의 PDF 보드 시트(페이지당 페그보드 1장, 행·열 번호 포함)를 쓰세요.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>휴대폰에서도 쓸 수 있나요?</summary>
+      <p>네 — 최신 모바일 브라우저에서 모두 작동하고, 앱처럼 설치할 수도 있습니다
+      ("홈 화면에 추가"를 찾으세요). 설치 후에는 오프라인에서도 작동합니다.
+      사진은 컴퓨터에서처럼 휴대폰 안에 그대로 남습니다.</p>
+    </details>
+  </section>
+</main>
+
+<footer>
+  <nav class="footer-nav" aria-label="Page sections">
+    <a href="#examples">예시</a> · <a href="#size-guide">크기 가이드</a> ·
+    <a href="#guide">가이드</a> · <a href="#pricing">가격</a> · <a href="#faq">자주 묻는 질문</a>
+  </nav>
+  <p>무료 버전: 도안 너비 최대 48개, 내보내기에 작은 워터마크가 들어갑니다.
+  색상은 지각(Lab) 거리로 표준 Perler / Hama 팔레트(무료는 64색, 유료 플랜은 100색)에 매칭됩니다.
+  Perler® 및 Hama®와 제휴 관계가 없습니다.</p>
+  <nav class="footer-nav" aria-label="Legal and support">
+    <a href="studio-ko.html">Dreamforge Studio — 전체 서비스</a> ·
+    <a href="privacy.html">개인정보 처리방침</a> · <a href="terms.html">이용약관</a> ·
+    <a href="#pricing">가격</a> ·
+    <a href="mailto:a13259605261@163.com">Support: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+  </nav>
+  <p>© 2026 Bead Pattern Maker · Dreamforge Studio</p>
+</footer>
+
+<div id="upgradeModal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <p id="upgradeText"></p>
+    <div class="modal-actions">
+      <a href="#pricing" class="btn btn-primary" id="upgradeGo">플랜 보기</a>
+      <button id="upgradeClose" class="btn" type="button">닫기</button>
+    </div>
+    <p class="hint">Gumroad에서 구독하면 라이선스 키가 이메일로 도착합니다 — 가격 섹션에 입력하면 이 기기에서 플랜이 바로 활성화됩니다.</p>
+  </div>
+</div>
+
+<div id="printArea"></div>
+
+<script src="palette.js"></script>
+<script src="core.js"></script>
+<script src="app-ko.js"></script>
+<script>
+/* Hero before/after compare slider (photo vs pattern). */
+(function () {
+  var range = document.getElementById('cmpRange');
+  var top = document.getElementById('cmpTop');
+  var handle = document.getElementById('cmpHandle');
+  if (!range || !top || !handle) return;
+  function apply() {
+    var v = Number(range.value);
+    top.style.clipPath = 'inset(0 ' + (100 - v) + '% 0 0)';
+    handle.style.left = v + '%';
+  }
+  range.addEventListener('input', apply);
+  apply();
+})();
+</script>
+</body>
+</html>

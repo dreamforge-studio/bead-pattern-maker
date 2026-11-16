@@ -299,3 +299,10 @@ footer { max-width: 880px; margin: 0 auto; padding: 0 14px 28px; color: var(--mu
 /* Downloadable editions (itch.io): the bought tier is on — no key entry, no upsell buttons */
 body.edition .license-controls,
 body.edition .plan-btn { display: none !important; }
+
+/* --- language switcher (multilingual: one <a> per language, add a link to add a language) --- */
+.lang-switch { display: flex; gap: 8px; align-items: center; font-size: .9rem; margin: 0; }
+.lang-switch a { color: #fff; text-decoration: none; opacity: .85; padding: 4px 6px; white-space: nowrap; }
+.lang-switch a:hover { opacity: 1; text-decoration: underline; }
+.lang-switch a.active { opacity: 1; font-weight: 700; text-decoration: underline; }
+.lang-switch .sep { opacity: .5; color: #fff; }
