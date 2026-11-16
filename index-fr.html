@@ -36,9 +36,14 @@
     </div>
   </div>
   <p class="privacy">🔒 Votre photo ne quitte jamais votre appareil. Tout fonctionne en local.</p>
-  <nav class="lang-switch" aria-label="Language">
-    <a href="index.html" hreflang="en">EN</a><span class="sep">|</span><a href="index-zh.html" hreflang="zh-CN">中文</a><span class="sep">|</span><a href="index-ja.html" hreflang="ja">日本語</a><span class="sep">|</span><a href="index-ko.html" hreflang="ko">한국어</a><span class="sep">|</span><a href="index-fr.html" class="active" hreflang="fr">Français</a>
-  </nav>
+  <select class="lang-select" id="langSelect" aria-label="Language / 语言 / 言語 / 언어 / Langue" title="Language">
+      <option value="index.html">English</option>
+      <option value="index-zh.html">中文（简体）</option>
+      <option value="index-ja.html">日本語</option>
+      <option value="index-ko.html">한국어</option>
+      <option value="index-fr.html" selected>Français</option>
+  </select>
+  <script>document.getElementById('langSelect').addEventListener('change',function(){location.href=this.value;});</script>
 </header>
 
 <main>
@@ -431,6 +436,9 @@
     <a href="mailto:a13259605261@163.com">Support: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
   </nav>
   <p>© 2026 Bead Pattern Maker · Dreamforge Studio</p>
+  <nav class="lang-switch footer-lang" aria-label="Language">
+    <a href="index.html" hreflang="en">EN</a><span class="sep">|</span><a href="index-zh.html" hreflang="zh-CN">中文</a><span class="sep">|</span><a href="index-ja.html" hreflang="ja">日本語</a><span class="sep">|</span><a href="index-ko.html" hreflang="ko">한국어</a><span class="sep">|</span><a href="index-fr.html" class="active" hreflang="fr">Français</a>
+  </nav>
 </footer>
 
 <div id="upgradeModal" class="modal hidden" role="dialog" aria-modal="true">

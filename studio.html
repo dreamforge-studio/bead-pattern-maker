@@ -145,9 +145,14 @@
     </div>
   </div>
   <p class="privacy">AI video · design · tools — delivered digitally, worldwide</p>
-  <nav class="lang-switch" aria-label="Language">
-    <a href="studio.html" class="active" hreflang="en">EN</a><span class="sep">|</span><a href="studio-zh.html" hreflang="zh-CN">中文</a><span class="sep">|</span><a href="studio-ja.html" hreflang="ja">日本語</a><span class="sep">|</span><a href="studio-ko.html" hreflang="ko">한국어</a><span class="sep">|</span><a href="studio-fr.html" hreflang="fr">Français</a>
-  </nav>
+  <select class="lang-select" id="langSelect" aria-label="Language / 语言 / 言語 / 언어 / Langue" title="Language">
+      <option value="studio.html" selected>English</option>
+      <option value="studio-zh.html">中文（简体）</option>
+      <option value="studio-ja.html">日本語</option>
+      <option value="studio-ko.html">한국어</option>
+      <option value="studio-fr.html">Français</option>
+  </select>
+  <script>document.getElementById('langSelect').addEventListener('change',function(){location.href=this.value;});</script>
 </header>
 
 <main>
@@ -401,6 +406,9 @@
   </nav>
   <p>Business enquiries by email: <a href="mailto:a13259605261@163.com">a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a></p>
   <p>© 2026 Dreamforge Studio</p>
+  <nav class="lang-switch footer-lang" aria-label="Language">
+    <a href="studio.html" class="active" hreflang="en">EN</a><span class="sep">|</span><a href="studio-zh.html" hreflang="zh-CN">中文</a><span class="sep">|</span><a href="studio-ja.html" hreflang="ja">日本語</a><span class="sep">|</span><a href="studio-ko.html" hreflang="ko">한국어</a><span class="sep">|</span><a href="studio-fr.html" hreflang="fr">Français</a>
+  </nav>
 </footer>
 
 </body>
