@@ -24,6 +24,35 @@
 </header>
 
 <main>
+  <section class="card hero" id="hero">
+    <h2 class="hero-title">Your photo, turned into a bead pattern you can actually build</h2>
+    <p class="hero-sub">Drag the slider — this is a real pattern made by this tool, not a mockup:
+    <strong>40 × 40 beads · 21 colors · 1,600 beads</strong>, with an exact shopping list to match.</p>
+    <div class="compare" id="heroCompare">
+      <img class="cmp-base" src="examples/cat-pattern.png" alt="Bead pattern generated from the cat photo">
+      <img class="cmp-top" id="cmpTop" src="examples/cat-original.png" alt="Original photo: cartoon cat face">
+      <span class="cmp-label cmp-label-l">Photo</span>
+      <span class="cmp-label cmp-label-r">Pattern</span>
+      <div class="cmp-handle" id="cmpHandle"><span class="cmp-grip">⇔</span></div>
+      <input type="range" class="cmp-range" id="cmpRange" min="0" max="100" value="50"
+             aria-label="Slide to compare the original photo and the bead pattern">
+    </div>
+    <div class="bead-strip" aria-hidden="true">
+      <span style="background:#BE1E2D"></span><span style="background:#EE6A24"></span>
+      <span style="background:#F6C90E"></span><span style="background:#1E9E4A"></span>
+      <span style="background:#2456A6"></span><span style="background:#6E4B9E"></span>
+      <span style="background:#E38CA6"></span><span style="background:#7BA7D9"></span>
+      <span style="background:#8CC63E"></span><span style="background:#6E3B26"></span>
+      <span style="background:#F1E4C3"></span><span style="background:#17181A"></span>
+    </div>
+    <ul class="trust-strip">
+      <li>✓ No sign-up</li>
+      <li>✓ 100% in your browser — photos are never uploaded</li>
+      <li>✓ Free to start</li>
+    </ul>
+    <p class="hero-cta"><a href="#step-upload" class="btn btn-primary">Make my pattern ↓</a></p>
+  </section>
+
   <section class="card" id="step-upload">
     <h2><span class="step">1</span> Pick a photo</h2>
     <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload an image">
@@ -75,6 +104,168 @@
   <section class="card hidden" id="batch">
     <h2>Batch results</h2>
     <div id="batchList"></div>
+  </section>
+
+  <section class="card" id="examples">
+    <h2>Examples — real output from this tool</h2>
+    <p>Every pattern below was produced by this generator from the picture next to it.
+    What you see is what you get: same colors, same codes, same counts.</p>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/cat-original.png" alt="Original picture: cartoon cat face" loading="lazy">
+          <span class="img-label">Original</span></div>
+        <div><img src="examples/cat-pattern.png" alt="Bead pattern generated from the cat picture" loading="lazy">
+          <span class="img-label">Pattern</span></div>
+      </div>
+      <figcaption>Cat portrait — 40 × 40 beads · 21 colors · 1,600 beads total</figcaption>
+      <p class="example-tip">💡 Pet portraits and faces: use <strong>40 beads wide or more</strong> —
+      eyes, whiskers and fur shading need the extra detail to survive.</p>
+    </figure>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/landscape-original.png" alt="Original picture: mountain landscape" loading="lazy">
+          <span class="img-label">Original</span></div>
+        <div><img src="examples/landscape-pattern.png" alt="Bead pattern generated from the landscape picture" loading="lazy">
+          <span class="img-label">Pattern</span></div>
+      </div>
+      <figcaption>Mountain landscape — 40 × 30 beads · 29 colors · 1,200 beads total</figcaption>
+      <p class="example-tip">💡 Landscapes are detail-heavy. Big shapes — sky, mountains, water —
+      still read well at 40 wide; for photo-like scenery, go wider (Pro or Studio).</p>
+    </figure>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/flower-original.png" alt="Original picture: sunflower" loading="lazy">
+          <span class="img-label">Original</span></div>
+        <div><img src="examples/flower-pattern.png" alt="Bead pattern generated from the sunflower picture" loading="lazy">
+          <span class="img-label">Pattern</span></div>
+      </div>
+      <figcaption>Sunflower — 32 × 43 beads · 25 colors · 1,376 beads total</figcaption>
+      <p class="example-tip">💡 One bold subject on a plain background is the easiest win —
+      it stays clear even at smaller widths.</p>
+    </figure>
+
+    <figure class="example">
+      <div class="pair-imgs">
+        <div><img src="examples/smiley-original.png" alt="Original picture: cartoon smiley face" loading="lazy">
+          <span class="img-label">Original</span></div>
+        <div><img src="examples/smiley-pattern.png" alt="Bead pattern generated from the smiley picture" loading="lazy">
+          <span class="img-label">Pattern</span></div>
+      </div>
+      <figcaption>Smiley face — 36 × 36 beads · 30 colors · 1,296 beads total</figcaption>
+      <p class="example-tip">💡 Logos, icons and cartoon art convert cleanly at almost any size —
+      flat colors and bold outlines are bead-perfect.</p>
+    </figure>
+  </section>
+
+  <section class="card" id="size-guide">
+    <h2>Size guide — what a width really means</h2>
+    <p>The width you set is the number of beads across. Standard midi beads are 5&nbsp;mm each,
+    so the finished size is easy to work out before you start:</p>
+    <div class="table-wrap">
+      <table class="size-table">
+        <thead><tr>
+          <th>Width you set</th><th>Finished size*</th><th>Beads needed†</th>
+          <th>Detail level</th><th>Good for</th>
+        </tr></thead>
+        <tbody>
+          <tr><td><strong>20 beads</strong></td><td>≈ 10 cm (4″)</td><td>≈ 400</td>
+            <td>Chunky — bold shapes only</td><td>Keychains, charms, magnets</td></tr>
+          <tr><td><strong>29 beads</strong></td><td>≈ 14.5 cm (5.7″)</td><td>841</td>
+            <td>Clear for simple art</td><td>Exactly one standard pegboard — coasters, desk pieces</td></tr>
+          <tr><td><strong>48 beads</strong></td><td>≈ 24 cm (9.4″)</td><td>≈ 2,300</td>
+            <td>Good — portraits work</td><td>Small wall art, framed gifts <em>(Free plan max)</em></td></tr>
+          <tr><td><strong>100 beads</strong></td><td>≈ 50 cm (20″)</td><td>≈ 10,000</td>
+            <td>Photo-like detail</td><td>Large wall décor <em>(Pro)</em></td></tr>
+          <tr><td><strong>200 beads</strong></td><td>≈ 100 cm (39″)</td><td>≈ 40,000</td>
+            <td>Maximum detail</td><td>Poster-size pieces <em>(Studio)</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">* Width across; the height follows your photo's proportions.
+    † For a square, fully filled pattern — your exact count appears in the shopping list
+    under every pattern you make.</p>
+    <p class="example-tip">💡 Rule of thumb: the smaller the pattern, the bolder your photo
+    needs to be — one big subject and strong contrast. A busy photo that looks great at
+    100 beads wide will turn to mush at 20.</p>
+  </section>
+
+  <section class="card" id="guide">
+    <h2>Step-by-step guide — from photo to finished piece</h2>
+    <p>New to fuse beads? Follow these five steps and you can't go wrong.</p>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">1</span> Pick a good photo</h3>
+        <p>Choose a picture with <strong>one clear subject, a plain background and strong
+        contrast</strong>. Faces, pets, logos and cartoon art work best. Busy scenes with
+        lots of tiny detail turn to mush at bead size — if your photo is busy, crop in
+        tight around the subject first.</p>
+      </div>
+      <img src="examples/guide-photo-good-vs-busy.png" loading="lazy"
+           alt="Comparison: a simple cat portrait marked good, a busy cluttered picture marked bad">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">2</span> Set the width</h3>
+        <p>The width is how many beads across your finished piece will be; the height
+        follows your photo automatically. More beads = more detail, but also more beads,
+        more time and more cost. As a guide: <strong>keychains 20–30 beads, coasters and
+        desk pieces 40–60</strong> (29 wide is exactly one pegboard), wall pieces 80+.
+        See the Size guide above for finished sizes.</p>
+      </div>
+      <img src="examples/guide-widths.png" loading="lazy"
+           alt="The same smiley picture converted at 16, 29 and 48 beads wide, showing increasing detail">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">3</span> Read the chart</h3>
+        <p><strong>Every square is one bead.</strong> The code printed in each cell
+        (like <strong>P01</strong>) is that bead's color code — the same code shown in
+        the shopping list. The <strong>bold lines every 5 beads</strong> let you count
+        in fives instead of one by one. You can switch the grid lines and the codes
+        on or off above your pattern.</p>
+      </div>
+      <img src="examples/guide-read-chart.png" loading="lazy"
+           alt="Zoomed-in bead chart with labels: one square equals one bead, a color code in each cell, bold lines every five beads">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">4</span> Buy beads from the list</h3>
+        <p>Under your pattern you'll find the shopping list: every color with its code,
+        name and <strong>exact count</strong>, the total bead count, and how many
+        standard 29 × 29 pegboards the piece takes. Buy about <strong>10% extra</strong>
+        of each color — a few beads always roll away.</p>
+      </div>
+      <img src="examples/guide-shopping-list.png" loading="lazy"
+           alt="Example shopping list for the cat pattern: top colors with counts, 1,600 beads total, 4 pegboards">
+    </div>
+
+    <div class="guide-step">
+      <div class="guide-text">
+        <h3><span class="step">5</span> Download, print &amp; build</h3>
+        <p>Download the pattern as a PNG and build from your screen, or print it.
+        When printing, choose <strong>100% / “Actual size”</strong> — “Fit to page”
+        shrinks the grid so it no longer matches your pegboard. On the Studio plan,
+        PDF board sheets split big patterns into one page per pegboard, with row and
+        column numbers on every page.</p>
+      </div>
+      <img src="examples/guide-print.png" loading="lazy"
+           alt="Printing diagram: print at 100 percent actual size, not fit to page">
+    </div>
+
+    <div class="finish-note">
+      <h3>🏁 Finish it: the ironing step</h3>
+      <p>Once every bead is placed, cover the piece with parchment (ironing) paper and
+      iron on medium heat, moving in slow circles, until the bead tops melt together.
+      Let it cool flat — a heavy book on top keeps it from curling. That's the whole
+      craft: place, iron, cool, done.</p>
+    </div>
   </section>
 
   <section class="card" id="features">
@@ -170,50 +361,52 @@
     </div>
   </section>
 
-  <section class="card" id="examples">
-    <h2>Examples — real output from this tool</h2>
-    <p>Every pattern below was produced by this generator from the picture next to it.
-    What you see is what you get: same colors, same codes, same counts.</p>
+  <section class="card" id="faq">
+    <h2>Frequently asked questions</h2>
 
-    <figure class="example">
-      <div class="pair-imgs">
-        <div><img src="examples/cat-original.png" alt="Original picture: cartoon cat face" loading="lazy">
-          <span class="img-label">Original</span></div>
-        <div><img src="examples/cat-pattern.png" alt="Bead pattern generated from the cat picture" loading="lazy">
-          <span class="img-label">Pattern</span></div>
-      </div>
-      <figcaption>Cat portrait — 40 × 40 beads · 21 colors · 1,600 beads total</figcaption>
-    </figure>
+    <details class="faq-item">
+      <summary>How many beads and pegboards will I need?</summary>
+      <p>The shopping list under your pattern counts every color exactly, plus the total
+      bead count and how many standard 29 × 29 pegboards the piece takes. For example,
+      the cat pattern above needs 1,600 beads in 21 colors and 4 pegboards. Tip: buy
+      about 10% extra of each color — a few beads always roll away.</p>
+    </details>
 
-    <figure class="example">
-      <div class="pair-imgs">
-        <div><img src="examples/landscape-original.png" alt="Original picture: mountain landscape" loading="lazy">
-          <span class="img-label">Original</span></div>
-        <div><img src="examples/landscape-pattern.png" alt="Bead pattern generated from the landscape picture" loading="lazy">
-          <span class="img-label">Pattern</span></div>
-      </div>
-      <figcaption>Mountain landscape — 40 × 30 beads · 29 colors · 1,200 beads total</figcaption>
-    </figure>
+    <details class="faq-item">
+      <summary>Is my photo uploaded to a server?</summary>
+      <p>No. Everything runs locally in your browser — your photo never leaves your
+      device, nothing is stored, and there is no account. Close the tab and it's gone.</p>
+    </details>
 
-    <figure class="example">
-      <div class="pair-imgs">
-        <div><img src="examples/flower-original.png" alt="Original picture: sunflower" loading="lazy">
-          <span class="img-label">Original</span></div>
-        <div><img src="examples/flower-pattern.png" alt="Bead pattern generated from the sunflower picture" loading="lazy">
-          <span class="img-label">Pattern</span></div>
-      </div>
-      <figcaption>Sunflower — 32 × 43 beads · 25 colors · 1,376 beads total</figcaption>
-    </figure>
+    <details class="faq-item">
+      <summary>What's the difference between Free, Pro and Studio?</summary>
+      <p>Free: patterns up to 48 beads wide, the basic 64-color palette, and PNG exports
+      with a small watermark. Pro ($4.99/mo): up to 120 wide, the full 100-color palette,
+      watermark-free exports and a downloadable CSV bead list. Studio ($9.99/mo): up to
+      200 wide, printable PDF board sheets, batch generation and a commercial license.
+      See Pricing above for the full comparison.</p>
+    </details>
 
-    <figure class="example">
-      <div class="pair-imgs">
-        <div><img src="examples/smiley-original.png" alt="Original picture: cartoon smiley face" loading="lazy">
-          <span class="img-label">Original</span></div>
-        <div><img src="examples/smiley-pattern.png" alt="Bead pattern generated from the smiley picture" loading="lazy">
-          <span class="img-label">Pattern</span></div>
-      </div>
-      <figcaption>Smiley face — 36 × 36 beads · 30 colors · 1,296 beads total</figcaption>
-    </figure>
+    <details class="faq-item">
+      <summary>Why does my downloaded PNG have a watermark?</summary>
+      <p>Free-plan exports carry a small “Made with Bead Pattern Maker” strip along the
+      bottom so people can find the tool. Pro and Studio exports are completely clean.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>My printed grid doesn't line up with my pegboard. What went wrong?</summary>
+      <p>Your printer scaled the page. Reprint at <strong>100% / “Actual size”</strong>
+      and turn off “Fit to page” — one printed square must equal one bead. Or simply
+      build from the screen, or use Studio's PDF board sheets, which are paginated to
+      match one pegboard per page with row and column numbers.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Can I use this on my phone?</summary>
+      <p>Yes — it works in any modern mobile browser, and you can install it like an app
+      (look for “Add to Home Screen”); after that it even works offline. Your photos
+      stay on your phone, exactly like on a computer.</p>
+    </details>
   </section>
 </main>
 
@@ -239,5 +432,21 @@
 <script src="palette.js"></script>
 <script src="core.js"></script>
 <script src="app.js"></script>
+<script>
+/* Hero before/after compare slider (photo vs pattern). */
+(function () {
+  var range = document.getElementById('cmpRange');
+  var top = document.getElementById('cmpTop');
+  var handle = document.getElementById('cmpHandle');
+  if (!range || !top || !handle) return;
+  function apply() {
+    var v = Number(range.value);
+    top.style.clipPath = 'inset(0 ' + (100 - v) + '% 0 0)';
+    handle.style.left = v + '%';
+  }
+  range.addEventListener('input', apply);
+  apply();
+})();
+</script>
 </body>
 </html>
