@@ -28,18 +28,43 @@ a subpath like `username.github.io/bead-pattern-maker/` too.
 3. The page renders the bead grid (toggleable grid lines / color codes),
    a per-color bead shopping list, and exports a PNG pattern.
 
-## Free tier & paid unlock
+## Plans (Free / Pro / Studio)
 
-All limits live in one place — `CONFIG` in `core.js`:
+All plan differences live in `TIERS` in `core.js` and are enforced by the
+app — not just described on the Pricing page:
 
-- `UNLOCKED: false` → width capped at `FREE_MAX_WIDTH` (48), exported PNGs
-  carry the footer watermark `Made with Bead Pattern Maker`.
-- When the Gumroad unlock ships, verify the buyer's license key and set
-  `UNLOCKED: true` → cap rises to `PRO_MAX_WIDTH` (200) and the watermark
-  disappears. No other code changes are needed.
+| | Free | Pro — $4.99/mo | Studio — $9.99/mo |
+|---|---|---|---|
+| Max pattern width | 48 beads | 120 beads | 200 beads |
+| Palette | 64 basic colors | full 100 colors (Perler+Hama+Artkal) | full 100 colors |
+| PNG export | watermarked | watermark-free, high-res | watermark-free, high-res |
+| Bead list CSV | — (in-page chart only) | ✓ download / print | ✓ |
+| PDF board sheets (per-pegboard pages, row/col coordinates) | — | — | ✓ (print dialog → Save as PDF) |
+| Batch generation | — | — | ✓ |
+| Commercial license | — | — | ✓ |
+
+Locked features never fail silently: clicking one opens an upgrade prompt
+naming the plan that includes it. The active plan is decided by a license
+key stored in `localStorage` (`bpm.license`); no key = Free.
+
+## License keys (placeholder rule — replace when Gumroad opens)
+
+Format: `BPM-PRO-XXXX-XXXC` / `BPM-STU-XXXX-XXXC`, where `C` is a checksum
+character over the rest of the key (`Core.makeLicenseKey` /
+`Core.validateLicenseKey` in `core.js`). This is a *local placeholder*:
+it stops casual typos and sharing-by-accident, it is not real DRM.
+
+When the Gumroad shop opens:
+
+1. Create two subscription products (Pro $4.99/mo, Studio $9.99/mo).
+2. Point the Pricing section's Upgrade buttons at the Gumroad product
+   links (they currently link to `#` and are labelled “Coming soon”).
+3. Issue each subscriber a key in the same format and swap
+   `validateLicenseKey` for Gumroad license verification — the rest of
+   the tier system (caps, gates, palettes) does not change.
 
 ## Self-test
 
 ```bash
-node test/selftest.js   # 35 assertions: palette, matching, quantize, stats, limits, PWA files
+node test/selftest.js   # palette, matching, quantize, stats, tiers, license keys, CSV, PWA files
 ```

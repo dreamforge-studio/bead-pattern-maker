@@ -32,6 +32,8 @@
       <input type="file" id="fileInput" accept="image/*" hidden>
     </div>
     <button id="sampleBtn" class="btn btn-ghost" type="button">No photo handy? Try a sample image</button>
+    <button id="batchBtn" class="btn btn-ghost" type="button">🔒 Batch: convert many photos at once (Studio)</button>
+    <input type="file" id="batchInput" accept="image/*" multiple hidden>
   </section>
 
   <section class="card hidden" id="step-settings">
@@ -57,6 +59,8 @@
     <div class="canvas-wrap"><canvas id="preview"></canvas></div>
     <div class="actions">
       <button id="exportBtn" class="btn btn-primary" type="button">⬇ Download pattern (PNG)</button>
+      <button id="csvBtn" class="btn" type="button">⬇ Bead list (CSV) 🔒 Pro</button>
+      <button id="pdfBtn" class="btn" type="button">🖨 Print / PDF board sheets 🔒 Studio</button>
     </div>
     <h3>Shopping list — beads you need</h3>
     <p class="hint" id="statsSummary"></p>
@@ -66,6 +70,11 @@
         <tbody></tbody>
       </table>
     </div>
+  </section>
+
+  <section class="card hidden" id="batch">
+    <h2>Batch results</h2>
+    <div id="batchList"></div>
   </section>
 
   <section class="card" id="features">
@@ -86,9 +95,10 @@
         grid lines and color codes printed in every cell, ready to build from.</li>
       <li><strong>100% private.</strong> Everything runs locally in your browser.
         Your photo is never uploaded to a server.</li>
-      <li><strong>Free vs. unlocked.</strong> The free version makes patterns up to
-        48 beads wide and adds a small watermark to exports. The unlocked version
-        (coming soon) raises the limit to 200 beads wide and removes the watermark.</li>
+      <li><strong>Three plans.</strong> Free covers patterns up to 48 beads wide with the
+        basic palette and watermarked exports. Pro and Studio raise the width limit and
+        unlock the full palette, CSV bead lists, printable PDF board sheets and batch
+        mode — see Pricing below for exactly what each plan includes.</li>
     </ul>
   </section>
 
@@ -102,6 +112,62 @@
       <li><span class="step">3</span><div><strong>Get your pattern</strong><br>
         See the chart with color codes, check the per-color bead counts, and download the PNG.</div></li>
     </ol>
+  </section>
+
+  <section class="card" id="pricing">
+    <h2>Pricing</h2>
+    <p>Start free. Upgrade when you need bigger patterns, the full color palette,
+    or files you can print and build from.</p>
+    <div class="pricing-grid">
+      <div class="price-card" data-tier="free">
+        <h3>Free</h3>
+        <p class="price">$0</p>
+        <ul>
+          <li>Patterns up to <strong>48 beads wide</strong></li>
+          <li>Basic <strong>64-color</strong> palette (Perler / Hama codes)</li>
+          <li>Bead counts in the on-page chart</li>
+          <li>PNG export with a small watermark</li>
+          <li>No account, works forever</li>
+        </ul>
+        <a href="#" class="btn plan-btn">Current plan</a>
+      </div>
+      <div class="price-card popular" data-tier="pro">
+        <span class="badge">Most Popular</span>
+        <h3>Pro</h3>
+        <p class="price">$4.99<span class="per">/month</span></p>
+        <ul>
+          <li>Patterns up to <strong>120 beads wide</strong></li>
+          <li><strong>Full 100-color palette</strong> (Perler + Hama + Artkal)</li>
+          <li><strong>Watermark-free</strong>, high-resolution PNG exports</li>
+          <li>Bead list as a <strong>downloadable CSV</strong> — printable shopping list</li>
+          <li>Everything in Free</li>
+        </ul>
+        <a href="#" class="btn plan-btn btn-primary">Upgrade to Pro</a>
+        <small class="soon">Coming soon</small>
+      </div>
+      <div class="price-card" data-tier="studio">
+        <h3>Studio</h3>
+        <p class="price">$9.99<span class="per">/month</span></p>
+        <ul>
+          <li>Patterns up to <strong>200 beads wide</strong></li>
+          <li><strong>PDF board sheets</strong> — paginated by pegboard, with row/column coordinates for printing</li>
+          <li><strong>Batch generation</strong> — convert many photos in one go</li>
+          <li><strong>Commercial license</strong> for the patterns you create</li>
+          <li>Everything in Pro</li>
+        </ul>
+        <a href="#" class="btn plan-btn btn-primary">Upgrade to Studio</a>
+        <small class="soon">Coming soon</small>
+      </div>
+    </div>
+    <div class="license-row">
+      <label for="licenseInput"><strong>Already have a license key?</strong></label>
+      <div class="license-controls">
+        <input type="text" id="licenseInput" placeholder="BPM-PRO-XXXX-XXXX" autocomplete="off" spellcheck="false">
+        <button id="licenseApply" class="btn" type="button">Activate</button>
+        <button id="licenseReset" class="btn btn-ghost" type="button">Back to Free</button>
+      </div>
+      <p class="hint" id="licenseStatus">Keys are stored only on this device and activate the plan instantly.</p>
+    </div>
   </section>
 
   <section class="card" id="examples">
@@ -156,6 +222,19 @@
   Colors are matched to a 64-color Perler / Hama palette using perceptual (Lab) distance.
   Not affiliated with Perler® or Hama®.</p>
 </footer>
+
+<div id="upgradeModal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <p id="upgradeText"></p>
+    <div class="modal-actions">
+      <a href="#pricing" class="btn btn-primary" id="upgradeGo">See plans</a>
+      <button id="upgradeClose" class="btn" type="button">Close</button>
+    </div>
+    <p class="hint">Subscriptions are coming soon — license keys activate a plan on this device right away.</p>
+  </div>
+</div>
+
+<div id="printArea"></div>
 
 <script src="palette.js"></script>
 <script src="core.js"></script>

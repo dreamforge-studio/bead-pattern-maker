@@ -2,32 +2,107 @@
  * Bead Pattern Maker — core logic (pure functions, no DOM).
  * Shared by the browser app (window.BeadCore) and the Node self-test.
  *
- * PAID UNLOCK SWITCH: everything about the free-tier limits lives in CONFIG.
- * When the Gumroad unlock ships, flipping CONFIG.UNLOCKED to true (after a
- * license check) raises the width cap and removes the export watermark.
- * Nothing else in the codebase needs to change.
+ * SUBSCRIPTION TIERS: every plan difference lives in TIERS below and is
+ * enforced here + in app.js — width caps are clamped, the export watermark
+ * follows the tier, the palette grows on paid plans, and CSV / PDF /
+ * batch are hard-gated by tier flags (the UI asks for an upgrade instead
+ * of failing silently). The active tier comes from a license key
+ * (validateLicenseKey); no key = Free.
  */
 (function (global) {
   'use strict';
 
   var CONFIG = {
-    UNLOCKED: false,                              // <-- paid unlock switch
-    FREE_MAX_WIDTH: 48,                           // bead columns, free tier
-    PRO_MAX_WIDTH: 200,                           // bead columns, unlocked
     DEFAULT_WIDTH: 29,                            // one standard pegboard
     WATERMARK_TEXT: 'Made with Bead Pattern Maker',
     PEGBOARD_SIZE: 29                             // 29 x 29 pegs per board
   };
 
-  function maxWidth(unlocked) {
-    return unlocked ? CONFIG.PRO_MAX_WIDTH : CONFIG.FREE_MAX_WIDTH;
+  var TIERS = {
+    free: {
+      id: 'free', name: 'Free', priceMonthly: 0,
+      maxWidth: 48, watermark: true, paletteSize: 'basic',
+      csvExport: false, pdfExport: false, batch: false
+    },
+    pro: {
+      id: 'pro', name: 'Pro', priceMonthly: 4.99,
+      maxWidth: 120, watermark: false, paletteSize: 'full',
+      csvExport: true, pdfExport: false, batch: false
+    },
+    studio: {
+      id: 'studio', name: 'Studio', priceMonthly: 9.99,
+      maxWidth: 200, watermark: false, paletteSize: 'full',
+      csvExport: true, pdfExport: true, batch: true
+    }
+  };
+  var TIER_ORDER = ['free', 'pro', 'studio'];
+
+  function getTier(id) {
+    return TIERS[id] || TIERS.free;
   }
 
-  function clampWidth(w, unlocked) {
+  function maxWidth(tierId) {
+    return getTier(tierId).maxWidth;
+  }
+
+  function clampWidth(w, tierId) {
     w = Math.round(Number(w) || CONFIG.DEFAULT_WIDTH);
     if (w < 1) w = 1;
-    var cap = maxWidth(unlocked);
+    var cap = maxWidth(tierId);
     return w > cap ? cap : w;
+  }
+
+  /* Lowest tier that unlocks a boolean feature flag ('csvExport',
+   * 'pdfExport', 'batch'), or null if no tier has it. */
+  function requiredTierFor(feature) {
+    for (var i = 0; i < TIER_ORDER.length; i++) {
+      if (TIERS[TIER_ORDER[i]][feature] === true) return TIER_ORDER[i];
+    }
+    return null;
+  }
+
+  /* ---------- license keys (LOCAL PLACEHOLDER rule) ----------
+   * Format: BPM-PRO-XXXX-XXXC / BPM-STU-XXXX-XXXC, where C is a checksum
+   * character over everything before it. This only keeps casual typing
+   * honest — when Gumroad subscriptions launch, keys will be issued and
+   * verified for real (see README); the format stays the same. */
+  var KEY_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  function keyChecksum(str) {
+    var s = 0;
+    for (var i = 0; i < str.length; i++) s += str.charCodeAt(i);
+    return KEY_CHARS[s % 36];
+  }
+  function makeLicenseKey(tierId, part1, part2) {
+    var tag = tierId === 'studio' ? 'STU' : 'PRO';
+    var payload = ('BPM-' + tag + '-' + part1 + '-' + part2).toUpperCase();
+    return payload + keyChecksum(payload);
+  }
+  function validateLicenseKey(key) {
+    if (!key) return null;
+    var k = String(key).trim().toUpperCase();
+    var m = /^BPM-(PRO|STU)-([A-Z0-9]{4})-([A-Z0-9]{3})([A-Z0-9])$/.exec(k);
+    if (!m) return null;
+    if (keyChecksum(k.slice(0, -1)) !== m[4]) return null;
+    return m[1] === 'PRO' ? 'pro' : 'studio';
+  }
+
+  /* Palette for a tier: Free = basic palette only; paid = basic + extra. */
+  function paletteForTier(tierId, basePalette, extraColors) {
+    if (getTier(tierId).paletteSize === 'full' && extraColors && extraColors.length) {
+      return basePalette.concat(extraColors);
+    }
+    return basePalette.slice();
+  }
+
+  /* Shopping list as CSV (Pro+). stats comes from buildStats(). */
+  function buildCsv(stats) {
+    var lines = ['Code,Color,Hex,Beads,Percent'];
+    stats.rows.forEach(function (r) {
+      var pct = stats.totalBeads ? (r.count / stats.totalBeads * 100).toFixed(1) : '0.0';
+      lines.push([r.code, r.name, r.hex, r.count, pct].join(','));
+    });
+    lines.push(['TOTAL', '', '', stats.totalBeads, '100.0'].join(','));
+    return lines.join('\n') + '\n';
   }
 
   function hexToRgb(hex) {
@@ -122,8 +197,16 @@
 
   var api = {
     CONFIG: CONFIG,
+    TIERS: TIERS,
+    TIER_ORDER: TIER_ORDER,
+    getTier: getTier,
     maxWidth: maxWidth,
     clampWidth: clampWidth,
+    requiredTierFor: requiredTierFor,
+    makeLicenseKey: makeLicenseKey,
+    validateLicenseKey: validateLicenseKey,
+    paletteForTier: paletteForTier,
+    buildCsv: buildCsv,
     hexToRgb: hexToRgb,
     rgbToLab: rgbToLab,
     preparePalette: preparePalette,

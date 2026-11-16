@@ -1,21 +1,40 @@
 /*
  * Bead Pattern Maker — browser glue.
  * All image processing happens locally in the user's browser:
- * sample -> quantize (core.js) -> render -> stats -> PNG export.
+ * sample -> quantize (core.js) -> render -> stats -> PNG / CSV / print.
+ *
+ * Subscription tiers (core.js TIERS) are enforced here: width is clamped
+ * to the plan cap, the palette and the export watermark follow the plan,
+ * and CSV / PDF / batch are locked behind their tiers — clicking them
+ * without the plan opens an upgrade prompt instead of failing silently.
+ * The plan comes from a license key in localStorage; no key = Free.
  */
 (function () {
   'use strict';
 
   var Core = window.BeadCore;
   var CFG = Core.CONFIG;
-  var palette = Core.preparePalette(window.BEAD_PALETTE);
-  var UNLOCKED = CFG.UNLOCKED;
-  var MAXW = Core.maxWidth(UNLOCKED);
+
+  /* ---------- plan / license state ---------- */
+  var licenseKey = '';
+  try { licenseKey = localStorage.getItem('bpm.license') || ''; } catch (e) { /* private mode */ }
+  var tier = Core.getTier(Core.validateLicenseKey(licenseKey) || 'free');
+  var palette = null; // prepared palette for the active tier
+
+  function rebuildPalette() {
+    var colors = Core.paletteForTier(tier.id, window.BEAD_PALETTE, window.BEAD_PALETTE_FULL_EXTRA);
+    palette = Core.preparePalette(colors);
+  }
+  rebuildPalette();
 
   var els = {
     dropzone: document.getElementById('dropzone'),
     fileInput: document.getElementById('fileInput'),
     sampleBtn: document.getElementById('sampleBtn'),
+    batchBtn: document.getElementById('batchBtn'),
+    batchInput: document.getElementById('batchInput'),
+    batchSection: document.getElementById('batch'),
+    batchList: document.getElementById('batchList'),
     settings: document.getElementById('step-settings'),
     result: document.getElementById('step-result'),
     widthRange: document.getElementById('widthRange'),
@@ -24,23 +43,82 @@
     toggleGrid: document.getElementById('toggleGrid'),
     toggleCodes: document.getElementById('toggleCodes'),
     sizeInfo: document.getElementById('sizeInfo'),
-    freeNote: document.getElementById('freeNote'),
+    planNote: document.getElementById('freeNote'),
     preview: document.getElementById('preview'),
     exportBtn: document.getElementById('exportBtn'),
+    csvBtn: document.getElementById('csvBtn'),
+    pdfBtn: document.getElementById('pdfBtn'),
     statsSummary: document.getElementById('statsSummary'),
-    statsBody: document.querySelector('#statsTable tbody')
+    statsBody: document.querySelector('#statsTable tbody'),
+    licenseInput: document.getElementById('licenseInput'),
+    licenseApply: document.getElementById('licenseApply'),
+    licenseReset: document.getElementById('licenseReset'),
+    licenseStatus: document.getElementById('licenseStatus'),
+    modal: document.getElementById('upgradeModal'),
+    modalText: document.getElementById('upgradeText'),
+    modalClose: document.getElementById('upgradeClose'),
+    printArea: document.getElementById('printArea')
   };
 
   var state = { img: null, grid: null, W: 0, H: 0, stats: null };
 
-  /* ---------- setup ---------- */
-  els.widthRange.max = MAXW;
-  els.widthNumber.max = MAXW;
-  els.freeNote.textContent = UNLOCKED
-    ? 'Unlocked: patterns up to ' + MAXW + ' beads wide, watermark-free exports.'
-    : 'Free version: up to ' + CFG.FREE_MAX_WIDTH + ' beads wide. Exports carry a small "'
-      + CFG.WATERMARK_TEXT + '" watermark.';
+  /* ---------- tier UI sync ---------- */
+  function planSummary(t) {
+    var colors = t.paletteSize === 'full' ? 'full 100-color palette' : 'basic 64-color palette';
+    var s = 'Current plan: ' + t.name + ' — patterns up to ' + t.maxWidth +
+      ' beads wide · ' + colors + ' · ' +
+      (t.watermark ? 'exports carry a small watermark.' : 'watermark-free exports.');
+    if (t.csvExport) s += ' CSV export unlocked.';
+    if (t.pdfExport) s += ' PDF board sheets + batch unlocked.';
+    return s;
+  }
 
+  function syncTierUi() {
+    els.widthRange.max = tier.maxWidth;
+    els.widthNumber.max = tier.maxWidth;
+    els.planNote.textContent = planSummary(tier);
+    document.querySelectorAll('.price-card').forEach(function (card) {
+      var isCurrent = card.getAttribute('data-tier') === tier.id;
+      card.classList.toggle('current', isCurrent);
+      var btn = card.querySelector('.plan-btn');
+      if (btn) {
+        btn.textContent = isCurrent ? 'Current plan' : 'Upgrade to ' + Core.getTier(card.getAttribute('data-tier')).name;
+        btn.classList.toggle('disabled', isCurrent);
+      }
+    });
+    if (els.licenseInput && licenseKey) els.licenseInput.value = licenseKey;
+  }
+
+  function setTier(newTierId, key) {
+    tier = Core.getTier(newTierId);
+    licenseKey = key || '';
+    try {
+      if (licenseKey) localStorage.setItem('bpm.license', licenseKey);
+      else localStorage.removeItem('bpm.license');
+    } catch (e) { /* ignore */ }
+    rebuildPalette();
+    syncTierUi();
+    if (state.img) regenerate();
+  }
+
+  /* ---------- upgrade prompt (locked features never fail silently) ---------- */
+  function showUpgrade(title, text) {
+    els.modalText.innerHTML = '<strong>' + title + '</strong><br>' + text;
+    els.modal.classList.remove('hidden');
+  }
+  function lockedPrompt(featureKey, featureLabel) {
+    var req = Core.getTier(Core.requiredTierFor(featureKey));
+    showUpgrade('🔒 ' + featureLabel + ' is a ' + req.name + ' feature',
+      featureLabel + ' is included in the ' + req.name + ' plan ($' + req.priceMonthly.toFixed(2) +
+      '/month). You are on the ' + tier.name + ' plan. Subscriptions are coming soon — ' +
+      'if you already have a license key, enter it in the Pricing section below.');
+  }
+  els.modalClose.addEventListener('click', function () { els.modal.classList.add('hidden'); });
+  document.getElementById('upgradeGo').addEventListener('click', function () { els.modal.classList.add('hidden'); });
+  els.modal.addEventListener('click', function (e) { if (e.target === els.modal) els.modal.classList.add('hidden'); });
+
+  /* ---------- setup ---------- */
+  syncTierUi();
   els.dropzone.addEventListener('click', function () { els.fileInput.click(); });
   els.dropzone.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); els.fileInput.click(); }
@@ -69,6 +147,43 @@
   els.toggleGrid.addEventListener('change', drawPreview);
   els.toggleCodes.addEventListener('change', drawPreview);
   els.exportBtn.addEventListener('click', exportPng);
+  els.csvBtn.addEventListener('click', exportCsv);
+  els.pdfBtn.addEventListener('click', exportPdf);
+  els.batchBtn.addEventListener('click', function () {
+    if (!tier.batch) { lockedPrompt('batch', 'Batch generation'); return; }
+    els.batchInput.click();
+  });
+  els.batchInput.addEventListener('change', function () {
+    if (els.batchInput.files.length) runBatch(els.batchInput.files);
+    els.batchInput.value = '';
+  });
+  els.licenseApply.addEventListener('click', applyLicense);
+  els.licenseReset.addEventListener('click', function () {
+    setTier('free', '');
+    els.licenseInput.value = '';
+    els.licenseStatus.textContent = 'Back on the Free plan.';
+  });
+  document.querySelectorAll('.plan-btn').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var target = Core.getTier(btn.closest('.price-card').getAttribute('data-tier'));
+      if (target.id === tier.id) return;
+      showUpgrade('Subscriptions coming soon',
+        'The ' + target.name + ' plan ($' + target.priceMonthly.toFixed(2) + '/month) is not on sale yet. ' +
+        'If you already have a ' + target.name + ' license key, enter it below to activate it on this device.');
+    });
+  });
+
+  function applyLicense() {
+    var key = els.licenseInput.value.trim();
+    var tierId = Core.validateLicenseKey(key);
+    if (tierId) {
+      setTier(tierId, key.toUpperCase());
+      els.licenseStatus.textContent = '✓ ' + tier.name + ' plan activated on this device.';
+    } else {
+      els.licenseStatus.textContent = 'That key doesn\u2019t look right. Format: BPM-PRO-XXXX-XXXX or BPM-STU-XXXX-XXXX.';
+    }
+  }
 
   /* ---------- image loading ---------- */
   function loadFile(file) {
@@ -115,7 +230,7 @@
   }
 
   function setWidth(v) {
-    var w = Core.clampWidth(v, UNLOCKED);
+    var w = Core.clampWidth(v, tier.id);
     els.widthRange.value = w;
     els.widthNumber.value = w;
     els.widthLabel.textContent = w;
@@ -123,12 +238,8 @@
   }
 
   /* ---------- pattern generation ---------- */
-  function regenerate() {
-    if (!state.img) return;
-    var W = setWidth(els.widthNumber.value);
-    var img = state.img;
+  function quantizeImage(img, W) {
     var H = Math.max(1, Math.round(W * img.naturalHeight / img.naturalWidth));
-
     var sample = document.createElement('canvas');
     sample.width = W; sample.height = H;
     var sx = sample.getContext('2d');
@@ -136,16 +247,20 @@
     sx.imageSmoothingQuality = 'high';
     sx.drawImage(img, 0, 0, W, H);
     var data = sx.getImageData(0, 0, W, H).data;
+    var grid = Core.quantizePixels(data, W, H, palette);
+    return { grid: grid, W: W, H: H, stats: Core.buildStats(grid, palette) };
+  }
 
-    state.grid = Core.quantizePixels(data, W, H, palette);
-    state.W = W; state.H = H;
-    state.stats = Core.buildStats(state.grid, palette);
-
+  function regenerate() {
+    if (!state.img) return;
+    var W = setWidth(els.widthNumber.value);
+    var out = quantizeImage(state.img, W);
+    state.grid = out.grid; state.W = out.W; state.H = out.H; state.stats = out.stats;
     els.sizeInfo.textContent =
-      'Pattern size: ' + W + ' × ' + H + ' beads · ' +
-      Core.pegboardsNeeded(W, H) + ' standard pegboard(s) (29×29) · ' +
-      state.stats.totalBeads.toLocaleString() + ' beads in ' +
-      state.stats.colorCount + ' colors.';
+      'Pattern size: ' + out.W + ' × ' + out.H + ' beads · ' +
+      Core.pegboardsNeeded(out.W, out.H) + ' standard pegboard(s) (29×29) · ' +
+      out.stats.totalBeads.toLocaleString() + ' beads in ' +
+      out.stats.colorCount + ' colors.';
     drawPreview();
     drawStats();
   }
@@ -181,7 +296,6 @@
       ctx.beginPath();
       for (var gx = 0; gx <= W; gx++) {
         var px = gx * cell + 0.5;
-        // bold line every 5 cells, like real pegboard counting guides
         ctx.moveTo(px, 0); ctx.lineTo(px, H * cell);
       }
       for (var gy = 0; gy <= H; gy++) {
@@ -232,18 +346,16 @@
     });
   }
 
-  /* ---------- export ---------- */
-  function exportPng() {
-    if (!state.grid) return;
-    var W = state.W, H = state.H;
+  /* ---------- exports ---------- */
+  function renderExportCanvas(W, H, grid) {
     var cell = Math.max(16, Math.floor(2400 / Math.max(W, H)));
-    var footer = UNLOCKED ? 0 : 44;
+    var footer = tier.watermark ? 44 : 0;
     var cv = document.createElement('canvas');
     cv.width = W * cell;
     cv.height = H * cell + footer;
     var ctx = cv.getContext('2d');
-    paintPattern(ctx, W, H, state.grid, cell, true, true);
-    if (!UNLOCKED) {
+    paintPattern(ctx, W, H, grid, cell, true, true);
+    if (tier.watermark) {
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, H * cell, cv.width, footer);
       ctx.fillStyle = '#6b7280';
@@ -252,15 +364,140 @@
       ctx.textBaseline = 'middle';
       ctx.fillText(CFG.WATERMARK_TEXT, cv.width / 2, H * cell + footer / 2);
     }
+    return cv;
+  }
+
+  function downloadCanvas(cv, filename) {
     cv.toBlob(function (blob) {
       var a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'bead-pattern-' + W + 'x' + H + '.png';
+      a.download = filename;
       document.body.appendChild(a);
       a.click();
       a.remove();
       setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
     }, 'image/png');
+  }
+
+  function exportPng() {
+    if (!state.grid) return;
+    downloadCanvas(renderExportCanvas(state.W, state.H, state.grid),
+      'bead-pattern-' + state.W + 'x' + state.H + '.png');
+  }
+
+  function exportCsv() {
+    if (!tier.csvExport) { lockedPrompt('csvExport', 'CSV bead list export'); return; }
+    if (!state.stats) return;
+    var blob = new Blob([Core.buildCsv(state.stats)], { type: 'text/csv' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'bead-list-' + state.W + 'x' + state.H + '.csv';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+  }
+
+  /* Studio: printable board sheets — one page per 29×29 pegboard section,
+   * with absolute row/column coordinates. Use the browser's
+   * "Save as PDF" in the print dialog to get a paginated PDF. */
+  function exportPdf() {
+    if (!tier.pdfExport) { lockedPrompt('pdfExport', 'PDF board sheets'); return; }
+    if (!state.grid) return;
+    var per = CFG.PEGBOARD_SIZE, W = state.W, H = state.H, grid = state.grid;
+    els.printArea.innerHTML = '';
+    for (var by = 0; by < H; by += per) {
+      for (var bx = 0; bx < W; bx += per) {
+        var w = Math.min(per, W - bx), h = Math.min(per, H - by);
+        var page = document.createElement('div');
+        page.className = 'board-page';
+        var head = document.createElement('h3');
+        head.textContent = 'Board ' + (bx / per + 1) + ' × ' + (by / per + 1) +
+          ' — columns ' + (bx + 1) + '–' + (bx + w) + ', rows ' + (by + 1) + '–' + (by + h) +
+          ' of ' + W + ' × ' + H;
+        page.appendChild(head);
+        page.appendChild(boardCanvas(grid, W, bx, by, w, h));
+        els.printArea.appendChild(page);
+      }
+    }
+    window.print();
+  }
+
+  function boardCanvas(grid, W, x0, y0, w, h) {
+    var cell = 18, left = 30, top = 18;
+    var cv = document.createElement('canvas');
+    cv.width = left + w * cell + 2;
+    cv.height = top + h * cell + 2;
+    var ctx = cv.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, cv.width, cv.height);
+    ctx.font = '600 9px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    for (var x = 0; x < w; x++) {
+      ctx.fillStyle = '#333';
+      ctx.fillText(String(x0 + x + 1), left + x * cell + cell / 2, top / 2 + 1);
+    }
+    for (var y = 0; y < h; y++) {
+      ctx.fillStyle = '#333';
+      ctx.fillText(String(y0 + y + 1), left / 2, top + y * cell + cell / 2);
+      for (var xx = 0; xx < w; xx++) {
+        var idx = grid[(y0 + y) * W + (x0 + xx)];
+        if (idx < 0) continue;
+        var c = palette[idx];
+        ctx.fillStyle = c.hex;
+        ctx.fillRect(left + xx * cell, top + y * cell, cell, cell);
+        ctx.fillStyle = textColorFor(c.hex);
+        ctx.font = '600 ' + Math.max(7, Math.floor(cell * 0.34)) + 'px Arial, sans-serif';
+        ctx.fillText(c.code, left + xx * cell + cell / 2, top + y * cell + cell / 2 + 0.5);
+        ctx.font = '600 9px Arial, sans-serif';
+      }
+    }
+    ctx.strokeStyle = 'rgba(30,30,30,0.4)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(left + 0.5, top + 0.5, w * cell, h * cell);
+    return cv;
+  }
+
+  /* ---------- batch (Studio) ---------- */
+  function runBatch(files) {
+    els.batchSection.classList.remove('hidden');
+    els.batchList.innerHTML = '';
+    var W = setWidth(els.widthNumber.value);
+    Array.prototype.forEach.call(files, function (file) {
+      if (!/^image\//.test(file.type)) return;
+      var item = document.createElement('div');
+      item.className = 'batch-item';
+      item.innerHTML = '<p class="hint">Processing ' + file.name + '…</p>';
+      els.batchList.appendChild(item);
+      var img = new Image();
+      img.onload = function () {
+        var out = quantizeImage(img, W);
+        var cell = Math.max(6, Math.floor(300 / Math.max(out.W, out.H)));
+        var cv = document.createElement('canvas');
+        cv.width = out.W * cell; cv.height = out.H * cell;
+        paintPattern(cv.getContext('2d'), out.W, out.H, out.grid, cell, true, false);
+        item.innerHTML = '';
+        item.appendChild(cv);
+        var info = document.createElement('p');
+        info.className = 'hint';
+        info.textContent = file.name + ' — ' + out.W + ' × ' + out.H + ' beads · ' +
+          out.stats.colorCount + ' colors · ' + out.stats.totalBeads.toLocaleString() + ' beads';
+        item.appendChild(info);
+        var btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.type = 'button';
+        btn.textContent = '⬇ Download PNG';
+        btn.addEventListener('click', function () {
+          downloadCanvas(renderExportCanvas(out.W, out.H, out.grid),
+            'bead-pattern-' + out.W + 'x' + out.H + '.png');
+        });
+        item.appendChild(btn);
+      };
+      img.onerror = function () { item.innerHTML = '<p class="hint">Could not read ' + file.name + '.</p>'; };
+      img.src = URL.createObjectURL(file);
+    });
+    els.batchSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   /* ---------- PWA ---------- */

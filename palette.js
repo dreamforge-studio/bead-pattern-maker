@@ -77,8 +77,57 @@
     { code: 'P40', name: 'Cocoa',           hex: '#8A5A33' }
   ];
 
+  /*
+   * FULL palette extension — unlocked by the Pro / Studio plans.
+   * Extra Hama + Perler shades plus an Artkal-style range, so paid plans
+   * match against 100 colors instead of the 64-color basic palette.
+   */
+  var FULL_EXTRA = [
+    // ---- more Hama shades ----
+    { code: 'H13', name: 'Cerise',          hex: '#D6336C' },
+    { code: 'H14', name: 'Orange Red',      hex: '#E4572E' },
+    { code: 'H15', name: 'Pastel Yellow',   hex: '#F7E38B' },
+    { code: 'H16', name: 'Pastel Green',    hex: '#B5D99C' },
+    { code: 'H19', name: 'Dark Grey',       hex: '#6B6F72' },
+    { code: 'H23', name: 'Wine Red',        hex: '#8E2434' },
+    { code: 'H24', name: 'Violet',          hex: '#8B6BAE' },
+    { code: 'H25', name: 'Azure',           hex: '#2E7FC2' },
+    { code: 'H32', name: 'Mint Green',      hex: '#7FC8A9' },
+    { code: 'H33', name: 'Moss Green',      hex: '#5B7553' },
+    { code: 'H34', name: 'Caramel',         hex: '#C68B4E' },
+    { code: 'H35', name: 'Ivory',           hex: '#F7F1DE' },
+    // ---- more Perler shades ----
+    { code: 'P41', name: 'Tangerine',       hex: '#F2853F' },
+    { code: 'P42', name: 'Salmon',          hex: '#F1948A' },
+    { code: 'P43', name: 'Fuchsia',         hex: '#C2187A' },
+    { code: 'P44', name: 'Grape',           hex: '#5E3A8C' },
+    { code: 'P45', name: 'Cobalt Blue',     hex: '#27408B' },
+    { code: 'P46', name: 'Aqua',            hex: '#57B8C4' },
+    { code: 'P47', name: 'Forest Green',    hex: '#14532D' },
+    { code: 'P48', name: 'Sage',            hex: '#A3B18A' },
+    { code: 'P49', name: 'Mahogany',        hex: '#6E2B20' },
+    { code: 'P50', name: 'Almond',          hex: '#D9B48F' },
+    { code: 'P51', name: 'Rose',            hex: '#D96C85' },
+    { code: 'P52', name: 'Steel Blue',      hex: '#4682B4' },
+    // ---- Artkal-style range ----
+    { code: 'A01', name: 'Artkal Snow',     hex: '#FAFAF7' },
+    { code: 'A02', name: 'Artkal Lemon',    hex: '#F5D90A' },
+    { code: 'A03', name: 'Artkal Scarlet',  hex: '#D7263D' },
+    { code: 'A04', name: 'Artkal Rosewood', hex: '#9B4444' },
+    { code: 'A05', name: 'Artkal Iris',     hex: '#7D5BA6' },
+    { code: 'A06', name: 'Artkal Ocean',    hex: '#1D6FA5' },
+    { code: 'A07', name: 'Artkal Jade',     hex: '#2FA36B' },
+    { code: 'A08', name: 'Artkal Olive',    hex: '#808000' },
+    { code: 'A09', name: 'Artkal Walnut',   hex: '#5C4033' },
+    { code: 'A10', name: 'Artkal Sandstone', hex: '#C2A878' },
+    { code: 'A11', name: 'Artkal Slate',    hex: '#5A6B7C' },
+    { code: 'A12', name: 'Artkal Coral',    hex: '#FF7F6B' }
+  ];
+
   global.BEAD_PALETTE = PALETTE;
+  global.BEAD_PALETTE_FULL_EXTRA = FULL_EXTRA;
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = PALETTE;
+    module.exports.FULL_EXTRA = FULL_EXTRA;
   }
 })(typeof window !== 'undefined' ? window : globalThis);
