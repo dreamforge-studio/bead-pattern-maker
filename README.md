@@ -18,7 +18,7 @@ python3 -m http.server 8000
 
 Push this folder as-is to a repo and enable Pages on the branch — it is a
 fully static site, no build step. All paths are relative, so it works from
-a subpath like `username.github.io/bead-pattern-maker/` too.
+a subpath like `dreamforge-studio.github.io/bead-pattern-maker/` too.
 
 ## How it works
 

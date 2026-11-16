@@ -162,6 +162,7 @@
     setTier('free', '');
     els.licenseInput.value = '';
     els.licenseStatus.textContent = 'Back on the Free plan.';
+    els.licenseStatus.className = 'hint';
   });
   document.querySelectorAll('.plan-btn').forEach(function (btn) {
     btn.addEventListener('click', function (e) {
@@ -180,8 +181,13 @@
     if (tierId) {
       setTier(tierId, key.toUpperCase());
       els.licenseStatus.textContent = '✓ ' + tier.name + ' plan activated on this device.';
+      els.licenseStatus.className = 'hint status-ok';
     } else {
-      els.licenseStatus.textContent = 'That key doesn\u2019t look right. Format: BPM-PRO-XXXX-XXXX or BPM-STU-XXXX-XXXX.';
+      els.licenseStatus.textContent = key
+        ? 'That key doesn\u2019t look right \u2014 check for typos and try again. Format: BPM-PRO-XXXX-XXXX or BPM-STU-XXXX-XXXX.'
+        : 'Enter a license key first \u2014 it looks like BPM-PRO-XXXX-XXXX.';
+      els.licenseStatus.className = 'hint status-error';
+      els.licenseInput.focus();
     }
   }
 
@@ -379,10 +385,20 @@
     }, 'image/png');
   }
 
+  /* Brief "it worked" feedback on a button after a download starts. */
+  function flashLabel(btn, text) {
+    if (btn.dataset.busy) return;
+    var orig = btn.textContent;
+    btn.dataset.busy = '1';
+    btn.textContent = text;
+    setTimeout(function () { btn.textContent = orig; delete btn.dataset.busy; }, 2400);
+  }
+
   function exportPng() {
     if (!state.grid) return;
     downloadCanvas(renderExportCanvas(state.W, state.H, state.grid),
       'bead-pattern-' + state.W + 'x' + state.H + '.png');
+    flashLabel(els.exportBtn, '✓ Saved — check your downloads');
   }
 
   function exportCsv() {
@@ -396,6 +412,7 @@
     a.click();
     a.remove();
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
+    flashLabel(els.csvBtn, '✓ CSV saved — check your downloads');
   }
 
   /* Studio: printable board sheets — one page per 29×29 pegboard section,
@@ -491,6 +508,7 @@
         btn.addEventListener('click', function () {
           downloadCanvas(renderExportCanvas(out.W, out.H, out.grid),
             'bead-pattern-' + out.W + 'x' + out.H + '.png');
+          flashLabel(btn, '✓ Saved — check your downloads');
         });
         item.appendChild(btn);
       };
