@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>泡泡没烦恼 · 玩法小样</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { height:100%; overflow:hidden; }
+  body {
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:linear-gradient(180deg,#fff6ec 0%,#ffeef6 45%,#e7f5ff 100%);
+    color:#5a4a52; user-select:none; -webkit-user-select:none; touch-action:none;
+  }
+  #topbar {
+    position:fixed; top:0; left:0; right:0; z-index:10;
+    padding:10px 12px 8px; background:rgba(255,255,255,0.55); backdrop-filter:blur(6px);
+  }
+  #tabs { display:flex; gap:8px; justify-content:center; }
+  .tab {
+    flex:1; max-width:118px; padding:9px 0; border:none; border-radius:999px;
+    font-size:16px; font-weight:700; color:#a08a96; background:rgba(255,255,255,0.85);
+    box-shadow:0 2px 6px rgba(190,140,160,0.18); cursor:pointer; transition:all .18s;
+  }
+  .tab.on { color:#fff; background:linear-gradient(135deg,#ff8fc0,#ff6fae); box-shadow:0 4px 10px rgba(255,120,175,0.4); }
+  #progress {
+    margin-top:8px; text-align:center; font-size:14px; font-weight:600; color:#8a6d7c;
+    min-height:20px; letter-spacing:.5px;
+  }
+  #cv { position:fixed; inset:0; display:block; }
+  #overlay {
+    position:fixed; inset:0; z-index:20; display:flex; align-items:center; justify-content:center;
+    background:rgba(255,248,244,0.45); backdrop-filter:blur(3px);
+  }
+  #overlay.hide { display:none; }
+  .card {
+    width:82%; max-width:320px; background:rgba(255,255,255,0.94); border-radius:26px;
+    padding:28px 22px 22px; text-align:center; box-shadow:0 14px 34px rgba(200,140,170,0.3);
+    animation:pop .38s cubic-bezier(.2,1.6,.4,1);
+  }
+  @keyframes pop { from { transform:scale(.8); opacity:0; } to { transform:scale(1); opacity:1; } }
+  .card h2 { font-size:24px; color:#e7548f; margin-bottom:10px; }
+  .card p { font-size:19px; font-weight:700; color:#6b5560; line-height:1.5; }
+  .card .stats { margin-top:12px; font-size:15px; color:#9a7f8d; line-height:1.7; white-space:pre-line; }
+  .btnrow { margin-top:20px; display:flex; gap:10px; justify-content:center; }
+  .btn {
+    border:none; border-radius:999px; padding:12px 26px; font-size:17px; font-weight:800; cursor:pointer;
+    color:#fff; background:linear-gradient(135deg,#ff8fc0,#ff6fae); box-shadow:0 5px 12px rgba(255,120,175,0.4);
+  }
+  .btn:active { transform:scale(.94); }
+  .btn.ghost { color:#e7548f; background:#ffeef6; box-shadow:none; }
+</style>
+</head>
+<body>
+<div id="topbar">
+  <div id="tabs">
+    <button class="tab on" data-mode="chain">连锁爆</button>
+    <button class="tab" data-mode="merge">泡泡合成</button>
+    <button class="tab" data-mode="rhythm">节奏戳</button>
+  </div>
+  <div id="progress">选一个花样，点开始试试手感</div>
+</div>
+<canvas id="cv"></canvas>
+<div id="overlay">
+  <div class="card">
+    <h2 id="ovTitle">连锁爆</h2>
+    <p id="ovText">戳中同色连片，一发连环爆</p>
+    <div class="stats" id="ovStats"></div>
+    <div class="btnrow">
+      <button class="btn" id="ovMain">开始</button>
+      <button class="btn ghost" id="ovAlt" style="display:none">换个花样</button>
+    </div>
+  </div>
+</div>
+<script>
+'use strict';
+/* ===== 基础 ===== */
+var W = 375, H = 667, DPR = 1, TOPH = 96;
+var cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+function resize() {
+  var iw = window.innerWidth || 375, ih = window.innerHeight || 667;
+  DPR = Math.min(window.devicePixelRatio || 1, 3);
+  var scale = iw / W; H = Math.max(520, Math.min(780, ih / scale));
+  cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+  cv.style.width = iw + 'px'; cv.style.height = ih + 'px';
+}
+window.addEventListener('resize', resize); resize();
+
+var JOY = ['#ff8fc0', '#6fd3ff', '#ffe082', '#7fe7c4', '#cda6f5'];
+var PRAISE = ['太厉害啦！', '手感火热！', '这波超顺的！', '你就是泡泡大师！', '玩得真漂亮！', '快乐加倍啦！'];
+function rnd(a, b) { return a + Math.random() * (b - a); }
+function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+function dist(x1, y1, x2, y2) { var dx = x2 - x1, dy = y2 - y1; return Math.sqrt(dx * dx + dy * dy); }
+function easeOutBack(t) { var c = 1.70158; t = t - 1; return 1 + (c + 1) * t * t * t + c * t * t; }
+function easeInOut(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+function pickPraise() { return PRAISE[Math.floor(Math.random() * PRAISE.length)]; }
+
+/* ===== 音频（WebAudio 合成，五声音阶） ===== */
+var AC = null;
+function ensureAudio() {
+  if (!AC) {
+    var Ctor = window.AudioContext || window.webkitAudioContext;
+    if (Ctor) { try { AC = new Ctor(); } catch (e) { AC = null; } }
+  }
+  if (AC && AC.state === 'suspended' && AC.resume) AC.resume();
+  return AC;
+}
+function audioNow() { return AC ? AC.currentTime : performance.now() / 1000; }
+var SCALE = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50, 1174.66, 1318.51];
+function tone(freq, t0, dur, type, vol, slideTo) {
+  if (!AC) return;
+  var o = AC.createOscillator(), g = AC.createGain();
+  o.type = type || 'triangle'; o.frequency.setValueAtTime(freq, t0);
+  if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t0 + dur);
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(vol || 0.16, t0 + 0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.connect(g); g.connect(AC.destination);
+  o.start(t0); o.stop(t0 + dur + 0.05);
+}
+function popNote(step) { if (AC) tone(SCALE[clamp(step, 0, SCALE.length - 1)], AC.currentTime, 0.22, 'triangle', 0.17); }
+function mergeSound() { if (!AC) return; var t = AC.currentTime; tone(392, t, 0.3, 'sine', 0.15, 784); tone(784, t + 0.1, 0.28, 'triangle', 0.12); }
+function perfectSound() { if (!AC) return; var t = AC.currentTime; tone(1318.51, t, 0.3, 'sine', 0.16); tone(1567.98, t + 0.06, 0.34, 'sine', 0.13); tone(2093, t + 0.12, 0.3, 'sine', 0.08); }
+function thump(t0, strong) { tone(strong ? 150 : 210, t0, 0.16, 'sine', strong ? 0.20 : 0.08, 55); }
+
+/* ===== 泡泡与粒子 ===== */
+var bubbles = [], particles = [], shards = [], halos = [], floats = [], confetti = [];
+var nextId = 1;
+function makeBubble(x, y, r, color, opts) {
+  opts = opts || {};
+  return {
+    id: nextId++, x: x, y: y, r: r, color: color,
+    vx: opts.vx || 0, vy: opts.vy || 0,
+    big: !!opts.big, proud: !!opts.proud,
+    phase: rnd(0, Math.PI * 2), blink: rnd(1.2, 3.6), blinkT: 0,
+    born: perfNow(), scaleIn: 0, dead: false, shakeT: 0, squash: 0,
+    targetTime: opts.targetTime || 0, spawnBeat: opts.spawnBeat || 0
+  };
+}
+function perfNow() { return performance.now(); }
+function addParticles(x, y, col, n, spd) {
+  for (var i = 0; i < n; i++) {
+    var a = rnd(0, Math.PI * 2), s = rnd(spd * 0.3, spd);
+    particles.push({ x: x, y: y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 30, r: rnd(2, 4.5), col: col, life: 1, decay: rnd(1.6, 2.6) });
+  }
+  if (particles.length > 260) particles.splice(0, particles.length - 260);
+}
+function addShards(x, y, col) {
+  for (var i = 0; i < 7; i++) {
+    var a = rnd(0, Math.PI * 2), s = rnd(90, 210);
+    shards.push({ x: x, y: y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, rot: rnd(0, 6), vr: rnd(-9, 9), len: rnd(6, 12), col: col, life: 1, decay: rnd(2.2, 3.2) });
+  }
+}
+function addHalo(x, y, col, maxR) { halos.push({ x: x, y: y, r: 6, maxR: maxR || 54, col: col, life: 1 }); }
+function addFloat(x, y, text, col, size) { floats.push({ x: x, y: y, text: text, col: col || '#e7548f', size: size || 21, life: 1, born: perfNow() }); }
+function spawnConfetti(n) {
+  for (var i = 0; i < n; i++) confetti.push({ x: rnd(20, W - 20), y: rnd(-40, -6), vx: rnd(-16, 16), vy: rnd(120, 230), w: rnd(5, 8), h: rnd(8, 13), rot: rnd(0, 6), vr: rnd(-5, 5), col: JOY[i % JOY.length], life: 1 });
+  if (confetti.length > 120) confetti.splice(0, confetti.length - 120);
+}
+function burstFX(b, gold) {
+  var col = gold ? '#ffcf4d' : JOY[b.color];
+  addParticles(b.x, b.y, col, gold ? 14 : 9, gold ? 170 : 130);
+  addShards(b.x, b.y, col);
+  addHalo(b.x, b.y, col, b.r * 2.1);
+  b.squash = 1;
+}
+
+/* ===== 绘制 ===== */
+function drawBubble(b, now) {
+  var breathe = (1 + 0.03 * Math.sin(now / 620 + b.phase)) * (b.pulse || 1);
+  var sc = b.scaleIn < 1 ? easeOutBack(clamp(b.scaleIn, 0, 1)) : 1;
+  var sq = 1 - 0.18 * b.squash;
+  var r = b.r * breathe * sc;
+  var x = b.x, y = b.y + Math.sin(now / 900 + b.phase) * 2.2;
+  if (b.shakeT > 0) x += Math.sin(now / 28) * 3.2 * b.shakeT;
+  ctx.save(); ctx.translate(x, y); ctx.scale(1 / Math.max(sq, 0.6), Math.max(sq, 0.6));
+  var g = ctx.createRadialGradient(-r * 0.35, -r * 0.4, r * 0.15, 0, 0, r);
+  g.addColorStop(0, 'rgba(255,255,255,0.95)');
+  g.addColorStop(0.35, JOY[b.color]);
+  g.addColorStop(1, JOY[b.color]);
+  ctx.globalAlpha = 0.92;
+  ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
+  ctx.globalAlpha = 1;
+  ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(255,255,255,0.75)'; ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(-r * 0.36, -r * 0.44, r * 0.2, r * 0.11, -0.6, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.fill();
+  /* 表情 */
+  var blinking = b.blinkT > 0;
+  var ey = -r * 0.14, ex = r * 0.34, er = Math.max(2.2, r * 0.085);
+  ctx.fillStyle = '#6b4453'; ctx.strokeStyle = '#6b4453';
+  if (b.proud) {
+    ctx.lineWidth = Math.max(2, r * 0.07); ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.arc(-ex, ey + er, er * 1.25, Math.PI * 1.08, Math.PI * 1.92); ctx.stroke();
+    ctx.beginPath(); ctx.arc(ex, ey + er, er * 1.25, Math.PI * 1.08, Math.PI * 1.92); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, r * 0.08, r * 0.4, 0.15 * Math.PI, 0.85 * Math.PI); ctx.lineWidth = Math.max(2.4, r * 0.08); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, r * 0.16, r * 0.26, 0.1 * Math.PI, 0.9 * Math.PI); ctx.fillStyle = '#a34a63'; ctx.fill();
+  } else if (blinking) {
+    ctx.lineWidth = Math.max(2, r * 0.06); ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(-ex - er, ey); ctx.lineTo(-ex + er, ey); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ex - er, ey); ctx.lineTo(ex + er, ey); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, r * 0.12, r * 0.3, 0.2 * Math.PI, 0.8 * Math.PI); ctx.lineWidth = Math.max(2, r * 0.06); ctx.stroke();
+  } else {
+    ctx.beginPath(); ctx.arc(-ex, ey, er, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(ex, ey, er, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(0, r * 0.1, r * 0.32, 0.2 * Math.PI, 0.8 * Math.PI);
+    ctx.lineWidth = Math.max(2, r * 0.06); ctx.lineCap = 'round'; ctx.stroke();
+  }
+  ctx.restore();
+  return { x: x, y: y, r: r };
+}
+function drawFX(dt) {
+  var i, p;
+  for (i = particles.length - 1; i >= 0; i--) {
+    p = particles[i]; p.life -= p.decay * dt; if (p.life <= 0) { particles.splice(i, 1); continue; }
+    p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 260 * dt;
+    ctx.globalAlpha = Math.max(p.life, 0); ctx.beginPath(); ctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI * 2); ctx.fillStyle = p.col; ctx.fill();
+  }
+  for (i = shards.length - 1; i >= 0; i--) {
+    p = shards[i]; p.life -= p.decay * dt; if (p.life <= 0) { shards.splice(i, 1); continue; }
+    p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 320 * dt; p.rot += p.vr * dt;
+    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.globalAlpha = Math.max(p.life, 0);
+    ctx.strokeStyle = p.col; ctx.lineWidth = 2.4; ctx.beginPath(); ctx.moveTo(-p.len / 2, 0); ctx.lineTo(p.len / 2, 0); ctx.stroke(); ctx.restore();
+  }
+  for (i = halos.length - 1; i >= 0; i--) {
+    p = halos[i]; p.r += 190 * dt; p.life = 1 - p.r / p.maxR; if (p.life <= 0) { halos.splice(i, 1); continue; }
+    ctx.globalAlpha = Math.max(p.life, 0) * 0.8; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.strokeStyle = p.col; ctx.lineWidth = 3; ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+  for (i = confetti.length - 1; i >= 0; i--) {
+    p = confetti[i]; p.y += p.vy * dt; p.x += p.vx * dt + Math.sin(p.y / 30) * 0.7; p.rot += p.vr * dt;
+    if (p.y > H + 20) { confetti.splice(i, 1); continue; }
+    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.col; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore();
+  }
+  for (i = floats.length - 1; i >= 0; i--) {
+    p = floats[i]; var age = (perfNow() - p.born) / 1000; if (age > 0.85) { floats.splice(i, 1); continue; }
+    var s = age < 0.22 ? easeOutBack(age / 0.22) : 1;
+    ctx.save(); ctx.translate(p.x, p.y - age * 44); ctx.scale(s, s);
+    ctx.globalAlpha = age > 0.6 ? 1 - (age - 0.6) / 0.25 : 1;
+    ctx.font = '800 ' + p.size + 'px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+    ctx.strokeText(p.text, 0, 0); ctx.fillStyle = p.col; ctx.fillText(p.text, 0, 0); ctx.restore();
+  }
+  ctx.globalAlpha = 1;
+}
+
+/* ===== 游戏状态 ===== */
+var MODES = {
+  chain: { name: '连锁爆', intro: '戳中同色连片，一发连环爆' },
+  merge: { name: '泡泡合成', intro: '点两个同色泡，合成大泡泡' },
+  rhythm: { name: '节奏戳', intro: '踩着拍子戳，环合上时最完美' }
+};
+var mode = 'chain', phase = 'intro'; /* intro | play | over */
+var S = null; /* 本局状态 */
+var progressEl = document.getElementById('progress');
+function setProgress(t) { progressEl.textContent = t; }
+function clearField() { bubbles = []; particles = []; shards = []; halos = []; floats = []; confetti = []; }
+function aliveBubbles() { return bubbles.filter(function (b) { return !b.dead; }); }
+
+/* ===== 模式一：连锁爆 ===== */
+var CHAIN_TOTAL = 26, CHAIN_MAXTAP = 12, CHAIN_GAP_MS = 90;
+function chainStart() {
+  S = { taps: 0, chainQueue: [], chainBusyUntil: 0, lastChain: 0, maxChain: 0, noteStep: 0, settled: true };
+  var cols = 5, rows = 5, gx = W / (cols + 0.6), gy = 76;
+  var grid = [], i, cx, cy;
+  for (cy = 0; cy < rows; cy++) {
+    grid[cy] = [];
+    for (cx = 0; cx < cols; cx++) {
+      var col;
+      var roll = Math.random();
+      if (cx > 0 && roll < 0.42) col = grid[cy][cx - 1];
+      else if (cy > 0 && roll < 0.62) col = grid[cy - 1][cx];
+      else col = Math.floor(rnd(0, 4));
+      grid[cy][cx] = col;
+      bubbles.push(makeBubble(gx * (cx + 0.8) + rnd(-6, 6), TOPH + 54 + gy * cy + rnd(-5, 5), rnd(28, 33), col));
+    }
+  }
+  bubbles.push(makeBubble(W / 2 + rnd(-30, 30), TOPH + 54 + gy * rows - 42, rnd(28, 32), grid[rows - 1][2]));
+  chainProgress();
+}
+function chainNeighbors(b) {
+  return aliveBubbles().filter(function (o) {
+    return o.id !== b.id && o.color === b.color && dist(b.x, b.y, o.x, o.y) < (b.r + o.r) * 1.3;
+  });
+}
+function chainProgress() {
+  setProgress('剩余泡泡 ' + aliveBubbles().length + ' · 已用点戳 ' + S.taps + '/' + CHAIN_MAXTAP + (S.lastChain > 1 ? ' · 刚才连锁 ×' + S.lastChain : ''));
+}
+function chainPopOne(b, silent) {
+  b.dead = true; burstFX(b, false); if (!silent) popNote(S.noteStep++);
+}
+function chainTap(b) {
+  if (S.chainQueue.length || perfNow() < S.chainBusyUntil) return;
+  S.taps++; S.noteStep = 0;
+  /* BFS 收集同色连片 */
+  var seen = {}, order = [b], frontier = [b]; seen[b.id] = 1;
+  while (frontier.length) {
+    var next = [];
+    frontier.forEach(function (cur) {
+      chainNeighbors(cur).forEach(function (o) { if (!seen[o.id]) { seen[o.id] = 1; order.push(o); next.push(o); } });
+    });
+    frontier = next;
+  }
+  order.sort(function (a, c) { return dist(b.x, b.y, a.x, a.y) - dist(b.x, b.y, c.x, c.y); });
+  var t0 = perfNow();
+  order.forEach(function (o, i) { S.chainQueue.push({ b: o, at: t0 + i * CHAIN_GAP_MS }); });
+  S.chainBusyUntil = t0 + order.length * CHAIN_GAP_MS + 60;
+  S.lastChain = order.length; S.settled = false;
+  if (order.length > S.maxChain) S.maxChain = order.length;
+  if (order.length >= 6) {
+    setTimeout(function () { spawnConfetti(36); addFloat(W / 2, TOPH + 92, '连锁 ×' + order.length + ' 太爽啦！', '#e7548f', 26); }, order.length * CHAIN_GAP_MS * 0.6);
+  } else if (order.length >= 3) {
+    addFloat(b.x, b.y - 34, '连锁 ×' + order.length, '#e7548f', 20);
+  }
+  chainProgress();
+}
+function chainUpdate(now) {
+  if (!S) return;
+  var t = perfNow(), i;
+  for (i = S.chainQueue.length - 1; i >= 0; i--) {
+    if (t >= S.chainQueue[i].at) { chainPopOne(S.chainQueue[i].b, false); S.chainQueue.splice(i, 1); }
+  }
+  if (!S.settled && !S.chainQueue.length && t > S.chainBusyUntil) {
+    S.settled = true; chainProgress();
+    if (!aliveBubbles().length) return endGame(true, '用了 ' + S.taps + ' 次点戳 · 最大连锁 ×' + S.maxChain);
+    if (S.taps >= CHAIN_MAXTAP) return endGame(false, '还剩 ' + aliveBubbles().length + ' 个泡泡 · 最大连锁 ×' + S.maxChain);
+  }
+}
+
+/* ===== 模式二：泡泡合成 ===== */
+var MERGE_NEED = 3, MERGE_BIG_RATIO = 1.6, MERGE_BLAST_PAD = 55;
+function mergeSpawnSmall() {
+  var col = Math.floor(rnd(0, 3));
+  var b = makeBubble(rnd(46, W - 46), rnd(TOPH + 80, H - 90), rnd(23, 27), col, { vx: rnd(-13, 13), vy: rnd(-10, 10) });
+  if (Math.abs(b.vx) < 5) b.vx = 8;
+  bubbles.push(b); return b;
+}
+function mergeStart() {
+  S = { selected: null, merging: null, made: 0, poppedBig: 0, taps: 0, noteStep: 0 };
+  for (var i = 0; i < 18; i++) mergeSpawnSmall();
+  mergeProgress();
+}
+function mergeProgress() {
+  setProgress('合成大泡 ' + S.made + '/' + MERGE_NEED + ' · 戳破大泡 ' + S.poppedBig + '/' + MERGE_NEED);
+}
+function mergeTopUp() {
+  if (S.made >= MERGE_NEED) return;
+  var smalls = aliveBubbles().filter(function (b) { return !b.big; }).length;
+  var need = (MERGE_NEED - S.made) * 2;
+  while (smalls < need) { mergeSpawnSmall(); smalls++; }
+}
+function mergeTap(b) {
+  if (S.merging) return;
+  S.taps++;
+  if (b.big) {
+    /* 大泡戳破：震碎周围一圈小泡 */
+    b.dead = true; burstFX(b, false); popNote(5);
+    S.poppedBig++;
+    var blast = b.r + MERGE_BLAST_PAD, hit = 0;
+    aliveBubbles().forEach(function (o) {
+      if (!o.big && dist(b.x, b.y, o.x, o.y) < blast + o.r) { o.dead = true; burstFX(o, false); hit++; }
+    });
+    if (hit) addFloat(b.x, b.y - 40, '震碎 ' + hit + ' 个！', '#e7548f', 21);
+    addHalo(b.x, b.y, '#ffcf4d', blast);
+    mergeTopUp(); mergeProgress();
+    if (S.poppedBig >= MERGE_NEED) endGame(true, '合成大泡 ' + S.made + ' 个 · 全都戳破啦');
+    return;
+  }
+  if (!S.selected) { S.selected = b; popNote(1); return; }
+  if (S.selected.id === b.id) { S.selected = null; return; }
+  if (S.selected.color !== b.color) { b.shakeT = 1; popNote(0); return; }
+  /* 合成动画：两者飞向中点 */
+  var a = S.selected; S.selected = null;
+  S.merging = { a: a, b: b, t: 0, mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2, col: b.color, r: Math.max(a.r, b.r) * MERGE_BIG_RATIO };
+  mergeSound();
+}
+function mergeUpdate(dt) {
+  if (!S) return;
+  aliveBubbles().forEach(function (b) {
+    if (S.merging && (b.id === S.merging.a.id || b.id === S.merging.b.id)) return;
+    b.x += b.vx * dt; b.y += b.vy * dt;
+    if (b.x < b.r + 4) { b.x = b.r + 4; b.vx = Math.abs(b.vx); }
+    if (b.x > W - b.r - 4) { b.x = W - b.r - 4; b.vx = -Math.abs(b.vx); }
+    if (b.y < TOPH + 44 + b.r) { b.y = TOPH + 44 + b.r; b.vy = Math.abs(b.vy); }
+    if (b.y > H - b.r - 8) { b.y = H - b.r - 8; b.vy = -Math.abs(b.vy); }
+  });
+  if (S.merging) {
+    var m = S.merging; m.t += dt / 0.3;
+    var k = easeInOut(clamp(m.t, 0, 1));
+    m.a.x += (m.mx - m.a.x) * k * 0.55; m.a.y += (m.my - m.a.y) * k * 0.55;
+    m.b.x += (m.mx - m.b.x) * k * 0.55; m.b.y += (m.my - m.b.y) * k * 0.55;
+    if (m.t >= 1) {
+      m.a.dead = true; m.b.dead = true;
+      var big = makeBubble(m.mx, m.my, m.r, m.col, { big: true, proud: true });
+      bubbles.push(big); addHalo(m.mx, m.my, JOY[m.col], m.r * 1.7);
+      S.made++; S.merging = null; mergeTopUp(); mergeProgress();
+      if (S.made >= MERGE_NEED && S.poppedBig >= MERGE_NEED) endGame(true, '合成大泡 ' + S.made + ' 个 · 全都戳破啦');
+    }
+  }
+}
+
+/* ===== 模式三：节奏戳 ===== */
+var BPM = 112, BEAT = 60 / BPM, PERFECT_WIN = 0.140, RHYTHM_GOAL = 8;
+var beatTimer = null, nextBeatToSchedule = 0;
+function rhythmStart() {
+  ensureAudio();
+  var t0 = audioNow() + 0.15;
+  S = { t0: t0, nextSpawnBeat: 2, perfects: 0, totalPops: 0, noteStep: 0, lastBeatSnd: -1 };
+  nextBeatToSchedule = 0;
+  if (beatTimer) clearInterval(beatTimer);
+  /* 节拍声用音频时钟提前调度（lookahead），判定也走音频时钟 */
+  beatTimer = setInterval(function () {
+    if (!AC || mode !== 'rhythm' || phase !== 'play') return;
+    var ahead = AC.currentTime + 0.14;
+    while (S.t0 + nextBeatToSchedule * BEAT < ahead) {
+      thump(S.t0 + nextBeatToSchedule * BEAT, nextBeatToSchedule % 4 === 0);
+      nextBeatToSchedule++;
+    }
+  }, 30);
+  rhythmProgress();
+}
+function rhythmProgress() { setProgress('完美 ' + S.perfects + '/' + RHYTHM_GOAL + ' · 节拍环合上那一刻戳我'); }
+function rhythmBeatNow() { return (audioNow() - S.t0) / BEAT; }
+function rhythmUpdate() {
+  if (!S) return;
+  var beat = rhythmBeatNow();
+  /* 每 2 拍刷一只新泡，场上最多 6 只 */
+  if (beat >= S.nextSpawnBeat) {
+    S.nextSpawnBeat += 2;
+    if (aliveBubbles().length < 6) {
+      var targetBeat = Math.ceil(beat) + 4;
+      var b = makeBubble(rnd(52, W - 52), rnd(TOPH + 96, H - 110), rnd(28, 34), Math.floor(rnd(0, 5)), { targetTime: S.t0 + targetBeat * BEAT, spawnBeat: beat });
+      bubbles.push(b);
+    }
+  }
+}
+function rhythmTap(b) {
+  var dt = audioNow() - b.targetTime;
+  b.dead = true; S.totalPops++;
+  if (Math.abs(dt) <= PERFECT_WIN) {
+    S.perfects++; burstFX(b, true); perfectSound();
+    addFloat(b.x, b.y - 42, '完美！', '#f5a623', 26);
+  } else {
+    burstFX(b, false); popNote(S.noteStep++ % 5);
+  }
+  rhythmProgress();
+  if (S.perfects >= RHYTHM_GOAL) endGame(true, '完美 ' + S.perfects + ' 次 · 共戳破 ' + S.totalPops + ' 个');
+}
+function drawRhythmExtras(now) {
+  if (mode !== 'rhythm' || !S || phase !== 'play') return;
+  var beat = rhythmBeatNow(), i;
+  /* 节拍指示点 */
+  for (i = 0; i < 4; i++) {
+    var on = Math.floor(beat) % 4 === i && beat >= 0;
+    ctx.beginPath(); ctx.arc(W / 2 - 33 + i * 22, TOPH + 22, on ? 7 : 5, 0, Math.PI * 2);
+    ctx.fillStyle = on ? '#ff6fae' : 'rgba(190,150,170,0.4)'; ctx.fill();
+  }
+  /* 节拍环 */
+  aliveBubbles().forEach(function (b) {
+    var remain = b.targetTime - audioNow();
+    var span = Math.max((b.targetTime - (S.t0 + b.spawnBeat * BEAT)), 0.001);
+    var k = clamp(1 - remain / span, 0, 1);
+    var rr = b.r * (2.15 - 1.15 * k);
+    ctx.beginPath(); ctx.arc(b.x, b.y, Math.max(rr, b.r), 0, Math.PI * 2);
+    ctx.strokeStyle = Math.abs(remain) <= PERFECT_WIN ? 'rgba(245,166,35,0.95)' : 'rgba(255,255,255,0.8)';
+    ctx.lineWidth = Math.abs(remain) <= PERFECT_WIN ? 4 : 2.5; ctx.stroke();
+    var pulse = 1 + 0.055 * Math.max(0, 1 - Math.abs((beat % 1) - 0) * 2);
+    b.pulse = pulse;
+  });
+}
+
+/* ===== 模式二附加绘制：选中描边＋同色连线预览 ===== */
+function drawMergeExtras(now) {
+  if (mode !== 'merge' || !S || phase !== 'play' || !S.selected || S.selected.dead) return;
+  var s = S.selected;
+  ctx.save();
+  ctx.setLineDash([7, 7]); ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(231,84,143,0.55)';
+  aliveBubbles().forEach(function (o) {
+    if (!o.big && o.id !== s.id && o.color === s.color) { ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(o.x, o.y); ctx.stroke(); }
+  });
+  ctx.setLineDash([]);
+  var rr = s.r + 6 + Math.sin(now / 200) * 2;
+  ctx.beginPath(); ctx.arc(s.x, s.y, rr, 0, Math.PI * 2);
+  ctx.strokeStyle = '#e7548f'; ctx.lineWidth = 3.5; ctx.stroke();
+  ctx.restore();
+}
+
+/* ===== 流程控制 ===== */
+var overlay = document.getElementById('overlay'), ovTitle = document.getElementById('ovTitle'),
+    ovText = document.getElementById('ovText'), ovStats = document.getElementById('ovStats'),
+    ovMain = document.getElementById('ovMain'), ovAlt = document.getElementById('ovAlt');
+function showIntro(m) {
+  mode = m; phase = 'intro'; clearField(); S = null;
+  document.querySelectorAll('.tab').forEach(function (t) { t.classList.toggle('on', t.getAttribute('data-mode') === m); });
+  ovTitle.textContent = MODES[m].name;
+  ovText.textContent = MODES[m].intro;
+  ovStats.textContent = '';
+  ovMain.textContent = '开始'; ovAlt.style.display = 'none';
+  overlay.classList.remove('hide');
+  setProgress('选一个花样，点开始试试手感');
+}
+function beginPlay() {
+  ensureAudio(); clearField();
+  overlay.classList.add('hide'); phase = 'play';
+  if (mode === 'chain') chainStart();
+  else if (mode === 'merge') mergeStart();
+  else rhythmStart();
+}
+function endGame(win, stats) {
+  phase = 'over';
+  if (win) spawnConfetti(60);
+  ovTitle.textContent = win ? '完成啦！' : '就差一点';
+  ovText.textContent = win ? pickPraise() : '没关系，手感已经热起来啦';
+  ovStats.textContent = stats || '';
+  ovMain.textContent = '再来一局'; ovAlt.style.display = '';
+  overlay.classList.remove('hide');
+  setProgress(win ? '漂亮！这一局玩得真顺' : '就差一点，再来一局试试');
+}
+ovMain.addEventListener('click', function () { beginPlay(); });
+ovAlt.addEventListener('click', function () {
+  var order = ['chain', 'merge', 'rhythm'];
+  showIntro(order[(order.indexOf(mode) + 1) % 3]);
+});
+document.querySelectorAll('.tab').forEach(function (t) {
+  t.addEventListener('click', function () { ensureAudio(); showIntro(t.getAttribute('data-mode')); });
+});
+
+/* ===== 输入 ===== */
+function handleTap(lx, ly) {
+  if (phase !== 'play') return;
+  var list = aliveBubbles(), hit = null, i;
+  for (i = list.length - 1; i >= 0; i--) {
+    if (dist(lx, ly, list[i].x, list[i].y) < list[i].r * 1.18) { hit = list[i]; break; }
+  }
+  if (!hit) return;
+  if (mode === 'chain') chainTap(hit);
+  else if (mode === 'merge') mergeTap(hit);
+  else rhythmTap(hit);
+}
+cv.addEventListener('pointerdown', function (e) {
+  ensureAudio();
+  var rect = cv.getBoundingClientRect();
+  handleTap((e.clientX - rect.left) / rect.width * W, (e.clientY - rect.top) / rect.height * H);
+});
+
+/* ===== 主循环 ===== */
+var lastT = perfNow();
+function loop() {
+  var now = perfNow(), dt = Math.min((now - lastT) / 1000, 0.05); lastT = now;
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+  if (phase === 'play' || phase === 'over') {
+    if (mode === 'chain') chainUpdate(now);
+    else if (mode === 'merge') mergeUpdate(dt);
+    else rhythmUpdate();
+  }
+  aliveBubbles().forEach(function (b) {
+    b.scaleIn = Math.min(1, b.scaleIn + dt * 3.2);
+    b.blink -= dt; if (b.blink <= 0) { b.blinkT = 0.13; b.blink = rnd(1.4, 3.8); }
+    if (b.blinkT > 0) b.blinkT -= dt;
+    if (b.shakeT > 0) b.shakeT = Math.max(0, b.shakeT - dt * 3);
+    if (b.squash > 0) b.squash = Math.max(0, b.squash - dt * 5);
+    drawBubble(b, now);
+  });
+  drawMergeExtras(now);
+  drawRhythmExtras(now);
+  drawFX(dt);
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+showIntro('chain');
+
+/* ===== 测试桩接口 ===== */
+window.P = {
+  start: function (m) { showIntro(m); beginPlay(); },
+  tap: function (x, y) { handleTap(x, y); },
+  state: function () { return { mode: mode, phase: phase, S: S }; },
+  bubbles: function () { return bubbles; },
+  alive: function () { return aliveBubbles(); }
+};
+</script>
+</body>
+</html>
