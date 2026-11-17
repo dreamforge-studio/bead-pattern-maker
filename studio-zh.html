@@ -124,6 +124,26 @@
   .contact-row .label { display: block; font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
   .contact-row .value { display: block; font-weight: 600; font-size: .94rem; color: var(--green-dark); word-break: break-all; }
 
+  /* crypto payment */
+  .crypto-card { padding: 24px; }
+  .crypto-card h2 { margin: 0 0 8px; font-size: 1.3rem; }
+  .crypto-card > p { margin: 0 0 16px; color: var(--muted); line-height: 1.6; max-width: 640px; }
+  .crypto-addr-row { display: flex; gap: 10px; align-items: stretch; flex-wrap: wrap; }
+  .crypto-addr {
+    flex: 1 1 320px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .92rem; font-weight: 600; color: var(--green-dark);
+    background: #eef6f1; border: 1px solid var(--line); border-radius: 12px;
+    padding: 13px 16px; word-break: break-all; display: flex; align-items: center;
+  }
+  .crypto-copy {
+    flex: none; border: 1px solid var(--green); background: var(--green); color: #fff;
+    border-radius: 12px; padding: 0 18px; font-weight: 600; font-size: .92rem; cursor: pointer;
+    transition: background .15s ease;
+  }
+  .crypto-copy:hover { background: var(--green-dark); }
+  .crypto-note { margin: 14px 0 0; font-size: .88rem; color: var(--muted); line-height: 1.6; }
+  .crypto-note strong { color: var(--amber-deep); }
+
   footer p a { color: var(--green); text-decoration: none; }
   footer p a:hover { text-decoration: underline; }
 
@@ -467,6 +487,23 @@
       </a>
     </div>
   </section>
+
+  <div class="section-head" id="crypto">
+    <p class="eyebrow">付款</p>
+    <h2>加密收款</h2>
+    <p>想用加密货币付款？本页所有服务都支持 Solana 链 USDC 收款。</p>
+  </div>
+
+  <section class="card crypto-card reveal">
+    <h2>USDC（Solana 链）</h2>
+    <p>请把 USDC 打到下面这个地址&mdash;&mdash;<strong>仅限 Solana 链</strong>。这个地址收不了其他链（如 Polygon、Ethereum）发来的 USDC；走错链打款，资金可能丢失。</p>
+    <div class="crypto-addr-row">
+      <code class="crypto-addr" id="cryptoAddr">3Harkfw44HrcfqdMRTSSnQJmHLgrmBiubDrGVz1UFm96</code>
+      <button class="crypto-copy" type="button" data-copy-target="cryptoAddr">复制地址</button>
+    </div>
+    <p class="crypto-note"><strong>打款前请先联系我们确认订单，再付款。</strong>到账时间与汇率不作承诺&mdash;&mdash;金额以实际收到为准。</p>
+  </section>
+  <script>(function(){var b=document.querySelector('.crypto-copy');if(!b){return;}b.addEventListener('click',function(){var el=document.getElementById(b.getAttribute('data-copy-target'));var t=el?el.textContent.trim():'';function done(){var o=b.textContent;b.textContent='已复制 ✓';setTimeout(function(){b.textContent=o;},1800);}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,done);}else if(el){var r=document.createRange();r.selectNodeContents(el);var s=window.getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy');}catch(e){}done();}});})();</script>
 
   <div class="section-head" id="faq">
     <p class="eyebrow">常见问题</p>

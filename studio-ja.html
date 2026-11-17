@@ -124,6 +124,26 @@
   .contact-row .label { display: block; font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
   .contact-row .value { display: block; font-weight: 600; font-size: .94rem; color: var(--green-dark); word-break: break-all; }
 
+  /* crypto payment */
+  .crypto-card { padding: 24px; }
+  .crypto-card h2 { margin: 0 0 8px; font-size: 1.3rem; }
+  .crypto-card > p { margin: 0 0 16px; color: var(--muted); line-height: 1.6; max-width: 640px; }
+  .crypto-addr-row { display: flex; gap: 10px; align-items: stretch; flex-wrap: wrap; }
+  .crypto-addr {
+    flex: 1 1 320px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .92rem; font-weight: 600; color: var(--green-dark);
+    background: #eef6f1; border: 1px solid var(--line); border-radius: 12px;
+    padding: 13px 16px; word-break: break-all; display: flex; align-items: center;
+  }
+  .crypto-copy {
+    flex: none; border: 1px solid var(--green); background: var(--green); color: #fff;
+    border-radius: 12px; padding: 0 18px; font-weight: 600; font-size: .92rem; cursor: pointer;
+    transition: background .15s ease;
+  }
+  .crypto-copy:hover { background: var(--green-dark); }
+  .crypto-note { margin: 14px 0 0; font-size: .88rem; color: var(--muted); line-height: 1.6; }
+  .crypto-note strong { color: var(--amber-deep); }
+
   footer p a { color: var(--green); text-decoration: none; }
   footer p a:hover { text-decoration: underline; }
 
@@ -468,6 +488,23 @@
       </a>
     </div>
   </section>
+
+  <div class="section-head" id="crypto">
+    <p class="eyebrow">お支払い</p>
+    <h2>暗号資産でのお支払い</h2>
+    <p>暗号資産でのお支払いも可能です。このページのすべてのサービスで、Solana ネットワークの USDC を受け付けています。</p>
+  </div>
+
+  <section class="card crypto-card reveal">
+    <h2>USDC（Solana）</h2>
+    <p>下記のアドレスへ USDC をお送りください&mdash;&mdash;<strong>Solana ネットワーク専用</strong>です。他のネットワーク（Polygon や Ethereum など）から送られた USDC はこのアドレスでは受け取れません。誤ったネットワークで送金すると資金を失う恐れがあります。</p>
+    <div class="crypto-addr-row">
+      <code class="crypto-addr" id="cryptoAddr">3Harkfw44HrcfqdMRTSSnQJmHLgrmBiubDrGVz1UFm96</code>
+      <button class="crypto-copy" type="button" data-copy-target="cryptoAddr">アドレスをコピー</button>
+    </div>
+    <p class="crypto-note"><strong>送金前に必ずご連絡のうえ、ご注文内容をご確認ください。</strong>到着時間や為替レートの保証はいたしかねます&mdash;&mdash;金額は送金の受領をもって確定します。</p>
+  </section>
+  <script>(function(){var b=document.querySelector('.crypto-copy');if(!b){return;}b.addEventListener('click',function(){var el=document.getElementById(b.getAttribute('data-copy-target'));var t=el?el.textContent.trim():'';function done(){var o=b.textContent;b.textContent='コピーしました ✓';setTimeout(function(){b.textContent=o;},1800);}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,done);}else if(el){var r=document.createRange();r.selectNodeContents(el);var s=window.getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand('copy');}catch(e){}done();}});})();</script>
 
   <div class="section-head" id="faq">
     <p class="eyebrow">FAQ</p>
