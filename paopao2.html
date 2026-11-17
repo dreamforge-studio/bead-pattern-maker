@@ -1,0 +1,2265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>泡泡没烦恼</title>
+<style>
+  html, body { margin:0; padding:0; background:#fdf6ec; height:100%; overflow:hidden;
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; }
+  #wrap { position:relative; margin:0 auto; }
+  canvas { display:block; touch-action:none; border-radius:6px;
+    box-shadow:0 8px 40px rgba(90,60,120,.18); background:#eaf7ff; }
+  #shareOverlay { position:fixed; inset:0; background:rgba(29,35,64,.82); display:none;
+    z-index:99; align-items:center; justify-content:center; flex-direction:column; }
+  #shareOverlay img { max-width:82vw; max-height:72vh; border-radius:14px; box-shadow:0 12px 44px rgba(0,0,0,.4); }
+  #shareOverlay .row { margin-top:16px; display:flex; gap:12px; }
+  #shareOverlay a, #shareOverlay button { font-family:inherit; font-size:15px; border:none; cursor:pointer;
+    padding:11px 22px; border-radius:999px; background:#ff8fab; color:#fff; text-decoration:none; }
+  #shareOverlay button { background:#e8eef7; color:#33415c; }
+</style>
+</head>
+<body>
+<div id="wrap"><canvas id="cv"></canvas></div>
+<script>
+/* 《泡泡没烦恼》关卡参数 —— 同源文件
+ * index.html 通过 <script src="levels.js"> 加载，sim.js 通过 require 读取。
+ * 两边必须用同一份参数：调参只改这里，游戏与机器人基线自动一致。
+ *
+ * 字段说明：
+ *  id      关卡号
+ *  tier    难度层：谷底 / 爬升 / 浪尖 / 治愈（达标门槛按层判定）
+ *  title   关卡显示名（全中文）
+ *  mode    clear=全破过关 / timed=限时达标 / heal=治愈关（无失败，达数即过）
+ *  total   本关泡泡总量
+ *  mix     类型配比 { normal 普通, tough 顽固, red 倒计时, frozen 冰冻 }，合计应等于 total
+ *  speed   漂移速度系数（1 为基准）
+ *  radius  普通泡半径基准（逻辑像素）
+ *  run     同色成组长度区间 [最小, 最大]（连击攒清空爆炸靠它）
+ *  timeLimit 限时秒数（0=不限时）
+ *  target  timed/heal 的达标破泡数（clear 为 null，表示全破）
+ *  needBlast 需要触发的「烦恼清空」爆炸次数
+ *  redLimit 允许漏破的红泡数（null=本关无红泡规则）
+ *  redTimes 红泡出现的时刻（秒，timed 关用；clear 关红泡按 redEvery 间隔依次出现）
+ *  redEvery clear 关红泡出现间隔秒数
+ *  par     三星参考时长（秒）
+ *  intro   关卡目标说明（关卡介绍页显示）
+ *  hint    顿悟点提示（新机制首现关显示）
+ */
+
+var WORDS = [
+  '加班', '催婚', '房贷', '脱发', '堵车', '失眠', '胖了', '掉发',
+  '熬夜', '被催', '账单', '开会', '早起', '排队', '堵心', '没钱',
+  '加班费', '相亲', '体检', '堵车费', '闹钟', '外卖凉', '没睡好', '被@'
+];
+
+var COLOR_NAMES = ['粉', '蓝', '黄', '绿', '紫'];
+var COLOR_VALUES = ['#ff7eb6', '#4fc3f7', '#ffd54f', '#69f0ae', '#ba68c8'];
+
+var LEVELS = [
+  { id: 1, tier: '谷底', title: '先热个身', mode: 'clear',
+    total: 22, mix: { normal: 22, tough: 0, red: 0, frozen: 0 },
+    speed: 0.5, radius: 30, run: [3, 5], timeLimit: 0, target: null,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 40,
+    intro: '把所有烦恼泡泡都戳破！', hint: '' },
+
+  { id: 2, tier: '谷底', title: '连起来啦', mode: 'clear',
+    total: 28, mix: { normal: 28, tough: 0, red: 0, frozen: 0 },
+    speed: 0.55, radius: 30, run: [6, 9], timeLimit: 0, target: null,
+    needBlast: 1, redLimit: null, redTimes: [], redEvery: 0, par: 50,
+    intro: '全破，并打出 1 次「烦恼清空」！', hint: '连戳同一种颜色的泡泡，攒满 8 连击就会爆炸清空一片。' },
+
+  { id: 3, tier: '爬升', title: '有壳的来了', mode: 'clear',
+    total: 26, mix: { normal: 20, tough: 6, red: 0, frozen: 0 },
+    speed: 0.6, radius: 30, run: [3, 5], timeLimit: 0, target: null,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 70,
+    intro: '带壳的顽固泡泡出现了，全部戳破！', hint: '顿悟：先戳顽固泡旁边的普通泡，震波会给它的壳加一道裂纹。' },
+
+  { id: 4, tier: '浪尖', title: '手速大考验', mode: 'timed',
+    total: 45, mix: { normal: 45, tough: 0, red: 0, frozen: 0 },
+    speed: 0.95, radius: 29, run: [3, 5], timeLimit: 45, target: 40,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 45,
+    intro: '45 秒内戳破 40 个泡泡！', hint: '' },
+
+  { id: 5, tier: '治愈', title: '慢慢戳时光', mode: 'heal',
+    total: 35, mix: { normal: 35, tough: 0, red: 0, frozen: 0 },
+    speed: 0.35, radius: 31, run: [3, 5], timeLimit: 0, target: 25,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 45,
+    intro: '慢慢戳，戳破 25 个就过关，没有失败。', hint: '' },
+
+  { id: 6, tier: '谷底', title: '清空大作战', mode: 'clear',
+    total: 42, mix: { normal: 42, tough: 0, red: 0, frozen: 0 },
+    speed: 0.6, radius: 30, run: [5, 8], timeLimit: 0, target: null,
+    needBlast: 2, redLimit: null, redTimes: [], redEvery: 0, par: 60,
+    intro: '全破，并打出 2 次「烦恼清空」！', hint: '同色泡泡成组出现，顺着一组连戳，连击不断线。' },
+
+  { id: 7, tier: '爬升', title: '硬骨头专场', mode: 'clear',
+    total: 34, mix: { normal: 26, tough: 8, red: 0, frozen: 0 },
+    speed: 0.65, radius: 30, run: [3, 5], timeLimit: 0, target: null,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 85,
+    intro: '顽固泡泡变多了，全部戳破！', hint: '' },
+
+  { id: 8, tier: '浪尖', title: '红泡别跑', mode: 'clear',
+    total: 29, mix: { normal: 24, tough: 0, red: 5, frozen: 0 },
+    speed: 0.65, radius: 29, run: [3, 5], timeLimit: 0, target: null,
+    needBlast: 0, redLimit: 1, redTimes: [], redEvery: 7, par: 75,
+    intro: '红色倒计时泡出现后 5 秒内戳破，漏破不能超过 1 个！', hint: '顿悟：红泡一出现先戳它，顺序比速度重要。' },
+
+  { id: 9, tier: '爬升', title: '又快又稳', mode: 'timed',
+    total: 48, mix: { normal: 44, tough: 0, red: 4, frozen: 0 },
+    speed: 0.85, radius: 29, run: [3, 5], timeLimit: 50, target: 42,
+    needBlast: 0, redLimit: 1, redTimes: [8, 20, 32, 43], redEvery: 0, par: 50,
+    intro: '50 秒内戳破 42 个，红泡漏破不能超过 1 个！', hint: '' },
+
+  { id: 10, tier: '治愈', title: '云朵一样软', mode: 'heal',
+    total: 40, mix: { normal: 40, tough: 0, red: 0, frozen: 0 },
+    speed: 0.35, radius: 31, run: [5, 7], timeLimit: 0, target: 30,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 55,
+    intro: '慢慢戳，戳破 30 个就过关，没有失败。', hint: '' },
+
+  { id: 11, tier: '谷底', title: '冰冰凉凉', mode: 'clear',
+    total: 26, mix: { normal: 18, tough: 0, red: 0, frozen: 8 },
+    speed: 0.55, radius: 30, run: [3, 5], timeLimit: 0, target: null,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 60,
+    intro: '冰冻泡泡戳不动，想办法把它们全震碎！', hint: '顿悟：按住屏幕蓄力 0.6 秒再松手，能震碎整片冰面。' },
+
+  { id: 12, tier: '爬升', title: '冰火两重天', mode: 'clear',
+    total: 38, mix: { normal: 22, tough: 6, red: 0, frozen: 10 },
+    speed: 0.6, radius: 30, run: [3, 5], timeLimit: 0, target: null,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 90,
+    intro: '冰冻泡和顽固泡一起上，全部解决！', hint: '' },
+
+  { id: 13, tier: '浪尖', title: '全员上阵', mode: 'timed',
+    total: 55, mix: { normal: 44, tough: 5, red: 3, frozen: 3 },
+    speed: 0.9, radius: 29, run: [3, 5], timeLimit: 55, target: 48,
+    needBlast: 0, redLimit: 1, redTimes: [10, 26, 42], redEvery: 0, par: 55,
+    intro: '55 秒内戳破 48 个，红泡漏破不能超过 1 个！', hint: '' },
+
+  { id: 14, tier: '浪尖', title: '眼睛跟不上啦', mode: 'timed',
+    total: 55, mix: { normal: 55, tough: 0, red: 0, frozen: 0 },
+    speed: 1.35, radius: 22, run: [3, 5], timeLimit: 50, target: 46,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 50,
+    intro: '泡泡又小又快！50 秒内戳破 46 个！', hint: '' },
+
+  { id: 15, tier: '治愈', title: '烦恼清零日', mode: 'heal',
+    total: 45, mix: { normal: 45, tough: 0, red: 0, frozen: 0 },
+    speed: 0.35, radius: 31, run: [3, 5], timeLimit: 0, target: 35,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 60,
+    intro: '最后一关，慢慢把烦恼都戳掉，戳破 35 个就过关。', hint: '' }
+];
+
+/* 每关使用的颜色种数：需要清空爆炸的关卡颜色少、单色总量足，
+ * 机器人/玩家才能连戳同色攒满 8 连击。 */
+var COLOR_COUNT = { 1: 4, 2: 3, 3: 4, 4: 5, 5: 4, 6: 3, 7: 4, 8: 4, 9: 5, 10: 4, 11: 4, 12: 4, 13: 5, 14: 5, 15: 4 };
+LEVELS.forEach(function (l) { l.colors = COLOR_COUNT[l.id] || 4; });
+
+/* 达标门槛（按难度层）：机器人基线判定用 */
+var THRESHOLDS = { '谷底': 0.95, '爬升': 0.85, '浪尖': 0.70, '治愈': 1.00 };
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { WORDS: WORDS, COLOR_NAMES: COLOR_NAMES, COLOR_VALUES: COLOR_VALUES, LEVELS: LEVELS, THRESHOLDS: THRESHOLDS };
+}
+
+</script>
+<script>
+'use strict';
+/* ================= 常量（机制参数与原版一致，参数同源 levels.js） ================= */
+var W = 375, H = 667, HUD_H = 64, BAR_H = 76, FIELD_Y = 64, FIELD_H = 527;
+var BLAST_NEED = 8, BLAST_RADIUS = 115, CRACK_RANGE = 26, RED_TTL = 5, SCREEN_TARGET = 12;
+var COLORS = COLOR_VALUES;
+/* 快乐版显示色板（粉彩糖果系，仅显示层；levels.js 的 COLOR_VALUES 不动） */
+var JOY_COLORS = ['#ff8fc0', '#6fd3ff', '#ffe082', '#7fe7c4', '#cda6f5'];
+var CORAL = '#ff7d8a';                 // 倒计时泡：珊瑚玫瑰
+var INK = '#33415c', INK_SOFT = '#5a6b85', INK_FAINT = '#93a5bd';
+var CONF_MAX = 120;                    // 同屏纸屑上限
+
+var cv = document.getElementById('cv');
+var ctx = cv.getContext('2d');
+var wrap = document.getElementById('wrap');
+
+function fit() {
+  var w = Math.min(window.innerWidth, window.innerHeight * W / H, 480);
+  var h = w * H / W;
+  wrap.style.width = w + 'px'; wrap.style.height = h + 'px';
+  var dpr = Math.min(window.devicePixelRatio || 1, 3);   // DPR 上限 3，Retina 不发虚
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  cv.style.width = w + 'px'; cv.style.height = h + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', fit);
+
+/* ================= 存档 ================= */
+var SAVE_KEY = 'paopao_meifannao_v1';
+var save = { unlocked: 1, stars: {}, props: { needle: 1, shock: 1, slow: 1 },
+  music: true, jinnangMax: 0, lastVisit: '', lastDaily: '', giftClaimed: false,
+  endHist: { forms: [], lines: [], combos: [] }, shareRewards: {} };
+try {
+  var raw = localStorage.getItem(SAVE_KEY);
+  if (raw) {
+    var p = JSON.parse(raw);
+    if (p && p.props) {
+      for (var k in save) if (p[k] !== undefined) save[k] = p[k];
+      save.props = p.props;
+    }
+  }
+} catch (e) {}
+function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
+
+/* ================= 音效（WebAudio 合成，无外部文件） ================= */
+var AC = null;
+function audio() {
+  if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+  if (AC && AC.state === 'suspended') AC.resume();
+  return AC;
+}
+/* 当前音量系数：解压/晚安/呼吸模式走柔和档 */
+function sfxVolFactor() {
+  if (screen === 'relax' || screen === 'night' || playKind === 'relax' || playKind === 'night') return 0.5;
+  if (screen === 'breath' || screen === 'breathcard') return 0.4;
+  return 1;
+}
+function tone(freqA, freqB, dur, type, vol, delay) {
+  var ac = audio(); if (!ac) return;
+  var t0 = ac.currentTime + (delay || 0);
+  var o = ac.createOscillator(), g = ac.createGain();
+  o.type = type || 'sine';
+  o.frequency.setValueAtTime(freqA, t0);
+  o.frequency.exponentialRampToValueAtTime(Math.max(freqB, 1), t0 + dur);
+  g.gain.setValueAtTime((vol || 0.15) * sfxVolFactor(), t0);
+  g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+  o.connect(g); g.connect(ac.destination);
+  o.start(t0); o.stop(t0 + dur + 0.02);
+}
+/* 五声音阶（C 大调宫调式 C D E G A，两组八度循环上行） */
+var SCALE = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99, 880.00];
+var noteIdx = 0, lastNoteAt = -10;
+function sfxNote() {
+  if (elapsed - lastNoteAt > 1.2) noteIdx = 0;              // 断连 1.2 秒音阶重置
+  var f = SCALE[Math.min(noteIdx, SCALE.length - 1)];
+  noteIdx++;
+  lastNoteAt = elapsed;
+  tone(f, f * 0.99, 0.14, 'triangle', 0.20);
+  tone(f * 2, f * 2 * 0.99, 0.08, 'sine', 0.05);
+}
+function sfxPopSoft() { tone(340, 240, 0.12, 'sine', 0.13); }   // 解压/晚安柔和戳声
+function sfxCrack() { tone(210, 120, 0.06, 'square', 0.10); }
+function sfxBlast() {  // 清空爆炸：上行小琶音
+  [523.25, 659.25, 783.99, 1046.5].forEach(function (f, i) { tone(f, f, 0.12, 'triangle', 0.13, i * 0.045); });
+  tone(170, 60, 0.22, 'sine', 0.16);
+}
+function sfxShatter() { tone(1350, 280, 0.22, 'sine', 0.14); tone(1800, 500, 0.16, 'sine', 0.07, 0.03); }
+function sfxRed() { tone(880, 880, 0.08, 'square', 0.06); }
+function sfxWhistle() { tone(620, 1860, 0.22, 'sine', 0.14); tone(1860, 1240, 0.12, 'sine', 0.07, 0.2); }  // 彩虹泡滑音哨
+function sfxSpring() { tone(280, 920, 0.13, 'sine', 0.15); tone(920, 460, 0.11, 'sine', 0.10, 0.11); }       // 金色泡弹簧音
+function sfxSparkle() { [1318.5, 1568, 2093].forEach(function (f, i) { tone(f, f, 0.09, 'sine', 0.06, i * 0.05); }); }
+function sfxCheer() { [523.25, 587.33, 783.99].forEach(function (f, i) { tone(f, f, 0.1, 'triangle', 0.09, i * 0.05); }); }
+function sfxWin() { [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach(function (f, i) { tone(f, f, 0.16, 'triangle', 0.13, i * 0.09); }); }
+function sfxSoftFail() { tone(392, 392, 0.14, 'sine', 0.10); tone(523.25, 523.25, 0.2, 'sine', 0.10, 0.13); }  // 温柔收尾，不丧气
+function sfxClick() { tone(660, 660, 0.05, 'sine', 0.07); }
+function sfxProp() { tone(587.33, 587.33, 0.07, 'triangle', 0.10); tone(880, 880, 0.1, 'triangle', 0.10, 0.06); }
+
+/* ================= 轻快 BGM（WebAudio 合成循环，约 112 BPM） ================= */
+var BGM = { started: false, step: 0, nextT: 0 };
+var BGM_MELODY = [0, 2, 4, 2, 5, 4, 2, 1, 0, 2, 4, 4, 5, 4, 2, -1,   // 音阶序号，-1 休止（C 大调五声）
+                  3, 4, 5, 4, 3, 2, 1, 2, 0, 1, 2, -1, 2, 1, 0, -1];
+var BGM_CHORDS = [[130.81, 196.00, 261.63], [98.00, 146.83, 196.00], [110.00, 164.81, 220.00], [87.31, 130.81, 174.61]]; // C G Am F 低音+和弦
+var BGM_SCALE = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
+function bgmVolFactor() {
+  if (screen === 'relax' || screen === 'night' || screen === 'breath' || playKind === 'relax' || playKind === 'night') return 0.45;
+  return 1;
+}
+function bgmNote(freq, t0, dur, type, vol) {
+  var o = AC.createOscillator(), g = AC.createGain();
+  o.type = type; o.frequency.setValueAtTime(freq, t0);
+  g.gain.setValueAtTime(vol * bgmVolFactor(), t0);
+  g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+  o.connect(g); g.connect(AC.destination);
+  o.start(t0); o.stop(t0 + dur + 0.02);
+}
+function bgmTick() {
+  if (!save.music || !BGM.started) return;
+  var ac = audio(); if (!ac) return;
+  var stepDur = 60 / 112 / 2;                       // 八分音符
+  if (BGM.nextT < ac.currentTime) { BGM.nextT = ac.currentTime + 0.05; BGM.step = 0; }
+  while (BGM.nextT < ac.currentTime + 0.18) {
+    var s = BGM.step, t0 = BGM.nextT;
+    var bar = Math.floor(s / 8) % 4, chord = BGM_CHORDS[bar];
+    if (s % 8 === 0) chord.forEach(function (f) { bgmNote(f * 2, t0, stepDur * 7, 'triangle', 0.020); });  // 和弦垫
+    if (s % 4 === 0) bgmNote(chord[0], t0, stepDur * 2, 'sine', 0.045);                                     // 低音
+    var m = BGM_MELODY[s % BGM_MELODY.length];
+    if (m >= 0) bgmNote(BGM_SCALE[m], t0, stepDur * 0.95, 'triangle', 0.042);                               // 主旋律
+    BGM.step++; BGM.nextT += stepDur;
+  }
+}
+
+/* ================= 工具 ================= */
+function rnd(a, b) { return a + Math.random() * (b - a); }
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+  return a;
+}
+function rr(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+/* 弹性缓动：鼓励字/面板/按钮统一 easeOutBack，禁线性生硬进出 */
+function easeOutBack(t) { var c1 = 1.70158, c3 = c1 + 1; t = Math.max(0, Math.min(1, t)); return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); }
+function easeOut(t) { t = Math.max(0, Math.min(1, t)); return 1 - Math.pow(1 - t, 3); }
+/* 洗牌袋轮换：抽完一轮才重复 */
+var bags = {};
+function bagDraw(key, pool) {
+  if (!bags[key] || bags[key].idx >= bags[key].items.length) bags[key] = { items: shuffle(pool), idx: 0 };
+  return bags[key].items[bags[key].idx++];
+}
+
+/* ================= 暖心话库（五池，≥60 句；口径：会夸会哄、心里甜） ================= */
+/* 来源标注见 report-joy.md：自创 / 流传改编（民间短句改编成泡泡口吻） */
+var WARM = {
+  praise: [   // 夸奖池（过关＋连击猛夸）15+
+    '这手速，泡泡看了都想给你让路', '全清！你就是烦恼克星本星', '漂亮！这局打得跟表演赛似的',
+    '你一出手，泡泡全场自觉排队', '哇，这波连招，我眼睛都看直了', '运气也是实力，你今天双份在线',
+    '好家伙，烦恼在你手里活不过三秒', '这节奏感，泡泡都想跟着你跳舞', '你笑起来的样子，比过关还好看',
+    '稳得很，泡泡们心服口服', '今天的你，闪闪发光挡不住', '生活明朗，万物可爱，你最可爱',
+    '好运正在派送，第一个就是你', '万事胜意，说的就是你今天', '你负责开心，烦恼我来赶跑',
+    '这局封神，泡泡圈都传遍了'
+  ],
+  comfort: [  // 安慰池（未过关专用，先甩锅给泡泡）10+
+    '不怪你，是泡泡太狡猾', '它们就是仗着人多，咱们一个个收拾', '差一点点而已，你的手感明明超好',
+    '没事没事，泡泡们就是欠戳', '就差一口气，下一局它们跑不掉', '烦恼没清完没关系，我陪你慢慢来',
+    '是运气刚才打了个盹，马上就回来', '你已经很棒了，泡泡只是运气好', '歇口气，喝口水，回来继续收拾它们',
+    '它们跑得了一时，跑不了下一局', '天大的烦恼，也敌不过你多戳两下'
+  ],
+  encourage: [ // 鼓励池（开局/过半/进行中）12
+    '开局就这么顺，今天运气不错呀', '过半啦，你这节奏稳得很', '手感热起来了，就是这个味儿',
+    '慢慢来，泡泡们都等着你呢', '你戳泡泡的样子，认真又好看', '节奏对了，剩下的交给手速',
+    '看，烦恼已经少了一大半', '今天的你，出手自带好运', '日子要甜甜的，先从这局开始',
+    '别急，好运在路上堵着车呢', '你比泡泡聪明多了，稳住', '这一局，注定是你的主场'
+  ],
+  daily: [    // 每日一句池（每日首开）9 + 想念 3
+    '新的一天，好运先给你留了座', '今天也要甜甜的，你值得', '阳光正好，你笑得更好',
+    '把烦恼留给泡泡，把开心留给自己', '今日好运已派送，请注意查收', '你一来，今天都变可爱了',
+    '慢慢生活，稳稳幸福', '吃好喝好，今天没烦恼', '所有的好运，都在赶来见你的路上'
+  ],
+  miss: [     // 回归想念（距上次打开 ≥1 天）
+    '你可算来了，泡泡们排队等你戳', '想你啦，今天的烦恼都给你留好了', '好久不见，泡泡们想你想得都鼓起来了'
+  ],
+  funny: [    // 搞怪池：遗言弹字 7 + 待机碎碎念 6
+    '我裂开了', '拜拜了您嘞', '啊~舒服', '我先撤了', '啪！就很突然', '下辈子还做泡泡', '爽到飞起',
+    '戳我呀，嘿嘿', '我可是最圆的泡', '今天也要鼓鼓的', '别看我，我脸圆', '我先鼓为敬', '风再大我也不跑偏'
+  ],
+  heal: [     // 治愈关专属
+    '烦恼到此为止，剩下的都是好日子', '慢慢戳，世界陪你一起慢下来', '你看，云朵在天上也是慢慢飘的', '这一局的温柔，全都归你'
+  ],
+  breathe: [  // 深呼吸安神卡
+    '你看，肩膀是不是松下来了', '心跳慢下来了，烦恼也慢下来了', '这一分钟，世界只剩下呼吸和你'
+  ],
+  night: [    // 晚安卡
+    '晚安，今天的你也辛苦了', '星星都睡了，你也安心睡吧', '把烦恼关在门外，好梦进来坐坐'
+  ],
+  egg: [      // 彩蛋结尾
+    '泡泡们说：你今天真好看', '全体泡泡向你鞠躬啦', '泡泡合唱：你最棒'
+  ],
+  short: [    // 泡泡排队弹字（短句，一字一泡）
+    '你真棒', '烦恼退散', '开心最重要', '笑一个吧', '好运连连', '今天超幸运'
+  ]
+};
+/* 下一关预告（索引=刚过关卡号，指向下一关；第 15 关为收尾句） */
+var NEXT_TEASER = [
+  '下一关：连着戳同色，有大惊喜', '下一关：有泡泡穿上壳了，硬得很', '下一关：拼手速的时候到啦',
+  '下一关：慢悠悠，治愈时间', '下一关：清空爆炸，连着来两次', '下一关：硬骨头组团来了',
+  '下一关：红泡泡登场，别让它跑了', '下一关：又快又稳，红泡也来凑热闹', '下一关：泡个温泉，慢慢戳',
+  '下一关：冰冰凉的泡泡，戳不动哦', '下一关：冰和壳一起上，热闹了', '下一关：全员上阵，大场面',
+  '下一关：泡泡小而快，眼睛要跟上', '下一关：最后一站，温柔收尾', '明天还有新话等你'
+];
+
+/* ================= 好听话锦囊（30 条：夸人 8 / 安慰人 8 / 鼓励人 7 / 哄人 7） ================= */
+/* 每过一关解锁 2 条，按下方顺序发放；cat 色标：夸 #ff8fab 安慰 #7fc8bc 鼓励 #ffb35c 哄 #b79ced */
+var JINNANG = [
+  { cat: '夸人', text: '这事交给你，我特别放心', scene: '同事把活干漂亮了时', teaser: '这句一出，对方立马挺直腰板' },
+  { cat: '安慰人', text: '不是你的错，换谁都会难受，先缓缓', scene: '朋友自责难过时', teaser: '先接住情绪的那种' },
+  { cat: '鼓励人', text: '你已经比昨天更稳了，肉眼可见', scene: '朋友坚持一件事时', teaser: '进步被看见的感觉' },
+  { cat: '哄人', text: '别气啦，气坏了我心疼，请你喝奶茶', scene: '朋友生闷气时', teaser: '奶茶味的台阶' },
+  { cat: '夸人', text: '你一出手，事情立马就有谱了', scene: '夸同事靠谱时', teaser: '把人夸得干劲十足' },
+  { cat: '安慰人', text: '天大的事，也先吃顿饭再说', scene: '朋友焦头烂额时', teaser: '烟火气里藏着安慰' },
+  { cat: '鼓励人', text: '就差临门一脚，别怂，冲', scene: '朋友临阵犹豫时', teaser: '推人一把的劲儿' },
+  { cat: '哄人', text: '好好好，都是月亮惹的祸，我给你赔不是', scene: '跟对象闹小别扭时', teaser: '笑着就和好了' },
+  { cat: '夸人', text: '跟你共事，心里特别踏实', scene: '合作告一段落时', teaser: '踏实感拉满的一句' },
+  { cat: '安慰人', text: '你已经尽力了，剩下的交给运气', scene: '事情没办成时', teaser: '帮人卸下包袱的一句' },
+  { cat: '鼓励人', text: '你认真起来的样子，特别有魅力', scene: '朋友埋头努力时', teaser: '夸努力夸到心坎' },
+  { cat: '哄人', text: '你生气的样子都好看，就是有点费我', scene: '哄对象消气时', teaser: '俏皮到没法继续气' },
+  { cat: '夸人', text: '你这脑子，转得比陀螺还快', scene: '朋友想出好点子时', teaser: '夸聪明，夸得带笑' },
+  { cat: '安慰人', text: '哭出来也行，我陪你坐会儿', scene: '朋友忍不住掉眼泪时', teaser: '不说话也温暖' },
+  { cat: '鼓励人', text: '这事别人不行，你真行', scene: '朋友自我怀疑时', teaser: '信任感直接拉满' },
+  { cat: '哄人', text: '错啦错啦，下次我把好吃的都让给你', scene: '为小事拌嘴后', teaser: '用吃的摆平一切' },
+  { cat: '夸人', text: '你今天状态绝了，闪闪发光', scene: '朋友精心打扮出门时', teaser: '夸到对方心里开花' },
+  { cat: '安慰人', text: '这阵子过去，你还是那条好汉', scene: '朋友正处低谷时', teaser: '低谷里的一把火' },
+  { cat: '鼓励人', text: '小步也是步，一直走就很了不起', scene: '朋友进度慢时', teaser: '慢也有慢的光' },
+  { cat: '哄人', text: '别皱眉啦，皱纹会当真的，笑一个', scene: '朋友愁眉苦脸时', teaser: '一句就逗笑' },
+  { cat: '夸人', text: '这道菜一上桌，饭店都得靠边站', scene: '吃到好吃的家常菜时', teaser: '夸厨艺的天花板句' },
+  { cat: '安慰人', text: '别拿别人的进度，催自己的路', scene: '朋友焦虑比较时', teaser: '专治焦虑内耗' },
+  { cat: '鼓励人', text: '你的坚持，早晚会被看见', scene: '努力还没回报时', teaser: '给等待一个交代' },
+  { cat: '哄人', text: '你一生气，我这心里就下雨，带伞来哄你了', scene: '异地哄人时', teaser: '隔着屏幕都暖' },
+  { cat: '夸人', text: '你说话总能说到点子上', scene: '开会发言被认可时', teaser: '夸表达，特别服气那种' },
+  { cat: '安慰人', text: '累了就歇，天塌不下来', scene: '家人连轴转时', teaser: '听完肩膀都松了' },
+  { cat: '鼓励人', text: '去试试呗，最坏也就是回原地', scene: '朋友想尝试新事物时', teaser: '把恐惧说小的一句' },
+  { cat: '哄人', text: '抱抱，不气了，气出皱纹我可赔不起', scene: '朋友受委屈时', teaser: '抱抱是最好的药' },
+  { cat: '夸人', text: '有你在，这个家就稳稳的', scene: '对家人表达感谢时', teaser: '一句顶一万句辛苦了' },
+  { cat: '安慰人', text: '慢慢来，我等你，不着急', scene: '对方手忙脚乱时', teaser: '温柔到骨子里' }
+];
+var JINNANG_CAT_COLOR = { '夸人': '#ff8fab', '安慰人': '#7fc8bc', '鼓励人': '#ffb35c', '哄人': '#b79ced' };
+function jinnangUnlockedCount() { return Math.min(30, (save.jinnangMax || 0) * 2); }
+
+/* 解压专场 / 晚安关词库（独立模式，不进 levels.js） */
+var RELAX_WORDS = ['没事的', '慢慢来', '辛苦了', '抱抱', '会好的', '深呼吸', '放轻松', '我在呢', '别怕', '歇一歇', '喝口水', '你很好'];
+var RELAX_COLORS = ['#ffc2d6', '#bfe6da', '#ffe9b8', '#c2e2f7', '#ddd0f2'];
+var NIGHT_WORDS = ['晚安', '好梦', '今天辛苦了', '星星陪你睡', '月亮邮差', '做个好梦', '安心睡', '被窝暖暖', '梦里见', '辛苦啦'];
+var NIGHT_COLORS = ['#8fa3d9', '#a58fd9', '#d98fb8', '#7fb0d9', '#98a8e0'];
+
+/* 与 sim.js 相同的队列生成：类型按 mix 洗牌，颜色按 run 成组、总量均衡 */
+function buildQueue(level) {
+  var types = [];
+  ['normal', 'tough', 'frozen'].forEach(function (t) {
+    for (var i = 0; i < (level.mix[t] || 0); i++) types.push(t);
+  });
+  types = shuffle(types);
+  var n = types.length, C = level.colors, pool = [], colorSeq = [];
+  for (var c = 0; c < C; c++) pool.push(Math.floor(n / C) + (c < (n % C) ? 1 : 0));
+  var ci = Math.floor(Math.random() * C), guard = 0;
+  while (colorSeq.length < n && guard++ < 10000) {
+    if (pool[ci] <= 0) { ci = (ci + 1) % C; continue; }
+    var take = Math.min(pool[ci], level.run[0] + Math.floor(Math.random() * (level.run[1] - level.run[0] + 1)));
+    for (var k = 0; k < take; k++) colorSeq.push(ci);
+    pool[ci] -= take;
+    ci = (ci + 1 + Math.floor(Math.random() * (C - 1))) % C;
+  }
+  return types.map(function (t, i) { return { type: t, color: colorSeq[i] }; });
+}
+
+/* ================= 游戏状态 ================= */
+var screen = 'home';           // home / levels / jinnang / jindetail / intro / play / relax / breath / breathcard / night / nightcard / ending / clear / fail
+var playKind = 'level';        // level / relax / night（play/relax/night 共用泡泡场时的模式标记在 screen 上，此处记关卡外模式）
+var cur = null;
+var bubbles = [], particles = [], floaters = [], confetti = [], bigTexts = [], rings = [], faceFx = [];
+var queue = [], spawned = 0, redSpawned = 0;
+var pops = 0, blasts = 0, redMissed = 0, lives = 3;
+var elapsed = 0, timeLeft = 0, slowUntil = -1;
+var streakColor = -1, streak = 0, lastPopAt = -10;
+var hotChain = 0;                       // 任意颜色连戳链（鼓励档位用）
+var wordPool = [], wordIdx = 0;
+var mode = null;                        // 'needle' / 'shock'
+var revives = 0;
+var failGap = '', failLine = '', failGift = '';
+var clearInfo = null, ending = null, endingT = 0;
+var charge = null;
+var adOverlay = null;
+var toast = null;
+var hintFlags = {};
+var spawnTick = 0, surpriseTick = 3, surpriseBudget = { r: 0, g: 0 };
+var easyLeft = 0;                       // 开局易戳泡剩余数
+var helpPending = false;                // 未过关后的一次性局内帮助（下局开局 3 秒慢放）
+var lastPopsSeen = 0, tenCeleb = 0, halfDone = false, first3Done = false;
+var lastPopPos = { x: W / 2, y: H / 2 };
+var counterPulseT = -9, murmurTick = 5;
+var lastPointer = { x: -999, y: -999, t: -9 };
+var buttons = [];
+var transStart = 0, lastDrawnScreen = '';
+var pressMark = null;                   // {x,y,w,h,t} 按钮挤压回弹
+var dailyCard = null;                   // {line, propName, tomorrow}
+var todayLine = '';
+var jinnangScroll = 0, jinnangHits = [], jinnangSel = -1;
+var relaxPops = 0, nightPops = 0, modeSpawnTick = 0;
+var breath = null;                      // {round, phase, t, holding}
+var spawnScale = 1;                     // 掉帧时先减粒子
+
+function nextWord() {
+  if (wordIdx >= wordPool.length) { wordPool = shuffle(WORDS); wordIdx = 0; }
+  return wordPool[wordIdx++];
+}
+function radiusOf(level, type) {
+  if (type === 'tough') return level.radius + 3;
+  if (type === 'frozen') return level.radius + 1;
+  return level.radius + rnd(-3, 3);
+}
+var FACE_POOL = ['smile', 'smile', 'smile', 'wink', 'tongue', 'sleepy', 'look', 'silly'];
+function spawnBubble(spec) {
+  var r = radiusOf(cur, spec.type);
+  var easy = easyLeft > 0 && spec.type === 'normal';
+  if (easy) { r += 5; easyLeft--; }
+  var x = rnd(r + 4, W - r - 4), y = FIELD_Y + rnd(r + 4, FIELD_H - r - 4);
+  if (easy) { x = rnd(95, W - 95); y = FIELD_Y + rnd(120, 320); }   // 开局前几个：居中易戳
+  for (var tries = 0; tries < 8; tries++) {
+    var ok = true;
+    for (var i = 0; i < bubbles.length; i++) {
+      var b = bubbles[i], dx = b.x - x, dy = b.y - y;
+      if (dx * dx + dy * dy < (b.r + r) * (b.r + r) * 0.55) { ok = false; break; }
+    }
+    if (ok) break;
+    x = rnd(r + 4, W - r - 4); y = FIELD_Y + rnd(r + 4, FIELD_H - r - 4);
+  }
+  var ang = rnd(0, Math.PI * 2), spd = spec.type === 'frozen' ? 0 : rnd(10, 24) * cur.speed;
+  if (easy) spd *= 0.45;                                            // 开局慢一点，先开心
+  bubbles.push({
+    type: spec.type, color: spec.color, x: x, y: y, r: r,
+    vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
+    hp: spec.type === 'tough' ? 2 : 1,
+    ttl: spec.type === 'red' ? RED_TTL : Infinity,
+    word: nextWord(), seed: rnd(0, 10), dead: false,
+    face: pick(FACE_POOL), dodgeCd: 0
+  });
+}
+/* 惊喜泡：额外生成，不计入原总量与目标 */
+function spawnSurprise(type) {
+  var r = cur.radius + 2;
+  var x = rnd(r + 6, W - r - 6), y = FIELD_Y + rnd(r + 10, FIELD_H - r - 10);
+  var ang = rnd(0, Math.PI * 2), spd = rnd(8, 16) * cur.speed;
+  bubbles.push({
+    type: type, color: -2, x: x, y: y, r: r,
+    vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
+    hp: 1, ttl: Infinity, word: '', seed: rnd(0, 10), dead: false,
+    face: 'smile', dodgeCd: 0
+  });
+}
+function surpriseCounts() {
+  var t = cur.total;
+  var nr = Math.floor(t * 0.03) + (Math.random() < (t * 0.03 % 1) ? 1 : 0);
+  var ng = Math.floor(t * 0.02) + (Math.random() < (t * 0.02 % 1) ? 1 : 0);
+  return { r: nr, g: ng };
+}
+function isSurprise(b) { return b.type === 'rainbow' || b.type === 'gold'; }
+function startLevel(idx) {
+  cur = LEVELS[idx];
+  playKind = 'level';
+  bubbles = []; particles = []; floaters = []; confetti = []; bigTexts = []; rings = []; faceFx = [];
+  queue = buildQueue(cur); spawned = 0; redSpawned = 0;
+  pops = 0; blasts = 0; redMissed = 0; lives = 3;
+  elapsed = 0; timeLeft = cur.timeLimit || 0; slowUntil = -1;
+  streakColor = -1; streak = 0; lastPopAt = -10; hotChain = 0; noteIdx = 0; lastNoteAt = -10;
+  mode = null; revives = 0; charge = null; spawnTick = 0;
+  hintFlags = {}; easyLeft = 5;
+  lastPopsSeen = 0; tenCeleb = 0; halfDone = false; first3Done = false;
+  murmurTick = rnd(4, 7);
+  var sc = surpriseCounts();
+  if (cur.mode !== 'timed') {
+    while (spawned < queue.length) spawnBubble(queue[spawned++]);
+    for (var i = 0; i < sc.r; i++) spawnSurprise('rainbow');
+    for (var j = 0; j < sc.g; j++) spawnSurprise('gold');
+    surpriseBudget = { r: 0, g: 0 };
+  } else {
+    surpriseBudget = sc; surpriseTick = 4;
+  }
+  if (helpPending) {                       // 上局没过关的一次性帮助：开局 3 秒慢放
+    helpPending = false;
+    slowUntil = 3;
+    setTimeout(function () { showToast('开局慢放 3 秒，稳稳的'); }, 60);
+  }
+  BGM.started = true;
+  screen = 'play';
+}
+/* 独立模式：解压专场 / 晚安关（不进 levels.js） */
+function spawnModeBubble(kind) {
+  var words = kind === 'relax' ? RELAX_WORDS : NIGHT_WORDS;
+  var cols = kind === 'relax' ? RELAX_COLORS : NIGHT_COLORS;
+  var r = kind === 'relax' ? rnd(28, 38) : rnd(34, 44);
+  var x = rnd(r + 4, W - r - 4), y = FIELD_Y + rnd(r + 4, FIELD_H - r - 4);
+  var ang = rnd(0, Math.PI * 2), spd = kind === 'relax' ? rnd(5, 11) : rnd(3, 7);
+  bubbles.push({
+    type: 'normal', color: 0, joyColor: pick(cols), x: x, y: y, r: r,
+    vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
+    hp: 1, ttl: Infinity, word: pick(words), seed: rnd(0, 10), dead: false,
+    face: pick(FACE_POOL), dodgeCd: 0
+  });
+}
+function enterRelax() {
+  playKind = 'relax'; bubbles = []; particles = []; floaters = []; confetti = []; bigTexts = []; rings = []; faceFx = [];
+  relaxPops = 0; modeSpawnTick = 0; elapsed = 0; charge = null;
+  for (var i = 0; i < 10; i++) spawnModeBubble('relax');
+  BGM.started = true;
+  screen = 'relax';
+}
+function enterNight() {
+  playKind = 'night'; bubbles = []; particles = []; floaters = []; confetti = []; bigTexts = []; rings = []; faceFx = [];
+  nightPops = 0; modeSpawnTick = 0; elapsed = 0; charge = null;
+  for (var i = 0; i < 9; i++) spawnModeBubble('night');
+  BGM.started = true;
+  screen = 'night';
+}
+function enterBreath() {
+  breath = { round: 1, phase: 'inhale', t: 0, holding: false };
+  screen = 'breath';
+}
+function breathDur(round, phase) {
+  var slow = round >= 4 ? 0.5 : 0;
+  if (phase === 'hold') return 2;
+  return 4 + slow;
+}
+
+/* ================= 粒子 / 彩带 / 特效 ================= */
+function addParticles(x, y, color, n, power) {
+  n = Math.round(n * spawnScale);
+  for (var i = 0; i < n; i++) {
+    var a = rnd(0, Math.PI * 2), s = rnd(30, power || 130);
+    particles.push({ shape: 'dot', x: x, y: y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 20, life: rnd(0.2, 0.35), t: 0, color: color, r: rnd(2, 4.5) });
+  }
+}
+function addShards(x, y, color) {   // 戳破三件套之一：碎片四溅（≤0.35 秒收尾）
+  var n = Math.round(6 * spawnScale);
+  for (var i = 0; i < n; i++) {
+    var a = rnd(0, Math.PI * 2), s = rnd(60, 170);
+    particles.push({ shape: 'shard', x: x, y: y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 30, life: rnd(0.22, 0.35), t: 0, color: color, r: rnd(2.5, 5), rot: rnd(0, 6), vr: rnd(-9, 9) });
+  }
+}
+function addPlusFx(x, y) {          // 每戳小号星星/爱心粒子
+  var shapes = ['star', 'heart'];
+  for (var i = 0; i < 2; i++) {
+    particles.push({ shape: pick(shapes), x: x + rnd(-8, 8), y: y - 6, vx: rnd(-14, 14), vy: rnd(-70, -45), life: rnd(0.45, 0.65), t: 0, color: pick(['#ffb35c', '#ff8fab', '#ffd166']), r: rnd(4, 6.5) });
+  }
+}
+function addRing(x, y, color, maxR) { rings.push({ x: x, y: y, color: color, maxR: maxR || 46, t: 0, life: 0.35 }); }
+function addLaugh(x, y, scale) { faceFx.push({ x: x, y: y, t: 0, life: 0.28, scale: scale || 1 }); }
+var CONF_COLORS = ['#ff8fab', '#ffd166', '#7fe7c4', '#6fd3ff', '#cda6f5', '#ffb35c'];
+function spawnConfetti(x, y, n, opts) {
+  opts = opts || {};
+  var room = CONF_MAX - confetti.length;
+  n = Math.min(n, Math.max(0, room));
+  for (var i = 0; i < n; i++) {
+    var a = opts.angle !== undefined ? opts.angle + rnd(-0.5, 0.5) : rnd(0, Math.PI * 2);
+    var s = rnd(opts.sMin || 40, opts.sMax || 190);
+    confetti.push({
+      x: x, y: y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - (opts.up || 60),
+      w: rnd(4, 7), h: rnd(6, 11), rot: rnd(0, 6.3), vr: rnd(-7, 7),
+      color: (opts.palette || CONF_COLORS)[Math.floor(Math.random() * (opts.palette || CONF_COLORS).length)],
+      t: 0, life: rnd(1.4, 2.3), bounced: false
+    });
+  }
+}
+function heartRain() {
+  for (var i = 0; i < 10; i++) {
+    particles.push({ shape: 'heart', x: W / 2 + rnd(-70, 70), y: HUD_H + 6, vx: rnd(-16, 16), vy: rnd(24, 60), life: rnd(0.8, 1.2), t: 0, color: pick(['#ff8fab', '#ffb3c9', '#ff6b9d']), r: rnd(5, 8) });
+  }
+}
+function addFloater(x, y, text, color, opts) {
+  opts = opts || {};
+  floaters.push({ x: x, y: y, text: text, color: color || INK, t: 0, life: opts.life || 1.1, size: opts.size || 15, fade: !!opts.fade });
+}
+function addBigText(text, color) {  // 鼓励大字：弹跳缩放，≤0.8 秒淡出，不久挡画面
+  bigTexts.push({ text: text, color: color || '#e75480', t: 0, life: 0.8 });
+  if (bigTexts.length > 2) bigTexts.shift();
+}
+function showToast(text) { toast = { text: text, until: performance.now() / 1000 + 1.6 }; }
+
+/* ================= 规则（与原版一致，仅表现层扩展） ================= */
+function crackToughsNear(x, y, r) {
+  bubbles.forEach(function (b) {
+    if (b.type === 'tough' && !b.dead) {
+      var dx = b.x - x, dy = b.y - y;
+      if (Math.sqrt(dx * dx + dy * dy) < r + b.r + CRACK_RANGE) damageTough(b, true);
+    }
+  });
+}
+function maybeLastWords(b) {        // 30% 概率遗言弹字，小而快
+  if (Math.random() < 0.3) addFloater(b.x, b.y - b.r - 2, bagDraw('funny', WARM.funny.slice(0, 7)), '#8a6bc9', { life: 0.6, size: 12 });
+}
+function damageTough(b, byWave) {
+  if (b.dead) return;
+  b.hp--;
+  if (b.hp <= 0) {
+    b.dead = true; pops++;
+    addParticles(b.x, b.y, '#d9a066', 10, 140);
+    addShards(b.x, b.y, '#c98d54'); addRing(b.x, b.y, '#d9a066'); addLaugh(b.x, b.y, 0.9);
+    addFloater(b.x, b.y - b.r, '壳碎了！', '#a9743c');
+    maybeLastWords(b);
+    sfxBlast();
+  } else {
+    if (!byWave) sfxCrack();
+    addFloater(b.x, b.y - b.r, '裂了一道！', '#a9743c');
+    addParticles(b.x, b.y, '#e8dcc8', 4, 70);
+  }
+}
+function doBlast(x, y) {
+  blasts++;
+  sfxBlast();
+  addFloater(x, y - 20, '烦恼清空！', '#e75480');
+  addRing(x, y, '#ff8fab', BLAST_RADIUS * 0.8);
+  spawnConfetti(x, y, 14, {});
+  bubbles.forEach(function (b) {
+    if (b.dead || isSurprise(b)) return;
+    var dx = b.x - x, dy = b.y - y;
+    if (Math.sqrt(dx * dx + dy * dy) > BLAST_RADIUS + b.r) return;
+    if (b.type === 'normal' || b.type === 'red') {
+      b.dead = true; pops++;
+      addParticles(b.x, b.y, b.type === 'red' ? CORAL : JOY_COLORS[b.color], 6, 100);
+    } else if (b.type === 'tough') damageTough(b, true);
+  });
+}
+var CHEER_TIERS = [3, 5, 8, 12, 16, 24, 32, 44, 58];
+function popBubble(b) {
+  if (b.dead) return;
+  if (isSurprise(b)) return popSurprise(b);
+  b.dead = true; pops++;
+  lastPopPos = { x: b.x, y: b.y };
+  var col = b.type === 'red' ? CORAL : (b.joyColor || JOY_COLORS[b.color]);
+  addParticles(b.x, b.y, col, 9, 130);
+  addShards(b.x, b.y, col);
+  addRing(b.x, b.y, col);
+  addLaugh(b.x, b.y, 1);
+  addPlusFx(b.x, b.y - b.r * 0.4);
+  if (playKind === 'level') maybeLastWords(b);
+  if (b.type === 'normal') {
+    crackToughsNear(b.x, b.y, b.r);
+    if (b.color === streakColor && elapsed - lastPopAt <= 1.5) streak++;
+    else { streakColor = b.color; streak = 1; }
+    lastPopAt = elapsed;
+    if (elapsed - lastNoteAt <= 1.5 || noteIdx === 0) hotChain++; else hotChain = 1;
+    sfxNote();
+    if (streak >= 3) addFloater(b.x, b.y - b.r - 4, '连击 ×' + streak, '#7c4dbc', { life: 0.8 });
+    if (CHEER_TIERS.indexOf(hotChain) >= 0) {
+      addBigText(bagDraw('praise', WARM.praise));
+      spawnConfetti(b.x, b.y - 10, 22, {});
+      sfxCheer();
+    }
+    if (streak >= BLAST_NEED) { doBlast(b.x, b.y); streak = 0; streakColor = -1; }
+  } else {
+    sfxNote();
+  }
+}
+function popSurprise(b) {
+  b.dead = true;
+  lastPopPos = { x: b.x, y: b.y };
+  addLaugh(b.x, b.y, 1.25);
+  if (b.type === 'rainbow') {
+    sfxWhistle(); sfxSparkle();
+    // 七彩光环 + 震碎周围一圈 + 满屏小彩带
+    for (var h = 0; h < 7; h++) addRing(b.x, b.y, 'hsl(' + (h * 51) + ',85%,62%)', 60 + h * 12);
+    spawnConfetti(b.x, b.y, 42, {});
+    bubbles.forEach(function (o) {
+      if (o.dead || o === b || isSurprise(o)) return;
+      var dx = o.x - b.x, dy = o.y - b.y;
+      if (Math.sqrt(dx * dx + dy * dy) > 105 + o.r) return;
+      if (o.type === 'tough') damageTough(o, true);
+      else { o.dead = true; pops++; addParticles(o.x, o.y, o.type === 'red' ? CORAL : JOY_COLORS[o.color], 7, 110); addShards(o.x, o.y, o.type === 'red' ? CORAL : JOY_COLORS[o.color]); }
+    });
+    addFloater(b.x, b.y - b.r - 6, '彩虹炸开啦！', '#e75480', { size: 16 });
+  } else { // gold
+    sfxSpring(); sfxSparkle();
+    addRing(b.x, b.y, '#e9b949', 60);
+    for (var i = 0; i < 12; i++) particles.push({ shape: 'star', x: b.x, y: b.y, vx: rnd(-120, 120), vy: rnd(-140, 20), life: rnd(0.4, 0.7), t: 0, color: '#f2c94c', r: rnd(4, 7) });
+    // 随机小奖三选一
+    var reward;
+    if (cur.mode === 'timed' && timeLeft > 0) { elapsed = Math.max(0, elapsed - 3); reward = '多 3 秒，稳稳的！'; }
+    else {
+      var types = ['needle', 'shock', 'slow'];
+      var lowT = types.filter(function (t) { return (save.props[t] || 0) < 9; });
+      if (lowT.length && Math.random() < 0.6) { var gt = pick(lowT); save.props[gt]++; persist(); reward = '金泡送道具：' + PROP_NAMES[gt] + ' +1'; }
+      else { hotChain += 5; streak = Math.min(BLAST_NEED - 1, streak + 5); reward = '连击 +5，冲呀！'; }
+    }
+    addFloater(b.x, b.y - b.r - 6, reward, '#b8860b', { size: 15 });
+  }
+}
+function shatterIce() {
+  var n = 0;
+  bubbles.forEach(function (b) {
+    if (b.type === 'frozen' && !b.dead) { b.dead = true; pops++; n++; addParticles(b.x, b.y, '#a9d6e5', 9, 120); addShards(b.x, b.y, '#a9d6e5'); }
+  });
+  if (n > 0) { sfxShatter(); addFloater(W / 2, FIELD_Y + 70, '冰面震碎！', '#0077b6'); }
+}
+function grantProp(type, why) {
+  save.props[type] = Math.min(9, (save.props[type] || 0) + 1);
+  persist();
+  showToast((why || '道具补给') + '：' + PROP_NAMES[type] + ' +1');
+}
+var PROP_NAMES = { needle: '一针爽', shock: '抖一抖', slow: '慢动作' };
+var PROP_GLYPH = { needle: '针', shock: '震', slow: '慢' };
+function mockAd(cb) { adOverlay = { until: performance.now() / 1000 + 0.8, cb: cb }; }
+
+/* ================= 结尾形式轮换器（形式 × 台词 × 画面变体，带冷却去重） ================= */
+var END_VARIANTS = { confetti: [0, 1, 2], fortune: [0, 1, 2], bubbleline: [0, 1], jinnang: [0, 1], stars: [0, 1, 2], egg: [0, 1] };
+var END_CONF_PALETTES = [CONF_COLORS, ['#ff8fab', '#ffb3c9', '#ffd6e8', '#fff0f5'], ['#f2c94c', '#ffd166', '#ff8fab', '#fff3c9']];
+var formBag = [];
+function drawFormFromBag(canJinnang) {
+  formBag = formBag.filter(function (f) { return f !== 'jinnang' || canJinnang; });
+  if (!formBag.length) {
+    formBag = shuffle(['confetti', 'fortune', 'bubbleline', 'stars']);
+    if (canJinnang) formBag.splice(Math.floor(Math.random() * (formBag.length + 1)), 0, 'jinnang');
+  }
+  var recent = save.endHist.forms.slice(-2);
+  for (var k = 0; k < formBag.length; k++) {
+    if (recent.indexOf(formBag[0]) < 0) break;
+    formBag.push(formBag.shift());           // 冷却中的形式挪到袋尾
+  }
+  return formBag.shift();
+}
+function pickEnding(isHeal, newUnlocks) {
+  var hist = save.endHist;
+  var form, line, variant, tries = 0;
+  if (isHeal) {
+    var healForms = ['confetti', 'fortune'];
+    form = healForms[Math.floor(Math.random() * 2)];
+    if (hist.forms.length && hist.forms[hist.forms.length - 1] === form) form = form === 'confetti' ? 'fortune' : 'confetti';
+    line = bagDraw('heal', WARM.heal);
+    variant = Math.floor(Math.random() * END_VARIANTS[form].length);
+    return { form: form, line: line, variant: variant, heal: true, unlocks: newUnlocks || [] };
+  }
+  var egg = Math.random() < 0.125;
+  form = egg ? 'egg' : drawFormFromBag(newUnlocks && newUnlocks.length > 0);
+  do {
+    line = form === 'egg' ? pick(WARM.egg) : (form === 'bubbleline' ? pick(WARM.short) : pick(WARM.praise));
+    variant = Math.floor(Math.random() * END_VARIANTS[form].length);
+    tries++;
+  } while (tries < 10 && (hist.combos.indexOf(form + '|' + line + '|' + variant) >= 0 ||
+           (form !== 'egg' && hist.lines.slice(-5).indexOf(line) >= 0)));
+  hist.forms.push(form); if (hist.forms.length > 12) hist.forms.shift();
+  hist.lines.push(line); if (hist.lines.length > 12) hist.lines.shift();
+  hist.combos.push(form + '|' + line + '|' + variant); if (hist.combos.length > 10) hist.combos.shift();
+  persist();
+  return { form: form, line: line, variant: variant, heal: false, unlocks: newUnlocks || [] };
+}
+
+/* ================= 流程 ================= */
+var pendingLevel = 1;
+function winLevel() {
+  var stars = 1;
+  if (lives === 3) stars++;
+  if (elapsed <= cur.par) stars++;
+  var types = ['needle', 'shock', 'slow'], low = types[0];
+  types.forEach(function (t) { if ((save.props[t] || 0) < (save.props[low] || 0)) low = t; });
+  save.props[low] = Math.min(9, (save.props[low] || 0) + 1);
+  save.stars[cur.id] = Math.max(save.stars[cur.id] || 0, stars);
+  if (cur.id < 15) save.unlocked = Math.max(save.unlocked, cur.id + 1);
+  var oldCount = jinnangUnlockedCount();
+  save.jinnangMax = Math.max(save.jinnangMax || 0, cur.id);
+  var newCount = jinnangUnlockedCount();
+  var newUnlocks = [];
+  for (var i = oldCount; i < newCount; i++) newUnlocks.push(JINNANG[i]);
+  persist();
+  clearInfo = { stars: stars, reward: PROP_NAMES[low], newUnlocks: newUnlocks };
+  ending = pickEnding(cur.mode === 'heal', newUnlocks);
+  endingT = 0;
+  sfxWin();
+  screen = 'ending';
+}
+function failLevel(gapText) {
+  failGap = gapText;
+  failLine = bagDraw('comfort', WARM.comfort);
+  failGift = '';
+  if (Math.random() < 0.2) {   // 低频随机惊喜（约 1/5），非常规发放
+    var gt = pick(['needle', 'shock', 'slow']);
+    save.props[gt] = Math.min(9, (save.props[gt] || 0) + 1);
+    failGift = PROP_NAMES[gt];
+    persist();
+  }
+  helpPending = true;          // 固定小帮助：下一局开局 3 秒慢放（一次性局内帮助，不入库存）
+  sfxSoftFail();
+  screen = 'fail';
+}
+function revive() {
+  mockAd(function () {
+    revives++;
+    lives = Math.max(lives, 2);
+    if (cur.mode === 'timed') elapsed = Math.max(0, elapsed - 20);
+    if (cur.redLimit !== null) redMissed = Math.min(redMissed, cur.redLimit);
+    if (bubbles.filter(function (b) { return !b.dead && !isSurprise(b); }).length === 0 && spawned >= queue.length) {
+      var specs = [];
+      for (var i = 0; i < 12; i++) specs.push({ type: 'normal', color: Math.floor(i / 4) % 3 });
+      queue = queue.concat(specs);
+      while (spawned < queue.length) spawnBubble(queue[spawned++]);
+    }
+    screen = 'play';
+    showToast('回来啦，继续加油！');
+  });
+}
+
+/* ================= 更新 ================= */
+function aliveCount() { return bubbles.filter(function (b) { return !b.dead; }).length; }
+function aliveOriginals() { return bubbles.filter(function (b) { return !b.dead && !isSurprise(b); }).length; }
+function trackCelebrations() {
+  if (pops > lastPopsSeen) {
+    if (!first3Done && pops >= 3) {           // 开局前 3 个：10 秒内的第一次开心
+      first3Done = true;
+      spawnConfetti(lastPopPos.x, lastPopPos.y - 16, 16, {});
+      addFloater(W / 2, FIELD_Y + 96, bagDraw('encourage', WARM.encourage), '#e75480', { size: 19, life: 0.9 });
+      sfxCheer();
+    }
+    var tens = Math.floor(pops / 10);
+    if (tens > tenCeleb) {                    // 每 10 个：爱心雨 + 计数跳一下
+      tenCeleb = tens;
+      heartRain();
+      counterPulseT = performance.now() / 1000;
+    }
+    var goal = cur.mode === 'clear' ? cur.total : cur.target;
+    if (!halfDone && pops >= Math.ceil(goal / 2)) {   // 进度过半：一句夸夸
+      halfDone = true;
+      addFloater(W / 2, FIELD_Y + 96, bagDraw('encourage', WARM.encourage), '#7c4dbc', { size: 18, life: 0.9 });
+    }
+    lastPopsSeen = pops;
+  }
+}
+function updateFx(dt) {
+  particles = particles.filter(function (p) { p.t += dt; p.x += p.vx * dt; p.y += p.vy * dt; if (p.shape !== 'heart') p.vy += 150 * dt; if (p.vr) p.rot += p.vr * dt; return p.t < p.life; });
+  floaters = floaters.filter(function (f) { f.t += dt; if (!f.fade) f.y -= 24 * dt; return f.t < f.life; });
+  rings = rings.filter(function (r) { r.t += dt; return r.t < r.life; });
+  faceFx = faceFx.filter(function (f) { f.t += dt; return f.t < f.life; });
+  bigTexts = bigTexts.filter(function (b) { b.t += dt; return b.t < b.life; });
+  confetti = confetti.filter(function (c) {
+    c.t += dt; c.x += c.vx * dt; c.y += c.vy * dt; c.vy += 300 * dt; c.vx *= 0.99; c.rot += c.vr * dt;
+    if (c.y > FIELD_Y + FIELD_H - 4 && !c.bounced) { c.y = FIELD_Y + FIELD_H - 4; c.vy *= -0.35; c.bounced = true; }  // 弹性落点
+    return c.t < c.life;
+  });
+}
+function moveBubbles(dt, allowDodge) {
+  var ts = elapsed < slowUntil ? 0.45 : 1;
+  var bdt = dt * ts;
+  for (var i = 0; i < bubbles.length; i++) {
+    var b = bubbles[i];
+    if (b.dead || b.type === 'frozen') continue;
+    b.x += b.vx * bdt; b.y += b.vy * bdt;
+    if (b.x < b.r) { b.x = b.r; b.vx *= -1; }
+    if (b.x > W - b.r) { b.x = W - b.r; b.vx *= -1; }
+    if (b.y < FIELD_Y + b.r) { b.y = FIELD_Y + b.r; b.vy *= -1; }
+    if (b.y > FIELD_Y + FIELD_H - b.r) { b.y = FIELD_Y + FIELD_H - b.r; b.vy *= -1; }
+    // 卖萌小躲闪：指针靠近时低频小幅挪（≤半径 30%），点击当帧不躲，判定按挪后位置
+    if (allowDodge && b.dodgeCd > 0) b.dodgeCd -= dt;
+    if (allowDodge && b.dodgeCd <= 0 && performance.now() / 1000 - lastPointer.t < 0.6) {
+      var dx = b.x - lastPointer.x, dy = b.y - lastPointer.y, d = Math.sqrt(dx * dx + dy * dy);
+      if (d > 1 && d < b.r + 30 && Math.random() < 0.5) {
+        var nd = Math.min(b.r * 0.3, (b.r + 30 - d) * 0.4);
+        b.x += dx / d * nd; b.y += dy / d * nd;
+        b.dodgeCd = 2.5;
+      }
+    }
+    if (Math.random() < dt * 0.04) b.face = pick(FACE_POOL);   // 表情偶尔切换
+  }
+}
+function update(dt) {
+  elapsed += dt;
+  moveBubbles(dt, true);
+  var i, b;
+  for (i = 0; i < bubbles.length; i++) {
+    b = bubbles[i];
+    if (b.dead || b.type !== 'red') continue;
+    b.ttl -= (elapsed < slowUntil ? dt * 0.45 : dt);
+    if (b.ttl <= 0 && !b.dead) {
+      b.dead = true; redMissed++; lives--;
+      addFloater(b.x, b.y, '红泡跑掉啦！', '#e75480');
+      tone(300, 140, 0.18, 'square', 0.08);
+      if (cur.redLimit !== null && redMissed > cur.redLimit) return failLevel('红泡漏了 ' + redMissed + ' 个，最多只能漏 ' + cur.redLimit + ' 个');
+      if (lives <= 0) return failLevel('红泡太调皮，就差一点点');
+    }
+  }
+  if (elapsed - lastPopAt > 1.5) hotChain = 0;
+  // 红泡刷出（原规则）
+  if (redSpawned < (cur.mix.red || 0)) {
+    var due = false;
+    if (cur.mode === 'timed') due = elapsed >= (cur.redTimes[redSpawned] || 9999);
+    else if (cur.redEvery) due = elapsed >= 4 + redSpawned * cur.redEvery;
+    if (due) {
+      spawnBubble({ type: 'red', color: -1 });
+      redSpawned++; sfxRed();
+      addFloater(W / 2, FIELD_Y + 34, '红泡出现，先戳它！', '#e75480');
+    }
+  }
+  // 限时关涓流补刷（原规则）+ 惊喜泡额外补刷（不占原节奏）
+  if (cur.mode === 'timed') {
+    spawnTick -= dt;
+    if (spawned < queue.length && aliveCount() < SCREEN_TARGET && spawnTick <= 0) {
+      spawnBubble(queue[spawned++]); spawnTick = 0.3;
+    }
+    surpriseTick -= dt;
+    if (surpriseTick <= 0) {
+      surpriseTick = 5;
+      if (surpriseBudget.r > 0) { spawnSurprise('rainbow'); surpriseBudget.r--; }
+      else if (surpriseBudget.g > 0) { spawnSurprise('gold'); surpriseBudget.g--; }
+    }
+    timeLeft = Math.max(0, cur.timeLimit - elapsed);
+  }
+  // 待机碎碎念：偶尔一只泡小声说话
+  murmurTick -= dt;
+  if (murmurTick <= 0) {
+    murmurTick = rnd(6, 9);
+    var alive = bubbles.filter(function (x) { return !x.dead && x.type === 'normal'; });
+    if (alive.length) { var mb = pick(alive); addFloater(mb.x, mb.y - mb.r - 2, bagDraw('funny', WARM.funny.slice(7)), '#8a6bc9', { life: 0.9, size: 11, fade: true }); }
+  }
+  trackCelebrations();
+  updateFx(dt);
+  bubbles = bubbles.filter(function (x) { return !x.dead; });
+  // 结算判定（原规则；clear 关只看原泡泡，惊喜泡不挡过关）
+  if (cur.mode === 'heal') {
+    if (pops >= cur.target) return winLevel();
+  } else if (cur.mode === 'timed') {
+    if (pops >= cur.target) return winLevel();
+    if (timeLeft <= 0) return failLevel('就差 ' + (cur.target - pops) + ' 个泡泡');
+  } else {
+    if (spawned >= queue.length && redSpawned >= (cur.mix.red || 0) && aliveOriginals() === 0) {
+      if (blasts >= cur.needBlast) return winLevel();
+      return failLevel('就差 ' + (cur.needBlast - blasts) + ' 次清空爆炸');
+    }
+  }
+}
+/* 解压专场 / 晚安关更新：无失败路径 */
+function updateMode(dt) {
+  elapsed += dt;
+  moveBubbles(dt, false);
+  modeSpawnTick -= dt;
+  var target = playKind === 'relax' ? 10 : 9;
+  if (modeSpawnTick <= 0 && aliveCount() < target) {
+    spawnModeBubble(playKind);
+    modeSpawnTick = playKind === 'relax' ? 0.9 : 1.3;
+  }
+  updateFx(dt);
+  bubbles = bubbles.filter(function (x) { return !x.dead; });
+}
+function breathUpdate(dt) {
+  if (!breath) return;
+  breath.t += dt;
+  if (breath.t >= breathDur(breath.round, breath.phase)) {
+    breath.t = 0;
+    if (breath.phase === 'inhale') breath.phase = 'hold';
+    else if (breath.phase === 'hold') breath.phase = 'exhale';
+    else {
+      if (breath.round >= 5) { screen = 'breathcard'; breath.line = pick(WARM.breathe); sfxCheer(); return; }
+      breath.round++; breath.phase = 'inhale';
+    }
+  }
+}
+
+/* ================= 绘制基础 ================= */
+function drawBtn(x, y, w, h, label, act, opts) {
+  opts = opts || {};
+  buttons.push({ x: x, y: y, w: w, h: h, act: act, disabled: !!opts.disabled });
+  var scale = 1;
+  if (pressMark && performance.now() / 1000 - pressMark.t < 0.22 &&
+      Math.abs(pressMark.x - x) < 2 && Math.abs(pressMark.y - y) < 2) {
+    var pt = (performance.now() / 1000 - pressMark.t) / 0.22;
+    scale = 1 - 0.07 * Math.sin(Math.min(1, pt) * Math.PI);          // 按下挤压回弹
+  }
+  ctx.save();
+  ctx.translate(x + w / 2, y + h / 2); ctx.scale(scale, scale); ctx.translate(-w / 2, -h / 2);
+  ctx.globalAlpha = opts.disabled ? 0.45 : 1;
+  ctx.shadowColor = 'rgba(90,60,120,0.25)'; ctx.shadowBlur = 12; ctx.shadowOffsetY = 4;
+  var r = opts.r !== undefined ? opts.r : h / 2;                      // 胶囊形
+  if (opts.grad) {
+    var g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, opts.grad[0]); g.addColorStop(1, opts.grad[1]);
+    ctx.fillStyle = opts.disabled ? '#c3cfdf' : g;
+  } else ctx.fillStyle = opts.disabled ? '#c3cfdf' : (opts.fill || '#ff8fab');
+  rr(0, 0, w, h, r); ctx.fill();
+  ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
+  ctx.beginPath(); rr(2, 2, w - 4, h * 0.45, r - 2); ctx.fillStyle = 'rgba(255,255,255,0.28)'; ctx.fill();  // 顶部高光边
+  ctx.fillStyle = opts.color || '#ffffff';
+  ctx.font = 'bold ' + (opts.font || 17) + 'px "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(label, w / 2, h / 2 + 1);
+  if (opts.badge) {
+    ctx.font = '10px "PingFang SC","Microsoft YaHei",sans-serif';
+    var bw = ctx.measureText(opts.badge).width + 10;
+    ctx.fillStyle = '#ffd166'; rr(w - bw - 4, -8, bw, 16, 8); ctx.fill();
+    ctx.fillStyle = '#7f4f00';
+    ctx.fillText(opts.badge, w - bw / 2 - 4, 0);
+  }
+  ctx.restore();
+  ctx.globalAlpha = 1;
+}
+function drawTextBtn(x, y, label, act, opts) {   // 弱化文字入口
+  opts = opts || {};
+  ctx.font = (opts.font || 13) + 'px "PingFang SC","Microsoft YaHei",sans-serif';
+  var w = ctx.measureText(label).width + 16;
+  buttons.push({ x: x - w / 2, y: y - 14, w: w, h: 28, act: act, disabled: false });
+  ctx.fillStyle = opts.color || INK_FAINT;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(label, x, y);
+  return w;
+}
+function drawWrapped(text, x, y, maxW, lineH, font, color, align) {
+  ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align || 'left'; ctx.textBaseline = 'top';
+  var line = '', lines = [];
+  for (var i = 0; i < text.length; i++) {
+    if (ctx.measureText(line + text[i]).width > maxW && line) { lines.push(line); line = ''; }
+    line += text[i];
+  }
+  if (line) lines.push(line);
+  lines.forEach(function (ln, i) { ctx.fillText(ln, x, y + i * lineH); });
+  return lines.length * lineH;
+}
+function bgGrad() {   // 奶油色 → 浅天蓝柔和渐变
+  var g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#fdf3e3'); g.addColorStop(0.55, '#fdeef3'); g.addColorStop(1, '#dff2fd');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+}
+function bgNight() {
+  var g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#232a4d'); g.addColorStop(1, '#4a3566');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = 'rgba(255,255,255,0.75)';
+  for (var i = 0; i < 26; i++) {
+    var sx = (i * 67.3) % W, sy = (i * 41.7) % (H * 0.7);
+    ctx.globalAlpha = 0.3 + 0.4 * Math.abs(Math.sin(elapsed * 0.8 + i));
+    ctx.fillRect(sx, sy, 2, 2);
+  }
+  ctx.globalAlpha = 1;
+}
+function panel(x, y, w, h) {   // 半透明磨砂白卡片 + 柔影
+  ctx.save();
+  ctx.shadowColor = 'rgba(90,60,120,0.20)'; ctx.shadowBlur = 18; ctx.shadowOffsetY = 6;
+  ctx.fillStyle = 'rgba(255,255,255,0.90)';
+  rr(x, y, w, h, 22); ctx.fill();
+  ctx.restore();
+  ctx.strokeStyle = 'rgba(255,255,255,0.9)'; ctx.lineWidth = 1.5; rr(x, y, w, h, 22); ctx.stroke();
+}
+
+/* ================= 泡泡精灵（离屏预渲染：径向渐变通透感 + 高光 + 轮廓光） ================= */
+var sprites = {};
+function makeSprite(key, stops, rim) {
+  var c = document.createElement('canvas'); c.width = 128; c.height = 128;
+  var g2 = c.getContext('2d');
+  var g = g2.createRadialGradient(44, 38, 6, 64, 64, 62);
+  stops.forEach(function (s) { g.addColorStop(s[0], s[1]); });
+  g2.beginPath(); g2.arc(64, 64, 60, 0, Math.PI * 2); g2.fillStyle = g; g2.fill();
+  g2.beginPath(); g2.arc(64, 64, 57.5, 0, Math.PI * 2);
+  g2.strokeStyle = rim; g2.lineWidth = 3; g2.stroke();
+  g2.beginPath(); g2.ellipse(42, 36, 15, 10, -0.6, 0, Math.PI * 2);
+  g2.fillStyle = 'rgba(255,255,255,0.60)'; g2.fill();
+  g2.beginPath(); g2.ellipse(84, 96, 20, 8, 0.5, 0, Math.PI * 2);
+  g2.fillStyle = 'rgba(255,255,255,0.18)'; g2.fill();
+  sprites[key] = c;
+}
+function buildSprites() {
+  JOY_COLORS.forEach(function (col, i) {
+    makeSprite('n' + i, [[0, 'rgba(255,255,255,0.95)'], [0.25, col], [1, col]], 'rgba(255,255,255,0.65)');
+  });
+  makeSprite('red', [[0, 'rgba(255,255,255,0.95)'], [0.3, CORAL], [1, '#f2607a']], 'rgba(255,255,255,0.7)');
+  makeSprite('tough', [[0, 'rgba(255,255,255,0.9)'], [0.3, '#e0aa6e'], [1, '#c98d54']], 'rgba(255,255,255,0.55)');
+  makeSprite('frozen', [[0, 'rgba(255,255,255,0.98)'], [0.3, '#cdeefb'], [1, '#9fd3ea']], 'rgba(255,255,255,0.85)');
+  makeSprite('gold', [[0, 'rgba(255,255,255,0.98)'], [0.3, '#f7d774'], [1, '#e3ac3f']], 'rgba(255,240,190,0.9)');
+  RELAX_COLORS.forEach(function (col, i) { makeSprite('r' + i, [[0, 'rgba(255,255,255,0.95)'], [0.3, col], [1, col]], 'rgba(255,255,255,0.6)'); });
+  NIGHT_COLORS.forEach(function (col, i) { makeSprite('t' + i, [[0, 'rgba(255,255,255,0.85)'], [0.3, col], [1, col]], 'rgba(255,255,255,0.45)'); });
+}
+function spriteFor(b) {
+  if (b.type === 'red') return sprites.red;
+  if (b.type === 'tough') return sprites.tough;
+  if (b.type === 'frozen') return sprites.frozen;
+  if (b.type === 'gold') return sprites.gold;
+  if (b.joyColor) {
+    var pool = playKind === 'night' ? NIGHT_COLORS : RELAX_COLORS;
+    var idx = pool.indexOf(b.joyColor);
+    return sprites[(playKind === 'night' ? 't' : 'r') + Math.max(0, idx)];
+  }
+  return sprites['n' + Math.max(0, b.color)];
+}
+
+/* ================= 表情（Canvas 手绘，不用 emoji 字体） ================= */
+function drawFace(cx, cy, r, kind, seed, big) {
+  var ey = cy - r * 0.16, ex = r * 0.34, er = Math.max(1.6, r * 0.075);
+  var blink = ((animT + seed * 1.7) % 3.9) < 0.11;
+  ctx.strokeStyle = 'rgba(51,65,92,0.85)'; ctx.fillStyle = 'rgba(51,65,92,0.85)';
+  ctx.lineWidth = Math.max(1.4, r * 0.06); ctx.lineCap = 'round';
+  function eye(x, closed) {
+    if (closed) { ctx.beginPath(); ctx.moveTo(x - er * 1.5, ey); ctx.quadraticCurveTo(x, ey + er * 1.1, x + er * 1.5, ey); ctx.stroke(); }
+    else { ctx.beginPath(); ctx.arc(x, ey, er, 0, Math.PI * 2); ctx.fill(); }
+  }
+  function mouthSmile(w) {
+    ctx.beginPath(); ctx.arc(cx, cy + r * 0.08, r * (w || 0.30), 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke();
+  }
+  if (kind === 'tough') {           // 皱眉鼓腮
+    ctx.beginPath();
+    ctx.moveTo(cx - ex - er * 1.6, ey - er * 2.6); ctx.lineTo(cx - ex + er * 1.2, ey - er * 1.2);
+    ctx.moveTo(cx + ex + er * 1.6, ey - er * 2.6); ctx.lineTo(cx + ex - er * 1.2, ey - er * 1.2);
+    ctx.stroke();
+    eye(cx - ex, false); eye(cx + ex, false);
+    ctx.beginPath(); ctx.arc(cx - r * 0.52, cy + r * 0.18, r * 0.17, 0, Math.PI * 2); ctx.fillStyle = 'rgba(255,150,120,0.35)'; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx + r * 0.52, cy + r * 0.18, r * 0.17, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx - r * 0.16, cy + r * 0.34); ctx.lineTo(cx + r * 0.16, cy + r * 0.34); ctx.stroke();
+    return;
+  }
+  if (kind === 'red') {             // 着急脸 + 冒汗
+    ctx.beginPath();
+    ctx.moveTo(cx - ex - er * 1.4, ey - er * 2.2); ctx.lineTo(cx - ex + er * 1.2, ey - er * 2.8);
+    ctx.moveTo(cx + ex + er * 1.4, ey - er * 2.2); ctx.lineTo(cx + ex - er * 1.2, ey - er * 2.8);
+    ctx.stroke();
+    eye(cx - ex, false); eye(cx + ex, false);
+    ctx.beginPath(); ctx.arc(cx, cy + r * 0.26, r * 0.11, 0, Math.PI * 2); ctx.stroke();
+    var drip = ((animT * 26 + seed * 13) % 16);
+    ctx.beginPath();
+    var sx = cx + r * 0.78, sy = cy - r * 0.42 + drip;
+    ctx.moveTo(sx, sy - 4); ctx.quadraticCurveTo(sx + 3.4, sy + 2, sx, sy + 4.6);
+    ctx.quadraticCurveTo(sx - 3.4, sy + 2, sx, sy - 4);
+    ctx.fillStyle = 'rgba(140,210,245,0.9)'; ctx.fill();
+    return;
+  }
+  if (kind === 'frozen') {          // 冻得发抖：锯齿嘴
+    eye(cx - ex, blink); eye(cx + ex, blink);
+    ctx.beginPath();
+    var mw = r * 0.30, my = cy + r * 0.24;
+    ctx.moveTo(cx - mw, my);
+    for (var s = 1; s <= 4; s++) ctx.lineTo(cx - mw + (mw * 2) * s / 4, my + (s % 2 ? -r * 0.07 : r * 0.03));
+    ctx.stroke();
+    return;
+  }
+  if (kind === 'laugh' || big) {    // 大笑脸（戳破瞬间）
+    ctx.beginPath(); ctx.arc(cx - ex, ey, er * 1.15, Math.PI, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx + ex, ey, er * 1.15, Math.PI, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy + r * 0.05, r * 0.34, 0.05 * Math.PI, 0.95 * Math.PI);
+    ctx.fillStyle = 'rgba(120,40,60,0.9)'; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, cy + r * 0.30, r * 0.17, 0, Math.PI);
+    ctx.fillStyle = '#ff8fab'; ctx.fill();
+    return;
+  }
+  switch (kind) {
+    case 'wink':                    // 眨单眼
+      eye(cx - ex, false); eye(cx + ex, true); mouthSmile(0.32); break;
+    case 'tongue':                  // 吐舌头
+      eye(cx - ex, blink); eye(cx + ex, blink);
+      ctx.beginPath(); ctx.moveTo(cx - r * 0.2, cy + r * 0.16); ctx.lineTo(cx + r * 0.2, cy + r * 0.16); ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx + r * 0.08, cy + r * 0.24, r * 0.11, 0, Math.PI);
+      ctx.fillStyle = '#ff8fab'; ctx.fill(); break;
+    case 'sleepy':                  // 装睡打呼
+      eye(cx - ex, true); eye(cx + ex, true);
+      ctx.beginPath(); ctx.arc(cx, cy + r * 0.2, r * 0.09, 0, Math.PI * 2); ctx.stroke();
+      ctx.font = 'bold ' + Math.round(r * 0.42) + 'px "PingFang SC",sans-serif';
+      ctx.fillStyle = 'rgba(124,77,188,' + (0.45 + 0.3 * Math.sin(animT * 2 + seed)) + ')';
+      ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText('z', cx + r * 0.55, cy - r * 0.55 - (animT * 6 + seed * 9) % 8);
+      break;
+    case 'look':                    // 东张西望：瞳孔游移
+      var lx = Math.sin(animT * 0.9 + seed * 2) * er * 1.1;
+      ctx.beginPath(); ctx.arc(cx - ex + lx, ey, er, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx + ex + lx, ey, er, 0, Math.PI * 2); ctx.fill();
+      mouthSmile(0.24); break;
+    case 'silly':                   // 挤眉弄眼：一眉高一眉低
+      ctx.beginPath();
+      ctx.moveTo(cx - ex - er * 1.5, ey - er * 3.0); ctx.lineTo(cx - ex + er * 1.4, ey - er * 2.2);
+      ctx.moveTo(cx + ex - er * 1.4, ey - er * 1.6); ctx.lineTo(cx + ex + er * 1.5, ey - er * 2.4);
+      ctx.stroke();
+      eye(cx - ex, false); eye(cx + ex, true); mouthSmile(0.34); break;
+    default:                        // 微笑
+      eye(cx - ex, blink); eye(cx + ex, blink); mouthSmile(0.30);
+  }
+}
+function drawBubble(b) {
+  var breathe = 1 + Math.sin(animT * 2.2 + b.seed) * 0.03;         // 呼吸缩放 ±3%
+  var swayX = Math.sin(animT * 1.3 + b.seed * 3) * 1.6;            // 轻微摇晃（绘制偏移）
+  var shiver = b.type === 'frozen' ? Math.sin(animT * 40 + b.seed * 7) * 0.9 : 0;
+  var dx = b.x + swayX + shiver, dy = b.y + Math.cos(animT * 1.7 + b.seed * 2) * 1.2;
+  var r = b.r * breathe;
+  // 底部柔影
+  ctx.beginPath(); ctx.ellipse(b.x, FIELD_Y + FIELD_H - 6, r * 0.7, 4, 0, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(90,60,120,0.05)'; ctx.fill();
+  if (b.type === 'rainbow') {
+    var hue = (animT * 130 + b.seed * 47) % 360;
+    var g = ctx.createRadialGradient(dx - r * 0.3, dy - r * 0.35, r * 0.15, dx, dy, r);
+    g.addColorStop(0, 'rgba(255,255,255,0.95)');
+    g.addColorStop(0.4, 'hsl(' + hue + ',88%,68%)');
+    g.addColorStop(1, 'hsl(' + ((hue + 70) % 360) + ',88%,60%)');
+    ctx.beginPath(); ctx.arc(dx, dy, r, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
+    ctx.beginPath(); ctx.arc(dx - r * 0.32, dy - r * 0.36, r * 0.26, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.fill();
+  } else {
+    var spr = spriteFor(b);
+    if (spr) ctx.drawImage(spr, dx - r, dy - r, r * 2, r * 2);
+    else { ctx.beginPath(); ctx.arc(dx, dy, r, 0, Math.PI * 2); ctx.fillStyle = JOY_COLORS[Math.max(0, b.color)]; ctx.fill(); }
+  }
+  // 惊喜泡闪烁描边
+  if (isSurprise(b)) {
+    ctx.beginPath(); ctx.arc(dx, dy, r + 2.5, 0, Math.PI * 2);
+    ctx.strokeStyle = b.type === 'gold' ? 'rgba(233,185,73,' + (0.55 + 0.4 * Math.sin(animT * 6 + b.seed)) + ')' : 'rgba(255,255,255,' + (0.5 + 0.4 * Math.sin(animT * 6 + b.seed)) + ')';
+    ctx.lineWidth = 2.4; ctx.stroke();
+    if (b.type === 'gold') {
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      var sp = (animT * 2 + b.seed) % 1;
+      ctx.font = Math.round(10 + 4 * Math.sin(sp * Math.PI)) + 'px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('✦', dx + r * 0.55, dy - r * 0.6);
+    }
+  }
+  if (b.type === 'tough') {
+    ctx.beginPath(); ctx.arc(dx, dy, r - 1.5, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(127,85,57,0.75)'; ctx.lineWidth = 3; ctx.stroke();
+    if (b.hp === 1) {
+      ctx.strokeStyle = 'rgba(60,35,15,0.8)'; ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(dx - r * 0.5, dy - r * 0.6); ctx.lineTo(dx - r * 0.1, dy - r * 0.1); ctx.lineTo(dx - r * 0.4, dy + r * 0.4);
+      ctx.moveTo(dx + r * 0.55, dy - r * 0.3); ctx.lineTo(dx + r * 0.15, dy + r * 0.1); ctx.lineTo(dx + r * 0.45, dy + r * 0.55);
+      ctx.stroke();
+    }
+  }
+  if (b.type === 'frozen') {
+    ctx.strokeStyle = 'rgba(255,255,255,0.85)'; ctx.lineWidth = 1.6;
+    for (var k = 0; k < 3; k++) {
+      var a = k * Math.PI / 3 + 0.4;
+      ctx.beginPath();
+      ctx.moveTo(dx - Math.cos(a) * r * 0.8, dy - Math.sin(a) * r * 0.8);
+      ctx.lineTo(dx + Math.cos(a) * r * 0.8, dy + Math.sin(a) * r * 0.8);
+      ctx.stroke();
+    }
+  }
+  if (b.type === 'red') {
+    ctx.beginPath();
+    ctx.arc(dx, dy, r + 4, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Math.max(0, b.ttl / RED_TTL));
+    ctx.strokeStyle = CORAL; ctx.lineWidth = 3; ctx.stroke();
+  }
+  // 表情（类型脸优先，普通泡走搞怪表情池）
+  var kind = b.type === 'normal' || isSurprise(b) ? b.face : b.type;
+  drawFace(dx, dy - r * 0.14, r * 0.92, kind, b.seed, false);
+  // 烦恼词（脸下方）
+  if (b.word) {
+    ctx.fillStyle = b.type === 'frozen' ? '#2b6cb0' : 'rgba(255,255,255,0.96)';
+    ctx.font = 'bold ' + (b.word.length <= 2 ? 13 : (b.word.length === 3 ? 12 : 10.5)) + 'px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.shadowColor = b.type === 'frozen' || b.joyColor ? 'transparent' : 'rgba(60,30,60,0.22)';
+    ctx.shadowBlur = b.type === 'frozen' || b.joyColor ? 0 : 2;
+    if (b.joyColor) { ctx.fillStyle = INK; ctx.shadowBlur = 0; }
+    ctx.fillText(b.word, dx, dy + r * 0.52);
+    ctx.shadowBlur = 0;
+  }
+}
+
+/* ================= 局内绘制 ================= */
+function drawHUD() {
+  // 限时关：柔和进度光带代替红色倒计时数字
+  if (cur.mode === 'timed') {
+    var frac = Math.max(0, timeLeft / cur.timeLimit);
+    var g = ctx.createLinearGradient(0, 0, W, 0);
+    g.addColorStop(0, '#7fe7c4'); g.addColorStop(1, '#ffd6a5');
+    ctx.fillStyle = 'rgba(51,65,92,0.08)'; ctx.fillRect(0, 0, W, 5);
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W * frac, 5);
+  }
+  ctx.fillStyle = INK; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 15px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('第 ' + cur.id + ' 关', 14, 30);
+  // 中：已破计数（每 10 个跳一下）
+  var goal = cur.mode === 'clear' ? cur.total : cur.target;
+  var pulse = 1;
+  var pdt = performance.now() / 1000 - counterPulseT;
+  if (pdt < 0.35) pulse = 1 + 0.35 * Math.sin(Math.min(1, pdt / 0.35) * Math.PI);
+  ctx.save();
+  ctx.translate(W / 2, 30); ctx.scale(pulse, pulse);
+  ctx.font = 'bold 15px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign = 'center';
+  ctx.fillStyle = INK;
+  ctx.fillText('已破 ' + pops + ' / ' + goal, 0, 0);
+  ctx.restore();
+  // 右：仅有红泡的关卡显示生命
+  if ((cur.mix.red || 0) > 0) {
+    ctx.textAlign = 'right'; ctx.fillStyle = '#ff7d8a'; ctx.font = '14px sans-serif';
+    ctx.fillText('❤'.repeat(Math.max(0, lives)), W - 14, 30);
+  }
+  if (elapsed < slowUntil) {
+    ctx.textAlign = 'center'; ctx.fillStyle = '#5b8dd9';
+    ctx.font = '12px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText('慢动作中', W / 2, 52);
+  }
+}
+function drawPropCircles() {
+  var types = ['needle', 'shock', 'slow'], cy = H - 40;
+  types.forEach(function (t, i) {
+    var cx = 44 + i * 66, n = save.props[t] || 0;
+    var active = mode === t;
+    buttons.push({ x: cx - 26, y: cy - 26, w: 52, h: 52, act: function () { useProp(t); } });
+    ctx.beginPath(); ctx.arc(cx, cy, 26, 0, Math.PI * 2);
+    ctx.fillStyle = active ? 'rgba(255,209,102,0.95)' : 'rgba(255,255,255,0.62)';
+    ctx.fill();
+    ctx.strokeStyle = active ? '#e0a800' : 'rgba(120,140,170,0.35)'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = n > 0 ? INK : INK_FAINT;
+    ctx.font = 'bold 17px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(PROP_GLYPH[t], cx, cy + 1);
+    // 数量角标
+    ctx.beginPath(); ctx.arc(cx + 19, cy - 19, 9.5, 0, Math.PI * 2);
+    ctx.fillStyle = n > 0 ? '#ff8fab' : '#c3cfdf'; ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 10px sans-serif';
+    ctx.fillText(n + '', cx + 19, cy - 18.5);
+  });
+  if (mode) {
+    ctx.fillStyle = '#8a6d1f'; ctx.font = '12.5px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(mode === 'needle' ? '点一个顽固泡泡，一针爽把它戳破' : '点一个位置，抖一抖震碎一小片', W / 2, H - BAR_H - 6);
+  }
+}
+function drawMusicBtn() {
+  var cx = W - 34, cy = H - 40;
+  buttons.push({ x: cx - 17, y: cy - 17, w: 34, h: 34, act: function () {
+    save.music = !save.music; persist();
+    showToast(save.music ? '音乐开啦' : '音乐关啦');
+    if (save.music) { audio(); BGM.started = true; }
+  } });
+  ctx.beginPath(); ctx.arc(cx, cy, 17, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.62)'; ctx.fill();
+  ctx.strokeStyle = 'rgba(120,140,170,0.35)'; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.fillStyle = save.music ? INK : INK_FAINT;
+  ctx.font = '15px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('♪', cx, cy + 1);
+  if (!save.music) {
+    ctx.beginPath(); ctx.moveTo(cx - 9, cy + 9); ctx.lineTo(cx + 9, cy - 9);
+    ctx.strokeStyle = '#ff7d8a'; ctx.lineWidth = 2; ctx.stroke();
+  }
+}
+function useProp(t) {
+  audio();
+  var n = save.props[t] || 0;
+  if (n <= 0) { mockAd(function () { grantProp(t, '模拟广告'); }); return; }
+  if (t === 'slow') {
+    if (elapsed < slowUntil) { showToast('慢动作还没结束'); return; }
+    save.props.slow--; persist();
+    slowUntil = elapsed + 5;
+    showToast('慢动作 5 秒！');
+    sfxProp();
+    return;
+  }
+  mode = (mode === t) ? null : t;
+  sfxProp();
+}
+function drawStar(x, y, r, fill) {
+  ctx.beginPath();
+  for (var i = 0; i < 10; i++) {
+    var a = -Math.PI / 2 + i * Math.PI / 5, rad = i % 2 ? r * 0.45 : r;
+    var px = x + Math.cos(a) * rad, py = y + Math.sin(a) * rad;
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.closePath(); ctx.fillStyle = fill; ctx.fill();
+}
+function drawHeart(x, y, r, fill) {
+  ctx.beginPath();
+  ctx.moveTo(x, y + r * 0.9);
+  ctx.bezierCurveTo(x - r * 1.3, y + r * 0.1, x - r * 0.7, y - r * 0.9, x, y - r * 0.25);
+  ctx.bezierCurveTo(x + r * 0.7, y - r * 0.9, x + r * 1.3, y + r * 0.1, x, y + r * 0.9);
+  ctx.fillStyle = fill; ctx.fill();
+}
+function drawFx() {
+  rings.forEach(function (r) {
+    var p = r.t / r.life;
+    ctx.globalAlpha = (1 - p) * 0.8;
+    ctx.beginPath(); ctx.arc(r.x, r.y, 8 + (r.maxR - 8) * easeOut(p), 0, Math.PI * 2);
+    ctx.strokeStyle = r.color; ctx.lineWidth = 3 * (1 - p) + 0.5; ctx.stroke();
+  });
+  ctx.globalAlpha = 1;
+  particles.forEach(function (p) {
+    ctx.globalAlpha = Math.max(0, 1 - p.t / p.life);
+    if (p.shape === 'star') drawStar(p.x, p.y, p.r, p.color);
+    else if (p.shape === 'heart') drawHeart(p.x, p.y, p.r, p.color);
+    else if (p.shape === 'shard') {
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot || 0);
+      ctx.fillStyle = p.color; ctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 0.62);
+      ctx.restore();
+    } else { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fillStyle = p.color; ctx.fill(); }
+  });
+  ctx.globalAlpha = 1;
+  confetti.forEach(function (c) {
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, 1 - Math.pow(c.t / c.life, 2));
+    ctx.translate(c.x, c.y); ctx.rotate(c.rot);
+    ctx.fillStyle = c.color; ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+    ctx.restore();
+  });
+  ctx.globalAlpha = 1;
+  faceFx.forEach(function (f) {   // 戳破瞬间的大笑脸
+    var p = f.t / f.life;
+    ctx.save();
+    ctx.globalAlpha = 1 - p;
+    ctx.translate(f.x, f.y); var s = (0.7 + 0.5 * easeOutBack(p)) * (f.scale || 1); ctx.scale(s, s);
+    drawFace(0, 0, 17, 'laugh', 1, true);
+    ctx.restore();
+  });
+  ctx.globalAlpha = 1;
+  floaters.forEach(function (f) {
+    var a = f.fade ? Math.sin(Math.min(1, f.t / f.life) * Math.PI) : Math.max(0, 1 - f.t / f.life);
+    ctx.globalAlpha = a;
+    ctx.font = 'bold ' + (f.size || 15) + 'px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = f.color; ctx.fillText(f.text, f.x, f.y);
+  });
+  ctx.globalAlpha = 1;
+  bigTexts.forEach(function (b) {
+    var p = b.t / b.life;
+    ctx.save();
+    ctx.globalAlpha = p < 0.7 ? 1 : 1 - (p - 0.7) / 0.3;
+    ctx.translate(W / 2, FIELD_Y + 110); var s = easeOutBack(Math.min(1, p * 2.2)); ctx.scale(s, s);
+    ctx.font = 'bold 25px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+    var tw = ctx.measureText(b.text).width;
+    if (tw > W - 30) { ctx.font = 'bold 19px "PingFang SC","Microsoft YaHei",sans-serif'; }
+    ctx.strokeText(b.text, 0, 0);
+    ctx.fillStyle = b.color; ctx.fillText(b.text, 0, 0);
+    ctx.restore();
+  });
+  ctx.globalAlpha = 1;
+}
+function drawPlay() {
+  bgGrad();
+  drawHUD();
+  bubbles.forEach(drawBubble);
+  drawFx();
+  if (charge) {
+    var held = performance.now() / 1000 - charge.start;
+    var pr = Math.min(1, held / 0.6);
+    ctx.beginPath(); ctx.arc(charge.x, charge.y, 30, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(0,119,182,0.35)'; ctx.lineWidth = 5; ctx.stroke();
+    ctx.beginPath(); ctx.arc(charge.x, charge.y, 30, -Math.PI / 2, -Math.PI / 2 + pr * Math.PI * 2);
+    ctx.strokeStyle = '#5b8dd9'; ctx.stroke();
+    ctx.fillStyle = '#5b8dd9'; ctx.font = 'bold 13px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(pr >= 1 ? '松手震碎！' : '蓄力中…', charge.x, charge.y - 44);
+  }
+  drawPropCircles();
+  drawMusicBtn();
+}
+function drawModePlay(isNight) {
+  if (isNight) bgNight(); else bgGrad();
+  bubbles.forEach(drawBubble);
+  drawFx();
+  ctx.textBaseline = 'middle';
+  drawTextBtn(46, 30, '‹ 回首页', function () { screen = 'home'; sfxClick(); }, { color: isNight ? '#c9d4f5' : INK_FAINT, font: 13 });
+  if (!isNight) {
+    ctx.fillStyle = INK_SOFT; ctx.font = '13px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('解压专场 · 想戳就戳', W / 2, 30);
+    drawBtn(118, H - 118, 140, 44, '深呼吸', function () { enterBreath(); sfxClick(); }, { grad: ['#a8e6d5', '#7fc8bc'], font: 16 });
+  } else {
+    ctx.fillStyle = '#c9d4f5'; ctx.font = '13px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('晚安关 · 戳满 ' + nightPops + ' / 40', W / 2, 30);
+  }
+}
+
+/* ================= 首页（减法：标题/副标/每日一句/开始按钮/次级入口） ================= */
+var DECO = [
+  { x: 56, y: 108, r: 25, c: 0, face: 'smile', seed: 1.3 }, { x: 322, y: 92, r: 19, c: 1, face: 'wink', seed: 2.1 },
+  { x: 296, y: 216, r: 14, c: 3, face: 'tongue', seed: 3.7 }, { x: 74, y: 238, r: 13, c: 2, face: 'sleepy', seed: 4.2 },
+  { x: 186, y: 66, r: 11, c: 4, face: 'look', seed: 5.9 }, { x: 34, y: 348, r: 15, c: 1, face: 'silly', seed: 6.4 },
+  { x: 342, y: 336, r: 21, c: 0, face: 'smile', seed: 7.8 }
+];
+var homeConfetti = [], homeConfTick = 0;
+function drawDecoBubble(d) {
+  var dx = d.x + Math.sin(animT * 0.32 + d.seed * 2) * 8;
+  var dy = d.y + Math.cos(animT * 0.26 + d.seed * 3) * 10;
+  var r = d.r * (1 + Math.sin(animT * 2.1 + d.seed) * 0.03);
+  var spr = sprites['n' + d.c];
+  ctx.globalAlpha = 0.92;
+  if (spr) ctx.drawImage(spr, dx - r, dy - r, r * 2, r * 2);
+  ctx.globalAlpha = 1;
+  drawFace(dx, dy - r * 0.14, r * 0.92, d.face, d.seed, false);
+}
+function drawMusicBtnAt(cx, cy) {
+  buttons.push({ x: cx - 17, y: cy - 17, w: 34, h: 34, act: function () {
+    save.music = !save.music; persist();
+    showToast(save.music ? '音乐开啦' : '音乐关啦');
+    if (save.music) { audio(); BGM.started = true; }
+  } });
+  ctx.beginPath(); ctx.arc(cx, cy, 17, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.62)'; ctx.fill();
+  ctx.strokeStyle = 'rgba(120,140,170,0.35)'; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.fillStyle = save.music ? INK : INK_FAINT;
+  ctx.font = '15px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('♪', cx, cy + 1);
+  if (!save.music) {
+    ctx.beginPath(); ctx.moveTo(cx - 9, cy + 9); ctx.lineTo(cx + 9, cy - 9);
+    ctx.strokeStyle = '#ff7d8a'; ctx.lineWidth = 2; ctx.stroke();
+  }
+}
+function drawHome() {
+  bgGrad();
+  DECO.forEach(drawDecoBubble);
+  // 副标下动态彩带
+  homeConfetti.forEach(function (c) {
+    ctx.save(); ctx.globalAlpha = Math.max(0, 1 - c.t / c.life) * 0.85;
+    ctx.translate(c.x, c.y); ctx.rotate(c.rot);
+    ctx.fillStyle = c.color; ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+    ctx.restore();
+  });
+  ctx.globalAlpha = 1;
+  ctx.save();
+  ctx.shadowColor = 'rgba(90,60,120,0.28)'; ctx.shadowBlur = 7; ctx.shadowOffsetY = 3;
+  ctx.fillStyle = INK; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 54px "PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif';
+  ctx.fillText('泡泡没烦恼', W / 2, 148);
+  ctx.restore();
+  ctx.font = '16.5px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = INK_SOFT;
+  ctx.fillText('把烦恼都戳破吧！', W / 2, 192);
+  if (todayLine) {
+    ctx.font = '13px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = '#b07a9e';
+    ctx.fillText(todayLine, W / 2, 222);
+  }
+  drawBtn(82, 268, 210, 58, '开始游戏', function () {
+    pendingLevel = Math.min(save.unlocked, 15); screen = 'intro'; sfxClick();
+  }, { grad: ['#ff9eaf', '#ff6b9d'], font: 21 });
+  drawMusicBtnAt(W - 30, 32);
+  // 底部四个安静的次级入口
+  var nightLabel = new Date().getHours() >= 21 ? '晚安关 🌙' : '晚安关';
+  drawTextBtn(48, 630, '选关', function () { screen = 'levels'; sfxClick(); }, {});
+  drawTextBtn(128, 630, '锦囊', function () { screen = 'jinnang'; jinnangScroll = 0; sfxClick(); }, {});
+  drawTextBtn(222, 630, '解压专场', function () { enterRelax(); sfxClick(); }, {});
+  drawTextBtn(322, 630, nightLabel, function () { enterNight(); sfxClick(); }, {});
+  if (dailyCard) drawDailyCard();
+}
+function drawDailyCard() {
+  ctx.fillStyle = 'rgba(51,65,92,0.35)'; ctx.fillRect(0, 0, W, H);
+  panel(38, 218, W - 76, 216);
+  ctx.fillStyle = INK; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 16px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('今日第一句', W / 2, 252);
+  drawWrapped(dailyCard.line, 58, 276, W - 116, 27, '17px "PingFang SC","Microsoft YaHei",sans-serif', '#e75480', 'center');
+  ctx.font = '13.5px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = INK_SOFT;
+  ctx.fillText('送你一个「' + dailyCard.propName + '」，已经放进道具里啦', W / 2, 348);
+  ctx.font = '12px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = INK_FAINT;
+  ctx.fillText('明天的好听话，已经给你留好了：' + dailyCard.tomorrow + '……', W / 2, 380);
+  ctx.fillText('点任意处收下', W / 2, 410);
+}
+/* ================= 选关（次级页，默认不展示） ================= */
+function drawLevels() {
+  bgGrad();
+  ctx.fillStyle = 'rgba(51,65,92,0.25)'; ctx.fillRect(0, 0, W, H);
+  panel(18, 84, W - 36, 500);
+  ctx.fillStyle = INK; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 21px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('选关', W / 2, 122);
+  for (var i = 0; i < 15; i++) {
+    (function (id) {
+      var col = i % 5, row = Math.floor(i / 5);
+      var x = 34 + col * 63, y = 152 + row * 96, locked = id > save.unlocked;
+      var st = save.stars[id] || 0;
+      buttons.push({ x: x, y: y, w: 56, h: 84, disabled: locked, act: function () { pendingLevel = id; screen = 'intro'; sfxClick(); } });
+      ctx.fillStyle = locked ? '#e6ecf4' : '#ffffff';
+      rr(x, y, 56, 84, 14); ctx.fill();
+      ctx.strokeStyle = '#f3d9e6'; ctx.lineWidth = 1.5; rr(x, y, 56, 84, 14); ctx.stroke();
+      var spr = sprites['n' + (id % 5)];
+      if (spr && !locked) ctx.drawImage(spr, x + 10, y + 6, 36, 36);
+      ctx.fillStyle = locked ? INK_FAINT : INK;
+      ctx.font = 'bold 14px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(id + '', x + 28, y + 56);
+      ctx.font = '10.5px sans-serif'; ctx.fillStyle = '#f4a261';
+      ctx.fillText(locked ? '未解锁' : ('★'.repeat(st) + '☆'.repeat(3 - st)), x + 28, y + 73);
+    })(i + 1);
+  }
+  ctx.fillStyle = INK_FAINT; ctx.font = '12.5px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('点卡片外回到首页', W / 2, 556);
+}
+/* ================= 关卡介绍（极简：一行目标 + 一句顿悟提示） ================= */
+function drawIntro() {
+  bgGrad();
+  DECO.slice(0, 4).forEach(drawDecoBubble);
+  drawTextBtn(46, 30, '‹ 回首页', function () { screen = 'home'; sfxClick(); }, { font: 13 });
+  var lv = LEVELS[pendingLevel - 1];
+  ctx.fillStyle = INK; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 31px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText(lv.title, W / 2, 218);
+  ctx.font = '16.5px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = INK_SOFT;
+  ctx.fillText(lv.intro, W / 2, 268);
+  if (lv.hint) drawWrapped(lv.hint, 48, 306, W - 96, 25, '14.5px "PingFang SC","Microsoft YaHei",sans-serif', '#7c4dbc', 'center');
+  var pulse = 0.65 + 0.35 * Math.sin(animT * 3.2);
+  ctx.globalAlpha = pulse;
+  ctx.font = '15px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = '#e75480';
+  ctx.fillText('点任意处开始', W / 2, 430);
+  ctx.globalAlpha = 1;
+}
+
+/* ================= 结尾呈现（6 种形式 × 台词 × 画面变体） ================= */
+function enterClear() {
+  screen = 'clear';
+  spawnConfetti(16, H - 170, 24, { angle: -0.7, sMin: 200, sMax: 330, up: 60 });
+  spawnConfetti(W - 16, H - 170, 24, { angle: Math.PI + 0.7, sMin: 200, sMax: 330, up: 60 });
+}
+function drawEnding() {
+  bgGrad();
+  var t = endingT, e = ending;
+  bubbles.forEach(drawBubble);
+  drawFx();
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  if (e.form === 'confetti') {
+    if (!e.fired) {
+      e.fired = true;
+      spawnConfetti(8, H - 190, 46, { angle: -0.8, sMin: 240, sMax: 380, up: 40, palette: END_CONF_PALETTES[e.variant] });
+      spawnConfetti(W - 8, H - 190, 46, { angle: Math.PI + 0.8, sMin: 240, sMax: 380, up: 40, palette: END_CONF_PALETTES[e.variant] });
+    }
+    panel(36, 218, W - 72, 196);
+    ctx.fillStyle = '#e75480'; ctx.font = 'bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText(e.heal ? '治愈时间' : '送给你的', W / 2, 252);
+    drawWrapped(e.line, 56, 282, W - 112, 34, 'bold ' + (e.heal ? 25 : 22) + 'px "PingFang SC","Microsoft YaHei",sans-serif', INK, 'center');
+  } else if (e.form === 'fortune') {
+    var shake = t < 0.7 ? Math.sin(t * 42) * 3.5 : 0;
+    var rise = easeOut(Math.max(0, Math.min(1, (t - 0.7) / 0.6)));
+    var tags = ['上上签', '好运签', '甜甜签'];
+    var stickCols = ['#fff8e7', '#fdf0ec', '#eef7ff'];
+    if (rise > 0) {
+      var cardY = 372 - rise * 218;
+      ctx.save();
+      ctx.shadowColor = 'rgba(90,60,120,0.22)'; ctx.shadowBlur = 14; ctx.shadowOffsetY = 5;
+      ctx.fillStyle = stickCols[e.variant]; rr(W / 2 - 78, cardY, 156, 138, 12); ctx.fill();
+      ctx.restore();
+      ctx.fillStyle = '#e75480'; rr(W / 2 - 34, cardY + 10, 68, 22, 11); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 12.5px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText(tags[e.variant], W / 2, cardY + 21.5);
+      drawWrapped(e.line, W / 2 - 64, cardY + 46, 128, 26, 'bold 16.5px "PingFang SC","Microsoft YaHei",sans-serif', INK, 'center');
+    }
+    ctx.save(); ctx.translate(shake, 0);
+    var tg = ctx.createLinearGradient(0, 372, 0, 492);
+    tg.addColorStop(0, '#c99a68'); tg.addColorStop(1, '#a9743c');
+    ctx.fillStyle = tg; rr(W / 2 - 52, 386, 104, 106, 14); ctx.fill();
+    ctx.fillStyle = '#8a5a2b'; ctx.beginPath(); ctx.ellipse(W / 2, 388, 52, 10, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#e8c898';
+    [-26, 0, 26].forEach(function (off) { rr(W / 2 + off - 4, 356, 8, 34, 4); ctx.fill(); });
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 15px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText('今日好签', W / 2, 442);
+    ctx.restore();
+  } else if (e.form === 'bubbleline') {
+    ctx.fillStyle = INK_SOFT; ctx.font = '13px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText('泡泡们排队对你说', W / 2, 196);
+    var chars = e.line.split('');
+    var totalW = chars.length * 57;
+    chars.forEach(function (ch, i) {
+      var bx = W / 2 - totalW / 2 + 28 + i * 57;
+      var bt = t * 2.6 - i * 0.33;
+      var by = 306 - (bt > 0 ? Math.abs(Math.sin(Math.min(Math.PI, bt))) * 30 * easeOutBack(Math.min(1, bt)) : 0);
+      var spr = sprites['n' + (i % 5)];
+      if (spr) ctx.drawImage(spr, bx - 24, by - 24, 48, 48);
+      drawFace(bx, by - 3, 22, 'smile', i * 1.7, false);
+      ctx.fillStyle = '#e75480'; ctx.font = 'bold 21px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText(ch, bx, by - 42);
+    });
+  } else if (e.form === 'jinnang') {
+    var item = e.unlocks[0];
+    var p = Math.min(1, t / 0.7);
+    var sx = p < 0.5 ? 1 - p * 2 : (p - 0.5) * 2;
+    ctx.save();
+    ctx.translate(W / 2, 316); ctx.scale(Math.max(0.02, sx), 1); ctx.translate(-W / 2, -316);
+    panel(66, 226, W - 132, 180);
+    if (p < 0.5) {
+      var gg = ctx.createLinearGradient(0, 226, 0, 406);
+      gg.addColorStop(0, '#cda6f5'); gg.addColorStop(1, '#9a7fd0');
+      ctx.fillStyle = gg; rr(66, 226, W - 132, 180, 22); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 44px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText('锦', W / 2, 316);
+    } else if (item) {
+      ctx.fillStyle = JINNANG_CAT_COLOR[item.cat]; rr(W / 2 - 30, 246, 60, 22, 11); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = 'bold 12px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText(item.cat, W / 2, 257.5);
+      drawWrapped(item.text, 84, 284, W - 168, 28, 'bold 17.5px "PingFang SC","Microsoft YaHei",sans-serif', INK, 'center');
+      ctx.fillStyle = INK_FAINT; ctx.font = '12px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText('新解锁的锦囊' + (e.unlocks.length > 1 ? '（还有 ' + (e.unlocks.length - 1) + ' 条）' : ''), W / 2, 384);
+    }
+    ctx.restore();
+  } else if (e.form === 'stars') {
+    var totalStars = 0;
+    for (var k in save.stars) totalStars += save.stars[k];
+    ctx.fillStyle = INK; ctx.font = 'bold 17px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText('星星收集', W / 2, 208);
+    for (var i = 0; i < 10; i++) {
+      var sxp, syp;
+      if (e.variant === 1) { sxp = 44 + i * 32; syp = 268 - Math.sin(i / 9 * Math.PI) * 26; }
+      else if (e.variant === 2) { sxp = 76 + (i % 5) * 56; syp = i < 5 ? 246 : 300; }
+      else { sxp = 44 + i * 32; syp = 262; }
+      var lit = i < Math.min(10, totalStars) && t > 0.15 + i * 0.11;
+      var pop = lit ? easeOutBack(Math.min(1, (t - 0.15 - i * 0.11) * 3)) : 1;
+      ctx.save(); ctx.translate(sxp, syp); ctx.scale(pop, pop);
+      drawStar(0, 0, 13, lit ? '#f2c94c' : '#dbe4f0');
+      ctx.restore();
+    }
+    ctx.fillStyle = INK_SOFT; ctx.font = '13px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText('已经收集 ' + totalStars + ' 颗星星啦', W / 2, 344);
+    drawWrapped('“' + e.line + '”', 48, 376, W - 96, 28, 'bold 17px "PingFang SC","Microsoft YaHei",sans-serif', '#e75480', 'center');
+  } else if (e.form === 'egg') {
+    if (t > 0.3 && !e.fw1) { e.fw1 = true; addRing(80, 190, '#ffb35c', 52); addParticles(80, 190, '#ffb35c', 12, 150); }
+    if (t > 1.1 && !e.fw2) { e.fw2 = true; addRing(295, 160, '#ff8fab', 52); addParticles(295, 160, '#ff8fab', 12, 150); }
+    for (var j = 0; j < 6; j++) {
+      var bx2 = 48 + j * 56, bow = 1 - 0.22 * Math.max(0, Math.sin(t * 3.1 + j * 0.5));
+      var spr2 = sprites['n' + (j % 5)];
+      ctx.save(); ctx.translate(bx2, 330); ctx.scale(1, bow);
+      if (spr2) ctx.drawImage(spr2, -23, -23, 46, 46);
+      ctx.restore();
+      drawFace(bx2, 330 - 3, 21, 'smile', j * 2.3, false);
+    }
+    drawWrapped(e.line, 48, 396, W - 96, 30, 'bold 19px "PingFang SC","Microsoft YaHei",sans-serif', '#e75480', 'center');
+  }
+  if (t > 1.2) {
+    ctx.globalAlpha = 0.55 + 0.3 * Math.sin(animT * 3);
+    ctx.fillStyle = INK_FAINT; ctx.font = '12px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText('点任意处继续', W / 2, H - 30);
+    ctx.globalAlpha = 1;
+  }
+}
+/* ================= 结算页 ================= */
+function drawClear() {
+  bgGrad();
+  drawFx();
+  panel(26, 96, W - 52, 452);
+  ctx.fillStyle = INK; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 27px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('过关啦！', W / 2, 140);
+  for (var i = 0; i < 3; i++) drawStar(W / 2 - 34 + i * 34, 178, 13, i < clearInfo.stars ? '#f2c94c' : '#dbe4f0');
+  var line = ending ? ending.line : bagDraw('praise', WARM.praise);
+  drawWrapped(line, 48, 208, W - 96, 30, 'bold ' + (cur.mode === 'heal' ? 20 : 17.5) + 'px "PingFang SC","Microsoft YaHei",sans-serif', '#e75480', 'center');
+  ctx.font = '12.5px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = INK_FAINT;
+  ctx.fillText('戳破 ' + pops + ' 个 · 用时 ' + Math.round(elapsed) + ' 秒 · 补给：' + clearInfo.reward + ' +1', W / 2, 292);
+  var by = 316;
+  if (clearInfo.newUnlocks.length) {
+    ctx.fillStyle = '#c2637e'; ctx.font = '13px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText('解锁好听话 ×' + clearInfo.newUnlocks.length + '，去锦囊看看', W / 2, by + 8);
+    by += 30;
+  }
+  ctx.fillStyle = '#8a6bc9'; ctx.font = '13.5px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText(NEXT_TEASER[cur.id - 1], W / 2, by + 16);
+  by += 34;
+  if (cur.id < 15 && cur.mode !== 'heal') {
+    drawBtn(82, by, 210, 54, '下一关', function () { pendingLevel = cur.id + 1; screen = 'intro'; sfxClick(); }, { grad: ['#ff9eaf', '#ff6b9d'], font: 19 });
+  } else {
+    drawBtn(82, by, 210, 54, '回到首页', function () { screen = 'home'; sfxClick(); }, { grad: ['#ff9eaf', '#ff6b9d'], font: 19 });
+  }
+  by += 70;
+  drawTextBtn(W / 2 - 62, by, '重玩本关', function () { pendingLevel = cur.id; screen = 'intro'; sfxClick(); }, {});
+  drawTextBtn(W / 2 + 62, by, '解压专场', function () { enterRelax(); sfxClick(); }, {});
+  // 模拟 Banner 广告位（仅结算页，与原版一致）
+  ctx.fillStyle = '#e3e7ee'; ctx.fillRect(0, H - 40, W, 40);
+  ctx.fillStyle = '#9aa7ba'; ctx.font = '13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('广告位', W / 2, H - 20);
+}
+/* ================= 未过关（三步：共情 → 量化差距 → 小帮助） ================= */
+function drawFail() {
+  bgGrad();
+  panel(28, 118, W - 56, 408);
+  ctx.fillStyle = INK; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 28px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('就差一点点', W / 2, 168);
+  drawWrapped(failLine, 54, 202, W - 108, 28, 'bold 17px "PingFang SC","Microsoft YaHei",sans-serif', '#e75480', 'center');
+  ctx.font = '14.5px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = INK_SOFT;
+  ctx.fillText(failGap, W / 2, 268);
+  ctx.font = '12.5px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = INK_FAINT;
+  ctx.fillText('已破 ' + pops + ' 个 · 小帮助：下一局开局 3 秒慢放', W / 2, 296);
+  if (failGift) {
+    ctx.fillStyle = '#c2637e'; ctx.font = '13px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText('额外送你一个「' + failGift + '」，下局拿它出气', W / 2, 322);
+  }
+  drawBtn(72, 344, 232, 52, '再来一局，稳赢', function () { startLevel(cur.id - 1); sfxClick(); }, { grad: ['#ff9eaf', '#ff6b9d'], font: 18 });
+  if (revives < 2) {
+    drawBtn(96, 410, 184, 42, '看视频复活', function () { revive(); }, { fill: '#eef3fa', color: INK, font: 14.5, badge: '模拟广告位' });
+  }
+  drawTextBtn(W / 2, 486, '回首页', function () { screen = 'home'; sfxClick(); }, {});
+}
+
+/* ================= 锦囊图鉴 ================= */
+function drawJinnang() {
+  bgGrad();
+  drawTextBtn(46, 32, '‹ 首页', function () { screen = 'home'; sfxClick(); }, { font: 13.5 });
+  ctx.fillStyle = INK; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 20px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('好听话锦囊', W / 2, 32);
+  ctx.font = '12.5px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = INK_SOFT;
+  ctx.fillText('已收集 ' + jinnangUnlockedCount() + ' / 30 · 过关就能解锁新的', W / 2, 58);
+  jinnangHits = [];
+  var y0 = 78, cardH = 62, gap = 9, viewB = H - 14;
+  ctx.save();
+  ctx.beginPath(); ctx.rect(0, y0 - 6, W, viewB - y0 + 6); ctx.clip();
+  var unlocked = jinnangUnlockedCount();
+  JINNANG.forEach(function (item, i) {
+    var y = y0 + i * (cardH + gap) - jinnangScroll;
+    if (y + cardH < y0 - 10 || y > viewB) return;
+    var isOpen = i < unlocked;
+    jinnangHits.push({ idx: i, x: 16, y: y, w: W - 32, h: cardH, open: isOpen });
+    ctx.fillStyle = isOpen ? 'rgba(255,255,255,0.94)' : 'rgba(233,238,245,0.9)';
+    rr(16, y, W - 32, cardH, 14); ctx.fill();
+    ctx.fillStyle = JINNANG_CAT_COLOR[item.cat];
+    rr(16, y, 6, cardH, 3); ctx.fill();
+    if (isOpen) {
+      ctx.fillStyle = INK; ctx.font = 'bold 14.5px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign = 'left';
+      ctx.fillText(item.text, 34, y + 22);
+      ctx.fillStyle = INK_FAINT; ctx.font = '12px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText(item.cat + ' · ' + item.scene, 34, y + 45);
+    } else {
+      ctx.fillStyle = INK_FAINT; ctx.font = 'bold 15px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign = 'left';
+      ctx.fillText('？？？', 34, y + 22);
+      ctx.font = '12px "PingFang SC","Microsoft YaHei",sans-serif';
+      ctx.fillText(item.cat + ' · ' + item.teaser, 34, y + 45);
+    }
+  });
+  ctx.restore();
+}
+function drawJinDetail() {
+  bgGrad();
+  drawTextBtn(46, 32, '‹ 锦囊', function () { screen = 'jinnang'; sfxClick(); }, { font: 13.5 });
+  var item = JINNANG[jinnangSel];
+  if (!item) { screen = 'jinnang'; return; }
+  panel(30, 130, W - 60, 300);
+  ctx.fillStyle = JINNANG_CAT_COLOR[item.cat]; rr(W / 2 - 32, 158, 64, 24, 12); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(item.cat, W / 2, 170.5);
+  drawWrapped(item.text, 54, 214, W - 108, 38, 'bold 23px "PingFang SC","Microsoft YaHei",sans-serif', INK, 'center');
+  ctx.fillStyle = INK_SOFT; ctx.font = '14px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('什么时候用：' + item.scene, W / 2, 348);
+  drawBtn(88, 462, 200, 50, '生成分享卡', function () { makeShareCard(JINNANG[jinnangSel]); }, { grad: ['#a8c8f0', '#7fa8dd'], font: 16.5 });
+  ctx.fillStyle = INK_FAINT; ctx.font = '12px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('把这句好听话，送给想送的人', W / 2, 540);
+}
+/* 分享卡：Canvas 竖版卡片（网页版图片弹层 + 保存；微信版分享接口留待接入） */
+function makeShareCard(item) {
+  var c = document.createElement('canvas');
+  c.width = 750; c.height = 1000;
+  var g = c.getContext('2d');
+  var grad = g.createLinearGradient(0, 0, 750, 1000);
+  grad.addColorStop(0, '#fdf3e3'); grad.addColorStop(0.55, '#fdeef3'); grad.addColorStop(1, '#dff2fd');
+  g.fillStyle = grad; g.fillRect(0, 0, 750, 1000);
+  var decoCols = ['#ff8fc0', '#6fd3ff', '#ffe082', '#7fe7c4', '#cda6f5'];
+  for (var i = 0; i < 7; i++) {
+    g.beginPath(); g.arc(70 + (i * 173) % 680, 90 + (i * 211) % 760, 26 + (i % 3) * 12, 0, Math.PI * 2);
+    g.fillStyle = decoCols[i % 5] + '55'; g.fill();
+  }
+  g.fillStyle = JINNANG_CAT_COLOR[item.cat];
+  g.beginPath(); g.arc(375, 168, 40, 0, Math.PI * 2); g.fill();
+  g.fillStyle = '#fff'; g.font = 'bold 34px "PingFang SC","Microsoft YaHei",sans-serif';
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillText(item.cat.slice(0, 1), 375, 170);
+  g.fillStyle = '#33415c'; g.font = 'bold 57px "PingFang SC","Microsoft YaHei",sans-serif';
+  var words = item.text, line = '', ly = 330;
+  for (var j = 0; j < words.length; j++) {
+    if (g.measureText(line + words[j]).width > 600 && line) { g.fillText(line, 375, ly); ly += 84; line = ''; }
+    line += words[j];
+  }
+  if (line) g.fillText(line, 375, ly);
+  g.fillStyle = '#5a6b85'; g.font = '30px "PingFang SC","Microsoft YaHei",sans-serif';
+  g.fillText('—— ' + item.scene, 375, ly + 96);
+  g.fillStyle = '#33415c'; g.font = 'bold 29px "PingFang SC","Microsoft YaHei",sans-serif';
+  g.fillText('泡泡没烦恼 · 好听话锦囊', 375, 884);
+  g.fillStyle = '#93a5bd'; g.font = '25px "PingFang SC","Microsoft YaHei",sans-serif';
+  g.fillText('dreamforgestudio.xyz/paopao2.html', 375, 928);
+  var url = c.toDataURL('image/png');
+  // 网页版：图片弹层呈现 + 保存图片下载（微信版此处换 wx 分享回调）
+  try {
+    var ov = document.getElementById('shareOverlay');
+    if (!ov) {
+      ov = document.createElement('div'); ov.id = 'shareOverlay';
+      ov.innerHTML = '<img alt="分享卡"><div class="row"><a download="好听话锦囊.png">保存图片</a><button type="button">关闭</button></div>';
+      document.body.appendChild(ov);
+      ov.querySelector('button').addEventListener('click', function () { ov.style.display = 'none'; });
+    }
+    ov.querySelector('img').src = url;
+    ov.querySelector('a').href = url;
+    ov.style.display = 'flex';
+  } catch (e) {}
+  // 分享得奖：同一条锦囊每天首次生成，给送出方 1 个随机道具
+  var today = dateStr(new Date());
+  var idx = JINNANG.indexOf(item);
+  if (save.shareRewards[idx] !== today) {
+    save.shareRewards[idx] = today;
+    var gt = pick(['needle', 'shock', 'slow']);
+    save.props[gt] = Math.min(9, (save.props[gt] || 0) + 1);
+    persist();
+    showToast('开心传出去了，奖励你一个「' + PROP_NAMES[gt] + '」');
+  }
+  return url;
+}
+/* ================= 深呼吸 / 晚安卡 ================= */
+function drawBreath() {
+  bgGrad();
+  drawTextBtn(52, 30, '‹ 回解压专场', function () { screen = 'relax'; sfxClick(); }, { font: 13 });
+  if (!breath) { screen = 'relax'; return; }
+  var dur = breathDur(breath.round, breath.phase);
+  var p = Math.min(1, breath.t / dur);
+  var scale;
+  if (breath.phase === 'inhale') scale = 0.62 + 0.38 * easeOut(p);
+  else if (breath.phase === 'hold') scale = 1;
+  else scale = 1 - 0.38 * easeOut(p);
+  var r = 96 * scale;
+  var glow = (breath.phase === 'inhale' && breath.holding) || (breath.phase === 'exhale' && !breath.holding) || breath.phase === 'hold';
+  if (glow) {
+    ctx.beginPath(); ctx.arc(W / 2, 330, r + 20 + 5 * Math.sin(animT * 2), 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(127,200,188,0.20)'; ctx.fill();
+  }
+  var spr = sprites['n3'];
+  if (spr) ctx.drawImage(spr, W / 2 - r, 330 - r, r * 2, r * 2);
+  drawFace(W / 2, 330 - r * 0.14, r * 0.92, 'sleepy', 3.3, false);
+  var label = breath.phase === 'inhale' ? '吸气……' : (breath.phase === 'hold' ? '停一停' : '慢慢呼出来');
+  var alpha = Math.min(1, Math.min(p, 1 - p) * 3 + 0.25);
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = INK; ctx.font = 'bold 21px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(label, W / 2, 128);
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = INK_FAINT; ctx.font = '13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText(breath.phase === 'inhale' ? '按住屏幕，跟着泡泡一起吸气' : (breath.phase === 'exhale' ? '松开手，慢慢把气呼出来' : '就这样，停一停'), W / 2, 540);
+  for (var i = 0; i < 5; i++) {
+    ctx.beginPath(); ctx.arc(W / 2 - 44 + i * 22, 586, 5, 0, Math.PI * 2);
+    ctx.fillStyle = i < breath.round ? '#7fc8bc' : '#dbe4f0'; ctx.fill();
+  }
+  ctx.fillText('第 ' + breath.round + ' 轮 / 共 5 轮', W / 2, 616);
+}
+function drawBreathCard() {
+  bgGrad();
+  panel(34, 190, W - 68, 250);
+  ctx.fillStyle = INK; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 20px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('呼吸顺了，心也顺了', W / 2, 238);
+  drawWrapped(breath && breath.line ? breath.line : WARM.breathe[0], 56, 276, W - 112, 30, '17px "PingFang SC","Microsoft YaHei",sans-serif', '#4d9e8f', 'center');
+  drawBtn(62, 356, 118, 44, '回解压专场', function () { enterRelax(); sfxClick(); }, { grad: ['#a8e6d5', '#7fc8bc'], font: 14.5 });
+  drawBtn(196, 356, 118, 44, '回首页', function () { screen = 'home'; sfxClick(); }, { fill: '#eef3fa', color: INK, font: 14.5 });
+}
+function drawNightCard() {
+  bgNight();
+  panel(34, 180, W - 68, 268);
+  ctx.fillStyle = INK; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 21px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('晚安卡', W / 2, 226);
+  drawWrapped(nightLine ? nightLine : WARM.night[0], 56, 262, W - 112, 30, '17.5px "PingFang SC","Microsoft YaHei",sans-serif', '#7c4dbc', 'center');
+  ctx.font = '15px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = INK_SOFT;
+  ctx.fillText('放下手机，好好睡', W / 2, 356);
+  drawBtn(102, 384, 172, 46, '回首页', function () { screen = 'home'; sfxClick(); }, { grad: ['#a58fd9', '#7c6bc4'], font: 15.5 });
+}
+
+/* ================= 总绘制（转场：淡入 + 轻滑 200ms） ================= */
+var animT = 0;
+function draw() {
+  buttons = [];
+  if (screen !== lastDrawnScreen) { lastDrawnScreen = screen; transStart = performance.now(); }
+  var ta = Math.min(1, (performance.now() - transStart) / 200);
+  ctx.save();
+  ctx.globalAlpha = 0.35 + 0.65 * ta;
+  ctx.translate(0, (1 - ta) * 8);
+  if (screen === 'home') drawHome();
+  else if (screen === 'levels') drawLevels();
+  else if (screen === 'jinnang') drawJinnang();
+  else if (screen === 'jindetail') drawJinDetail();
+  else if (screen === 'intro') drawIntro();
+  else if (screen === 'play') drawPlay();
+  else if (screen === 'relax') drawModePlay(false);
+  else if (screen === 'night') drawModePlay(true);
+  else if (screen === 'breath') drawBreath();
+  else if (screen === 'breathcard') drawBreathCard();
+  else if (screen === 'nightcard') drawNightCard();
+  else if (screen === 'ending') drawEnding();
+  else if (screen === 'clear') drawClear();
+  else if (screen === 'fail') drawFail();
+  ctx.restore();
+  if (adOverlay) {
+    ctx.fillStyle = 'rgba(20,28,48,0.88)'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = 'bold 20px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText('模拟广告播放中…', W / 2, H / 2 - 14);
+    ctx.font = '13px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = '#bcd3ea';
+    ctx.fillText('这里将来是激励视频广告位', W / 2, H / 2 + 18);
+  }
+  if (toast && performance.now() / 1000 < toast.until) {
+    ctx.font = 'bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+    var tw = ctx.measureText(toast.text).width + 28;
+    ctx.fillStyle = 'rgba(51,65,92,0.92)';
+    rr((W - tw) / 2, H - BAR_H - 40, tw, 32, 16); ctx.fill();
+    ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(toast.text, W / 2, H - BAR_H - 23);
+  }
+}
+
+/* ================= 输入 ================= */
+function toLogic(e) {
+  var rect = cv.getBoundingClientRect();
+  return { x: (e.clientX - rect.left) * W / rect.width, y: (e.clientY - rect.top) * H / rect.height };
+}
+function hitButtons(p) {
+  for (var i = buttons.length - 1; i >= 0; i--) {
+    var b = buttons[i];
+    if (!b.disabled && p.x >= b.x && p.x <= b.x + b.w && p.y >= b.y && p.y <= b.y + b.h) {
+      pressMark = { x: b.x, y: b.y, w: b.w, h: b.h, t: performance.now() / 1000 };
+      b.act(); return true;
+    }
+  }
+  return false;
+}
+function topBubbleAt(p) {
+  for (var i = bubbles.length - 1; i >= 0; i--) {
+    var b = bubbles[i];
+    if (b.dead) continue;
+    var dx = b.x - p.x, dy = b.y - p.y;
+    if (dx * dx + dy * dy <= b.r * b.r) return b;
+  }
+  return null;
+}
+var jinDrag = null;
+function popModeBubble(b) {
+  b.dead = true;
+  var col = b.joyColor || '#ffc2d6';
+  addParticles(b.x, b.y, col, 7, 80);
+  addRing(b.x, b.y, col, 34);
+  addLaugh(b.x, b.y, 0.8);
+  sfxPopSoft();
+  if (playKind === 'relax') {
+    relaxPops++;
+    if (Math.random() < 0.22) addFloater(b.x, b.y - b.r - 4, bagDraw('comfort', WARM.comfort), '#4d9e8f', { size: 13.5, life: 1.4, fade: true });
+  } else {
+    nightPops++;
+    if (nightPops >= 40) {
+      nightLine = pick(WARM.night);
+      sfxCheer();
+      screen = 'nightcard';
+    }
+  }
+  bubbles = bubbles.filter(function (x) { return !x.dead; });
+}
+cv.addEventListener('pointerdown', function (e) {
+  e.preventDefault();
+  audio();
+  if (adOverlay) return;
+  var p = toLogic(e);
+  lastPointer = { x: p.x, y: p.y, t: performance.now() / 1000 };
+  if (screen === 'home' && dailyCard) { dailyCard = null; return; }
+  if (screen === 'ending') { enterClear(); return; }
+  if (screen === 'jinnang') {
+    if (hitButtons(p)) return;
+    jinDrag = { startY: p.y, startScroll: jinnangScroll, moved: 0 };
+    return;
+  }
+  if (screen === 'intro') { if (!hitButtons(p)) { startLevel(pendingLevel - 1); sfxClick(); } return; }
+  if (screen === 'levels') { if (!hitButtons(p)) screen = 'home'; return; }
+  if (screen === 'breath') {
+    if (hitButtons(p)) return;
+    if (breath) breath.holding = true;
+    return;
+  }
+  if (screen !== 'play' && screen !== 'relax' && screen !== 'night') { hitButtons(p); return; }
+  if (screen === 'relax' || screen === 'night') {
+    if (hitButtons(p)) return;
+    var mb = topBubbleAt(p);
+    if (mb) popModeBubble(mb);
+    return;
+  }
+  // play
+  if (p.y >= H - BAR_H) { hitButtons(p); return; }
+  if (mode === 'needle') {
+    var tb = topBubbleAt(p);
+    if (tb && tb.type === 'tough') {
+      save.props.needle--; persist();
+      tb.hp = 1; damageTough(tb, false);
+      addFloater(tb.x, tb.y - tb.r, '一针爽，破了！', '#a9743c');
+    } else showToast('一针爽只能用在顽固泡泡上');
+    mode = null;
+    return;
+  }
+  if (mode === 'shock') {
+    save.props.shock--; persist();
+    mode = null;
+    sfxBlast();
+    bubbles.slice().forEach(function (b) {
+      if (b.dead || isSurprise(b)) return;
+      var dx = b.x - p.x, dy = b.y - p.y;
+      if (Math.sqrt(dx * dx + dy * dy) > 90 + b.r) return;
+      if (b.type === 'normal' || b.type === 'red') { b.dead = true; pops++; addParticles(b.x, b.y, b.type === 'red' ? CORAL : JOY_COLORS[b.color], 8, 110); }
+      else if (b.type === 'tough') damageTough(b, true);
+    });
+    addFloater(p.x, p.y, '抖一抖，碎一片！', '#7c4dbc');
+    bubbles = bubbles.filter(function (b) { return !b.dead; });
+    return;
+  }
+  var b = topBubbleAt(p);
+  if (b && b.type !== 'frozen') {
+    if (b.type === 'tough') damageTough(b, false);
+    else popBubble(b);
+    bubbles = bubbles.filter(function (x) { return !x.dead; });
+    return;
+  }
+  charge = { x: p.x, y: p.y, start: performance.now() / 1000, onIce: !!(b && b.type === 'frozen') };
+  if (b && b.type === 'frozen' && !hintFlags.ice) {
+    hintFlags.ice = true;
+    addFloater(p.x, p.y - 40, '冻住了！按住蓄力', '#0077b6');
+  }
+});
+cv.addEventListener('pointermove', function (e) {
+  var p = toLogic(e);
+  lastPointer = { x: p.x, y: p.y, t: performance.now() / 1000 };
+  if (screen === 'jinnang' && jinDrag) {
+    var dy = p.y - jinDrag.startY;
+    jinDrag.moved = Math.max(jinDrag.moved, Math.abs(dy));
+    var maxScroll = Math.max(0, JINNANG.length * 71 - (H - 110));
+    jinnangScroll = Math.max(0, Math.min(maxScroll, jinDrag.startScroll - dy));
+  }
+});
+function endCharge() {
+  if (!charge) return;
+  var held = performance.now() / 1000 - charge.start;
+  var wasIce = charge.onIce;
+  charge = null;
+  if (held >= 0.6) shatterIce();
+  else if (wasIce) addFloater(W / 2, FIELD_Y + 60, '按住 0.6 秒蓄力再松手', '#0077b6');
+}
+cv.addEventListener('pointerup', function (e) {
+  if (screen === 'play') endCharge();
+  if (screen === 'breath' && breath) breath.holding = false;
+  if (screen === 'jinnang' && jinDrag) {
+    var wasTap = jinDrag.moved < 8;
+    jinDrag = null;
+    if (wasTap) {
+      var p = toLogic(e);
+      for (var i = 0; i < jinnangHits.length; i++) {
+        var h = jinnangHits[i];
+        if (p.x >= h.x && p.x <= h.x + h.w && p.y >= h.y && p.y <= h.y + h.h) {
+          if (h.open) { jinnangSel = h.idx; screen = 'jindetail'; sfxClick(); }
+          else showToast('过关就能解锁这条啦');
+          break;
+        }
+      }
+    }
+  }
+});
+cv.addEventListener('pointercancel', function () { charge = null; jinDrag = null; if (breath) breath.holding = false; });
+cv.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+
+/* ================= 每日第一句 / 回归想念 / gift 欢迎道具 ================= */
+function dateStr(d) { return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+function dayNum(d) { return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000); }
+var nightLine = '';
+(function bootDaily() {
+  var now = new Date(), today = dateStr(now);
+  var daysAway = 0;
+  if (save.lastVisit) daysAway = dayNum(now) - dayNum(new Date(save.lastVisit));
+  if (save.lastVisit && daysAway >= 1) todayLine = WARM.miss[dayNum(now) % WARM.miss.length];
+  else todayLine = WARM.daily[dayNum(now) % WARM.daily.length];
+  if (save.lastDaily !== today) {
+    var gp = pick(['needle', 'shock', 'slow']);
+    save.props[gp] = Math.min(9, (save.props[gp] || 0) + 1);
+    var tomorrowLine = WARM.daily[(dayNum(now) + 1) % WARM.daily.length];
+    dailyCard = { line: todayLine, propName: PROP_NAMES[gp], tomorrow: tomorrowLine.slice(0, 2) };
+    save.lastDaily = today;
+  }
+  save.lastVisit = today;
+  try {
+    if (typeof location !== 'undefined' && /[?&]gift=1/.test(location.search || '') && !save.giftClaimed) {
+      save.giftClaimed = true;
+      var wp = pick(['needle', 'shock', 'slow']);
+      save.props[wp] = Math.min(9, (save.props[wp] || 0) + 1);
+      setTimeout(function () { showToast('欢迎礼：' + PROP_NAMES[wp] + ' +1，开心收下'); }, 400);
+    }
+  } catch (e) {}
+  persist();
+})();
+
+/* ================= 主循环 ================= */
+var lastT = performance.now();
+function frame(now) {
+  requestAnimationFrame(frame);
+  var dt = Math.min(0.05, (now - lastT) / 1000);
+  lastT = now;
+  spawnScale = dt > 0.034 ? 0.5 : 1;      // 掉帧先减粒子，不减判定
+  animT += dt;
+  bgmTick();
+  if (adOverlay && now / 1000 >= adOverlay.until) {
+    var cb = adOverlay.cb; adOverlay = null;
+    if (cb) cb();
+  }
+  if (!adOverlay) {
+    if (screen === 'play') update(dt);
+    else if (screen === 'relax' || screen === 'night') updateMode(dt);
+    else if (screen === 'breath') breathUpdate(dt);
+    else if (screen === 'ending') {
+      endingT += dt;
+      updateFx(dt);
+      if (endingT >= 2.5) enterClear();
+    } else if (screen === 'clear') updateFx(dt);
+    else if (screen === 'home') {
+      homeConfTick -= dt;
+      if (homeConfTick <= 0 && homeConfetti.length < 18) {
+        homeConfTick = 0.45;
+        homeConfetti.push({ x: rnd(30, W - 30), y: 206, vx: rnd(-8, 8), vy: rnd(9, 18), w: rnd(4, 6), h: rnd(6, 10), rot: rnd(0, 6), vr: rnd(-3, 3), color: pick(CONF_COLORS), t: 0, life: rnd(2, 3) });
+      }
+      homeConfetti = homeConfetti.filter(function (c) { c.t += dt; c.x += c.vx * dt + Math.sin(animT * 2 + c.rot) * 0.4; c.y += c.vy * dt; c.rot += c.vr * dt; return c.t < c.life && c.y < 252; });
+    }
+  }
+  draw();
+}
+buildSprites();
+fit();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
