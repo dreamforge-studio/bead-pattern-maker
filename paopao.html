@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>泡泡没烦恼</title>
+<style>
+  html, body { margin:0; padding:0; background:#1d2b53; height:100%; overflow:hidden;
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; }
+  #wrap { position:relative; margin:0 auto; }
+  canvas { display:block; touch-action:none; border-radius:6px;
+    box-shadow:0 8px 40px rgba(0,0,0,.45); background:#eaf7ff; }
+</style>
+</head>
+<body>
+<div id="wrap"><canvas id="cv"></canvas></div>
+<script>
+/* 《泡泡没烦恼》关卡参数 —— 同源文件
+ * index.html 通过 <script src="levels.js"> 加载，sim.js 通过 require 读取。
+ * 两边必须用同一份参数：调参只改这里，游戏与机器人基线自动一致。
+ *
+ * 字段说明：
+ *  id      关卡号
+ *  tier    难度层：谷底 / 爬升 / 浪尖 / 治愈（达标门槛按层判定）
+ *  title   关卡显示名（全中文）
+ *  mode    clear=全破过关 / timed=限时达标 / heal=治愈关（无失败，达数即过）
+ *  total   本关泡泡总量
+ *  mix     类型配比 { normal 普通, tough 顽固, red 倒计时, frozen 冰冻 }，合计应等于 total
+ *  speed   漂移速度系数（1 为基准）
+ *  radius  普通泡半径基准（逻辑像素）
+ *  run     同色成组长度区间 [最小, 最大]（连击攒清空爆炸靠它）
+ *  timeLimit 限时秒数（0=不限时）
+ *  target  timed/heal 的达标破泡数（clear 为 null，表示全破）
+ *  needBlast 需要触发的「烦恼清空」爆炸次数
+ *  redLimit 允许漏破的红泡数（null=本关无红泡规则）
+ *  redTimes 红泡出现的时刻（秒，timed 关用；clear 关红泡按 redEvery 间隔依次出现）
+ *  redEvery clear 关红泡出现间隔秒数
+ *  par     三星参考时长（秒）
+ *  intro   关卡目标说明（关卡介绍页显示）
+ *  hint    顿悟点提示（新机制首现关显示）
+ */
+
+var WORDS = [
+  '加班', '催婚', '房贷', '脱发', '堵车', '失眠', '胖了', '掉发',
+  '熬夜', '被催', '账单', '开会', '早起', '排队', '堵心', '没钱',
+  '加班费', '相亲', '体检', '堵车费', '闹钟', '外卖凉', '没睡好', '被@'
+];
+
+var COLOR_NAMES = ['粉', '蓝', '黄', '绿', '紫'];
+var COLOR_VALUES = ['#ff7eb6', '#4fc3f7', '#ffd54f', '#69f0ae', '#ba68c8'];
+
+var LEVELS = [
+  { id: 1, tier: '谷底', title: '第一关', mode: 'clear',
+    total: 22, mix: { normal: 22, tough: 0, red: 0, frozen: 0 },
+    speed: 0.5, radius: 30, run: [3, 5], timeLimit: 0, target: null,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 40,
+    intro: '把所有烦恼泡泡都戳破！', hint: '' },
+
+  { id: 2, tier: '谷底', title: '第二关', mode: 'clear',
+    total: 28, mix: { normal: 28, tough: 0, red: 0, frozen: 0 },
+    speed: 0.55, radius: 30, run: [6, 9], timeLimit: 0, target: null,
+    needBlast: 1, redLimit: null, redTimes: [], redEvery: 0, par: 50,
+    intro: '全破，并打出 1 次「烦恼清空」！', hint: '连戳同一种颜色的泡泡，攒满 8 连击就会爆炸清空一片。' },
+
+  { id: 3, tier: '爬升', title: '第三关', mode: 'clear',
+    total: 26, mix: { normal: 20, tough: 6, red: 0, frozen: 0 },
+    speed: 0.6, radius: 30, run: [3, 5], timeLimit: 0, target: null,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 70,
+    intro: '带壳的顽固泡泡出现了，全部戳破！', hint: '顿悟：先戳顽固泡旁边的普通泡，震波会给它的壳加一道裂纹。' },
+
+  { id: 4, tier: '浪尖', title: '第四关', mode: 'timed',
+    total: 45, mix: { normal: 45, tough: 0, red: 0, frozen: 0 },
+    speed: 0.95, radius: 29, run: [3, 5], timeLimit: 45, target: 40,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 45,
+    intro: '45 秒内戳破 40 个泡泡！', hint: '' },
+
+  { id: 5, tier: '治愈', title: '第五关', mode: 'heal',
+    total: 35, mix: { normal: 35, tough: 0, red: 0, frozen: 0 },
+    speed: 0.35, radius: 31, run: [3, 5], timeLimit: 0, target: 25,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 45,
+    intro: '慢慢戳，戳破 25 个就过关，没有失败。', hint: '' },
+
+  { id: 6, tier: '谷底', title: '第六关', mode: 'clear',
+    total: 42, mix: { normal: 42, tough: 0, red: 0, frozen: 0 },
+    speed: 0.6, radius: 30, run: [5, 8], timeLimit: 0, target: null,
+    needBlast: 2, redLimit: null, redTimes: [], redEvery: 0, par: 60,
+    intro: '全破，并打出 2 次「烦恼清空」！', hint: '同色泡泡成组出现，顺着一组连戳，连击不断线。' },
+
+  { id: 7, tier: '爬升', title: '第七关', mode: 'clear',
+    total: 34, mix: { normal: 26, tough: 8, red: 0, frozen: 0 },
+    speed: 0.65, radius: 30, run: [3, 5], timeLimit: 0, target: null,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 85,
+    intro: '顽固泡泡变多了，全部戳破！', hint: '' },
+
+  { id: 8, tier: '浪尖', title: '第八关', mode: 'clear',
+    total: 29, mix: { normal: 24, tough: 0, red: 5, frozen: 0 },
+    speed: 0.65, radius: 29, run: [3, 5], timeLimit: 0, target: null,
+    needBlast: 0, redLimit: 1, redTimes: [], redEvery: 7, par: 75,
+    intro: '红色倒计时泡出现后 5 秒内戳破，漏破不能超过 1 个！', hint: '顿悟：红泡一出现先戳它，顺序比速度重要。' },
+
+  { id: 9, tier: '爬升', title: '第九关', mode: 'timed',
+    total: 48, mix: { normal: 44, tough: 0, red: 4, frozen: 0 },
+    speed: 0.85, radius: 29, run: [3, 5], timeLimit: 50, target: 42,
+    needBlast: 0, redLimit: 1, redTimes: [8, 20, 32, 43], redEvery: 0, par: 50,
+    intro: '50 秒内戳破 42 个，红泡漏破不能超过 1 个！', hint: '' },
+
+  { id: 10, tier: '治愈', title: '第十关', mode: 'heal',
+    total: 40, mix: { normal: 40, tough: 0, red: 0, frozen: 0 },
+    speed: 0.35, radius: 31, run: [5, 7], timeLimit: 0, target: 30,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 55,
+    intro: '慢慢戳，戳破 30 个就过关，没有失败。', hint: '' },
+
+  { id: 11, tier: '谷底', title: '第十一关', mode: 'clear',
+    total: 26, mix: { normal: 18, tough: 0, red: 0, frozen: 8 },
+    speed: 0.55, radius: 30, run: [3, 5], timeLimit: 0, target: null,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 60,
+    intro: '冰冻泡泡戳不动，想办法把它们全震碎！', hint: '顿悟：按住屏幕蓄力 0.6 秒再松手，能震碎整片冰面。' },
+
+  { id: 12, tier: '爬升', title: '第十二关', mode: 'clear',
+    total: 38, mix: { normal: 22, tough: 6, red: 0, frozen: 10 },
+    speed: 0.6, radius: 30, run: [3, 5], timeLimit: 0, target: null,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 90,
+    intro: '冰冻泡和顽固泡一起上，全部解决！', hint: '' },
+
+  { id: 13, tier: '浪尖', title: '第十三关', mode: 'timed',
+    total: 55, mix: { normal: 44, tough: 5, red: 3, frozen: 3 },
+    speed: 0.9, radius: 29, run: [3, 5], timeLimit: 55, target: 48,
+    needBlast: 0, redLimit: 1, redTimes: [10, 26, 42], redEvery: 0, par: 55,
+    intro: '55 秒内戳破 48 个，红泡漏破不能超过 1 个！', hint: '' },
+
+  { id: 14, tier: '浪尖', title: '第十四关', mode: 'timed',
+    total: 55, mix: { normal: 55, tough: 0, red: 0, frozen: 0 },
+    speed: 1.35, radius: 22, run: [3, 5], timeLimit: 50, target: 46,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 50,
+    intro: '泡泡又小又快！50 秒内戳破 46 个！', hint: '' },
+
+  { id: 15, tier: '治愈', title: '第十五关', mode: 'heal',
+    total: 45, mix: { normal: 45, tough: 0, red: 0, frozen: 0 },
+    speed: 0.35, radius: 31, run: [3, 5], timeLimit: 0, target: 35,
+    needBlast: 0, redLimit: null, redTimes: [], redEvery: 0, par: 60,
+    intro: '最后一关，慢慢把烦恼都戳掉，戳破 35 个就过关。', hint: '' }
+];
+
+/* 每关使用的颜色种数：需要清空爆炸的关卡颜色少、单色总量足，
+ * 机器人/玩家才能连戳同色攒满 8 连击。 */
+var COLOR_COUNT = { 1: 4, 2: 3, 3: 4, 4: 5, 5: 4, 6: 3, 7: 4, 8: 4, 9: 5, 10: 4, 11: 4, 12: 4, 13: 5, 14: 5, 15: 4 };
+LEVELS.forEach(function (l) { l.colors = COLOR_COUNT[l.id] || 4; });
+
+/* 达标门槛（按难度层）：机器人基线判定用 */
+var THRESHOLDS = { '谷底': 0.95, '爬升': 0.85, '浪尖': 0.70, '治愈': 1.00 };
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { WORDS: WORDS, COLOR_NAMES: COLOR_NAMES, COLOR_VALUES: COLOR_VALUES, LEVELS: LEVELS, THRESHOLDS: THRESHOLDS };
+}
+
+</script>
+<script>
+'use strict';
+/* ================= 常量（与 sim.js 同步，参数同源 levels.js） ================= */
+var W = 375, H = 667, HUD_H = 64, BAR_H = 76, FIELD_Y = 64, FIELD_H = 527;
+var BLAST_NEED = 8, BLAST_RADIUS = 115, CRACK_RANGE = 26, RED_TTL = 5, SCREEN_TARGET = 12;
+var COLORS = COLOR_VALUES;
+
+var cv = document.getElementById('cv');
+var ctx = cv.getContext('2d');
+var wrap = document.getElementById('wrap');
+
+function fit() {
+  var w = Math.min(window.innerWidth, window.innerHeight * W / H, 480);
+  var h = w * H / W;
+  wrap.style.width = w + 'px'; wrap.style.height = h + 'px';
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  cv.style.width = w + 'px'; cv.style.height = h + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', fit);
+
+/* ================= 存档 ================= */
+var SAVE_KEY = 'paopao_meifannao_v1';
+var save = { unlocked: 1, stars: {}, props: { needle: 1, shock: 1, slow: 1 } };
+try {
+  var raw = localStorage.getItem(SAVE_KEY);
+  if (raw) { var p = JSON.parse(raw); if (p && p.props) save = p; }
+} catch (e) {}
+function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
+
+/* ================= 音效（WebAudio 合成，无外部文件） ================= */
+var AC = null;
+function audio() {
+  if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+  if (AC && AC.state === 'suspended') AC.resume();
+  return AC;
+}
+function tone(freqA, freqB, dur, type, vol, delay) {
+  var ac = audio(); if (!ac) return;
+  var t0 = ac.currentTime + (delay || 0);
+  var o = ac.createOscillator(), g = ac.createGain();
+  o.type = type || 'sine';
+  o.frequency.setValueAtTime(freqA, t0);
+  o.frequency.exponentialRampToValueAtTime(Math.max(freqB, 1), t0 + dur);
+  g.gain.setValueAtTime(vol || 0.15, t0);
+  g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+  o.connect(g); g.connect(ac.destination);
+  o.start(t0); o.stop(t0 + dur + 0.02);
+}
+function sfxPop(streak) { tone(480 + streak * 45 + Math.random() * 60, 180, 0.09, 'triangle', 0.20); }
+function sfxCrack() { tone(210, 120, 0.06, 'square', 0.10); }
+function sfxBlast() { tone(170, 38, 0.38, 'sine', 0.32); tone(900, 200, 0.18, 'triangle', 0.10); }
+function sfxShatter() { tone(1350, 280, 0.22, 'sine', 0.16); tone(1800, 500, 0.16, 'sine', 0.08, 0.03); }
+function sfxRed() { tone(880, 880, 0.08, 'square', 0.07); }
+function sfxWin() { tone(523, 523, 0.12, 'triangle', 0.16); tone(659, 659, 0.12, 'triangle', 0.16, 0.11); tone(784, 784, 0.22, 'triangle', 0.18, 0.22); }
+function sfxFail() { tone(392, 392, 0.14, 'triangle', 0.14); tone(330, 330, 0.14, 'triangle', 0.14, 0.13); tone(262, 200, 0.26, 'triangle', 0.14, 0.26); }
+function sfxClick() { tone(660, 660, 0.05, 'sine', 0.08); }
+
+/* ================= 工具 ================= */
+function rnd(a, b) { return a + Math.random() * (b - a); }
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+  return a;
+}
+function rr(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+/* 与 sim.js 相同的队列生成：类型按 mix 洗牌，颜色按 run 成组、总量均衡 */
+function buildQueue(level) {
+  var types = [];
+  ['normal', 'tough', 'frozen'].forEach(function (t) {
+    for (var i = 0; i < (level.mix[t] || 0); i++) types.push(t);
+  });
+  types = shuffle(types);
+  var n = types.length, C = level.colors, pool = [], colorSeq = [];
+  for (var c = 0; c < C; c++) pool.push(Math.floor(n / C) + (c < (n % C) ? 1 : 0));
+  var ci = Math.floor(Math.random() * C), guard = 0;
+  while (colorSeq.length < n && guard++ < 10000) {
+    if (pool[ci] <= 0) { ci = (ci + 1) % C; continue; }
+    var take = Math.min(pool[ci], level.run[0] + Math.floor(Math.random() * (level.run[1] - level.run[0] + 1)));
+    for (var k = 0; k < take; k++) colorSeq.push(ci);
+    pool[ci] -= take;
+    ci = (ci + 1 + Math.floor(Math.random() * (C - 1))) % C;
+  }
+  return types.map(function (t, i) { return { type: t, color: colorSeq[i] }; });
+}
+
+/* ================= 游戏状态 ================= */
+var screen = 'home';           // home / intro / play / clear / fail
+var cur = null;                // 当前关卡配置
+var bubbles = [], particles = [], floaters = [];
+var queue = [], spawned = 0, redSpawned = 0;
+var pops = 0, blasts = 0, redMissed = 0, lives = 3;
+var elapsed = 0, timeLeft = 0, slowUntil = -1;
+var streakColor = -1, streak = 0, lastPopAt = -10;
+var wordPool = [], wordIdx = 0;
+var mode = null;               // 'needle' / 'shock' 道具待选目标
+var revives = 0;
+var failReason = '', clearInfo = null;
+var charge = null;             // {x,y,start}
+var adOverlay = null;          // {until, cb} 模拟广告
+var toast = null;              // {text, until}
+var hintFlags = {};
+var spawnTick = 0;
+var buttons = [];              // 当前屏按钮 {x,y,w,h,label,act,style,badge}
+
+function nextWord() {
+  if (wordIdx >= wordPool.length) { wordPool = shuffle(WORDS); wordIdx = 0; }
+  return wordPool[wordIdx++];
+}
+function radiusOf(level, type) {
+  if (type === 'tough') return level.radius + 3;
+  if (type === 'frozen') return level.radius + 1;
+  return level.radius + rnd(-3, 3);
+}
+function spawnBubble(spec) {
+  var r = radiusOf(cur, spec.type);
+  var x = rnd(r + 4, W - r - 4), y = FIELD_Y + rnd(r + 4, FIELD_H - r - 4);
+  for (var tries = 0; tries < 8; tries++) {
+    var ok = true;
+    for (var i = 0; i < bubbles.length; i++) {
+      var b = bubbles[i], dx = b.x - x, dy = b.y - y;
+      if (dx * dx + dy * dy < (b.r + r) * (b.r + r) * 0.55) { ok = false; break; }
+    }
+    if (ok) break;
+    x = rnd(r + 4, W - r - 4); y = FIELD_Y + rnd(r + 4, FIELD_H - r - 4);
+  }
+  var ang = rnd(0, Math.PI * 2), spd = spec.type === 'frozen' ? 0 : rnd(10, 24) * cur.speed;
+  bubbles.push({
+    type: spec.type, color: spec.color, x: x, y: y, r: r,
+    vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
+    hp: spec.type === 'tough' ? 2 : 1,
+    ttl: spec.type === 'red' ? RED_TTL : Infinity,
+    word: nextWord(), seed: rnd(0, 10), dead: false
+  });
+}
+function startLevel(idx) {
+  cur = LEVELS[idx];
+  bubbles = []; particles = []; floaters = [];
+  queue = buildQueue(cur); spawned = 0; redSpawned = 0;
+  pops = 0; blasts = 0; redMissed = 0; lives = 3;
+  elapsed = 0; timeLeft = cur.timeLimit || 0; slowUntil = -1;
+  streakColor = -1; streak = 0; lastPopAt = -10;
+  mode = null; revives = 0; charge = null; spawnTick = 0;
+  hintFlags = {};
+  if (cur.mode !== 'timed') {
+    while (spawned < queue.length) spawnBubble(queue[spawned++]);
+  }
+  screen = 'play';
+}
+function addParticles(x, y, color, n, power) {
+  for (var i = 0; i < (n || 12); i++) {
+    var a = rnd(0, Math.PI * 2), s = rnd(30, power || 130);
+    particles.push({ x: x, y: y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 20, life: rnd(0.35, 0.7), t: 0, color: color, r: rnd(2, 4.5) });
+  }
+}
+function addFloater(x, y, text, color) {
+  floaters.push({ x: x, y: y, text: text, color: color || '#1d2b53', t: 0, life: 1.1 });
+}
+function showToast(text) { toast = { text: text, until: performance.now() / 1000 + 1.6 }; }
+
+/* ================= 规则（与 sim.js 一致） ================= */
+function crackToughsNear(x, y, r) {
+  bubbles.forEach(function (b) {
+    if (b.type === 'tough' && !b.dead) {
+      var dx = b.x - x, dy = b.y - y;
+      if (Math.sqrt(dx * dx + dy * dy) < r + b.r + CRACK_RANGE) damageTough(b, true);
+    }
+  });
+}
+function damageTough(b, byWave) {
+  if (b.dead) return;
+  b.hp--;
+  if (b.hp <= 0) {
+    b.dead = true; pops++;
+    addParticles(b.x, b.y, '#b08968', 14, 150);
+    addFloater(b.x, b.y - b.r, '壳碎了！', '#7f5539');
+    sfxBlast();
+  } else {
+    if (!byWave) sfxCrack();
+    addFloater(b.x, b.y - b.r, '裂了一道！', '#7f5539');
+    addParticles(b.x, b.y, '#d6ccc2', 5, 80);
+  }
+}
+function doBlast(x, y) {
+  blasts++;
+  sfxBlast();
+  addFloater(x, y - 20, '烦恼清空！', '#e63946');
+  bubbles.forEach(function (b) {
+    if (b.dead) return;
+    var dx = b.x - x, dy = b.y - y;
+    if (Math.sqrt(dx * dx + dy * dy) > BLAST_RADIUS + b.r) return;
+    if (b.type === 'normal' || b.type === 'red') {
+      b.dead = true; pops++;
+      addParticles(b.x, b.y, b.type === 'red' ? '#ef476f' : COLORS[b.color], 8, 110);
+    } else if (b.type === 'tough') damageTough(b, true);
+  });
+}
+function popBubble(b) {
+  if (b.dead) return;
+  b.dead = true; pops++;
+  addParticles(b.x, b.y, b.type === 'red' ? '#ef476f' : COLORS[b.color], 13, 140);
+  if (b.type === 'normal') {
+    crackToughsNear(b.x, b.y, b.r);
+    if (b.color === streakColor && elapsed - lastPopAt <= 1.5) streak++;
+    else { streakColor = b.color; streak = 1; }
+    lastPopAt = elapsed;
+    sfxPop(streak);
+    if (streak >= 3) addFloater(b.x, b.y - b.r - 4, '连击 ×' + streak, '#5a189a');
+    if (streak >= BLAST_NEED) { doBlast(b.x, b.y); streak = 0; streakColor = -1; }
+  } else {
+    sfxPop(2);
+  }
+}
+function shatterIce() {
+  var n = 0;
+  bubbles.forEach(function (b) {
+    if (b.type === 'frozen' && !b.dead) { b.dead = true; pops++; n++; addParticles(b.x, b.y, '#a9d6e5', 12, 130); }
+  });
+  if (n > 0) { sfxShatter(); addFloater(W / 2, FIELD_Y + 70, '冰面震碎！', '#0077b6'); }
+}
+function grantProp(type, why) {
+  save.props[type] = Math.min(9, (save.props[type] || 0) + 1);
+  persist();
+  showToast((why || '道具补给') + '：' + PROP_NAMES[type] + ' +1');
+}
+var PROP_NAMES = { needle: '针', shock: '震荡', slow: '慢放' };
+function mockAd(cb) {
+  adOverlay = { until: performance.now() / 1000 + 0.8, cb: cb };
+}
+
+/* ================= 流程 ================= */
+var pendingLevel = 1;
+function fmtTime(s) { s = Math.max(0, Math.ceil(s)); return s + ' 秒'; }
+function winLevel() {
+  var stars = 1;
+  if (lives === 3) stars++;
+  if (elapsed <= cur.par) stars++;
+  var types = ['needle', 'shock', 'slow'], low = types[0];
+  types.forEach(function (t) { if ((save.props[t] || 0) < (save.props[low] || 0)) low = t; });
+  save.props[low] = Math.min(9, (save.props[low] || 0) + 1);
+  save.stars[cur.id] = Math.max(save.stars[cur.id] || 0, stars);
+  if (cur.id < 15) save.unlocked = Math.max(save.unlocked, cur.id + 1);
+  persist();
+  clearInfo = { stars: stars, reward: PROP_NAMES[low] };
+  sfxWin();
+  screen = 'clear';
+}
+function failLevel(reason) {
+  failReason = reason;
+  sfxFail();
+  screen = 'fail';
+}
+function revive() {
+  mockAd(function () {
+    revives++;
+    lives = Math.max(lives, 2);
+    if (cur.mode === 'timed') elapsed = Math.max(0, elapsed - 20);
+    if (cur.redLimit !== null) redMissed = Math.min(redMissed, cur.redLimit);
+    if (bubbles.filter(function (b) { return !b.dead; }).length === 0 && spawned >= queue.length) {
+      var specs = [];
+      for (var i = 0; i < 12; i++) specs.push({ type: 'normal', color: Math.floor(i / 4) % 3 });
+      queue = queue.concat(specs);
+      while (spawned < queue.length) spawnBubble(queue[spawned++]);
+    }
+    screen = 'play';
+    showToast('复活啦，继续加油！');
+  });
+}
+
+/* ================= 更新 ================= */
+function aliveCount() { return bubbles.filter(function (b) { return !b.dead; }).length; }
+function update(dt) {
+  elapsed += dt;
+  var ts = elapsed < slowUntil ? 0.45 : 1;
+  var bdt = dt * ts;
+  var i, b;
+  for (i = 0; i < bubbles.length; i++) {
+    b = bubbles[i];
+    if (b.dead || b.type === 'frozen') continue;
+    b.x += b.vx * bdt; b.y += b.vy * bdt;
+    if (b.x < b.r) { b.x = b.r; b.vx *= -1; }
+    if (b.x > W - b.r) { b.x = W - b.r; b.vx *= -1; }
+    if (b.y < FIELD_Y + b.r) { b.y = FIELD_Y + b.r; b.vy *= -1; }
+    if (b.y > FIELD_Y + FIELD_H - b.r) { b.y = FIELD_Y + FIELD_H - b.r; b.vy *= -1; }
+    if (b.type === 'red') {
+      b.ttl -= bdt;
+      if (b.ttl <= 0 && !b.dead) {
+        b.dead = true; redMissed++; lives--;
+        addFloater(b.x, b.y, '红泡漏掉了！', '#e63946');
+        tone(300, 140, 0.18, 'square', 0.10);
+        if (cur.redLimit !== null && redMissed > cur.redLimit) return failLevel('红泡漏破太多了');
+        if (lives <= 0) return failLevel('生命耗尽了');
+      }
+    }
+  }
+  // 红泡刷出
+  if (redSpawned < (cur.mix.red || 0)) {
+    var due = false;
+    if (cur.mode === 'timed') due = elapsed >= (cur.redTimes[redSpawned] || 9999);
+    else if (cur.redEvery) due = elapsed >= 4 + redSpawned * cur.redEvery;
+    if (due) {
+      spawnBubble({ type: 'red', color: -1 });
+      redSpawned++; sfxRed();
+      addFloater(W / 2, FIELD_Y + 34, '红泡出现，先戳它！', '#e63946');
+    }
+  }
+  // 限时关涓流补刷
+  if (cur.mode === 'timed') {
+    spawnTick -= dt;
+    if (spawned < queue.length && aliveCount() < SCREEN_TARGET && spawnTick <= 0) {
+      spawnBubble(queue[spawned++]); spawnTick = 0.3;
+    }
+    timeLeft = Math.max(0, cur.timeLimit - elapsed);
+  }
+  // 粒子与浮字
+  particles = particles.filter(function (p) { p.t += dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 160 * dt; return p.t < p.life; });
+  floaters = floaters.filter(function (f) { f.t += dt; f.y -= 26 * dt; return f.t < f.life; });
+  bubbles = bubbles.filter(function (b) { return !b.dead; });
+  // 结算判定
+  if (cur.mode === 'heal') {
+    if (pops >= cur.target) return winLevel();
+  } else if (cur.mode === 'timed') {
+    if (pops >= cur.target) return winLevel();
+    if (timeLeft <= 0) return failLevel('时间到了，还差 ' + (cur.target - pops) + ' 个');
+  } else {
+    if (spawned >= queue.length && redSpawned >= (cur.mix.red || 0) && bubbles.length === 0) {
+      if (blasts >= cur.needBlast) return winLevel();
+      return failLevel('泡泡都破了，还差 ' + (cur.needBlast - blasts) + ' 次清空爆炸');
+    }
+  }
+}
+
+/* ================= 绘制 ================= */
+function drawBtn(x, y, w, h, label, act, opts) {
+  opts = opts || {};
+  var fill = opts.fill || '#ff7eb6', col = opts.color || '#ffffff';
+  buttons.push({ x: x, y: y, w: w, h: h, act: act, disabled: !!opts.disabled });
+  ctx.globalAlpha = opts.disabled ? 0.45 : 1;
+  ctx.fillStyle = opts.disabled ? '#9db2ce' : fill;
+  rr(x, y, w, h, 14); ctx.fill();
+  ctx.fillStyle = col;
+  ctx.font = 'bold ' + (opts.font || 17) + 'px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(label, x + w / 2, y + h / 2 + 1);
+  if (opts.badge) {
+    ctx.font = '10px "PingFang SC","Microsoft YaHei",sans-serif';
+    var bw = ctx.measureText(opts.badge).width + 10;
+    ctx.fillStyle = '#ffd166'; rr(x + w - bw - 4, y - 8, bw, 16, 8); ctx.fill();
+    ctx.fillStyle = '#7f4f00';
+    ctx.fillText(opts.badge, x + w - bw / 2 - 4, y);
+  }
+  ctx.globalAlpha = 1;
+}
+function drawWrapped(text, x, y, maxW, lineH, font, color, align) {
+  ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align || 'left'; ctx.textBaseline = 'top';
+  var line = '', lines = [];
+  for (var i = 0; i < text.length; i++) {
+    if (ctx.measureText(line + text[i]).width > maxW && line) { lines.push(line); line = ''; }
+    line += text[i];
+  }
+  if (line) lines.push(line);
+  lines.forEach(function (ln, i) { ctx.fillText(ln, x, y + i * lineH); });
+  return lines.length * lineH;
+}
+function bgGrad() {
+  var g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#eaf7ff'); g.addColorStop(1, '#ffeef7');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+}
+function drawBubble(b) {
+  var pulse = 1 + Math.sin(elapsed * 2.4 + b.seed) * 0.02;
+  var r = b.r * pulse;
+  ctx.save();
+  ctx.beginPath(); ctx.arc(b.x, b.y, r, 0, Math.PI * 2);
+  if (b.type === 'red') ctx.fillStyle = 'rgba(239,71,111,0.92)';
+  else if (b.type === 'tough') ctx.fillStyle = 'rgba(192,133,82,0.95)';
+  else if (b.type === 'frozen') ctx.fillStyle = 'rgba(169,214,229,0.92)';
+  else ctx.fillStyle = COLORS[b.color];
+  ctx.globalAlpha = b.type === 'normal' ? 0.88 : 1;
+  ctx.fill();
+  ctx.globalAlpha = 1;
+  // 高光
+  ctx.beginPath(); ctx.arc(b.x - r * 0.32, b.y - r * 0.36, r * 0.28, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.fill();
+  if (b.type === 'tough') {
+    ctx.beginPath(); ctx.arc(b.x, b.y, r - 1.5, 0, Math.PI * 2);
+    ctx.strokeStyle = '#7f5539'; ctx.lineWidth = 3; ctx.stroke();
+    if (b.hp === 1) {
+      ctx.strokeStyle = 'rgba(60,35,15,0.85)'; ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(b.x - r * 0.5, b.y - r * 0.6); ctx.lineTo(b.x - r * 0.1, b.y - r * 0.1); ctx.lineTo(b.x - r * 0.4, b.y + r * 0.4);
+      ctx.moveTo(b.x + r * 0.55, b.y - r * 0.3); ctx.lineTo(b.x + r * 0.15, b.y + r * 0.1); ctx.lineTo(b.x + r * 0.45, b.y + r * 0.55);
+      ctx.stroke();
+    }
+  }
+  if (b.type === 'frozen') {
+    ctx.strokeStyle = 'rgba(255,255,255,0.85)'; ctx.lineWidth = 1.6;
+    for (var k = 0; k < 3; k++) {
+      var a = k * Math.PI / 3 + 0.4;
+      ctx.beginPath();
+      ctx.moveTo(b.x - Math.cos(a) * r * 0.8, b.y - Math.sin(a) * r * 0.8);
+      ctx.lineTo(b.x + Math.cos(a) * r * 0.8, b.y + Math.sin(a) * r * 0.8);
+      ctx.stroke();
+    }
+  }
+  if (b.type === 'red') {
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, r + 4, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Math.max(0, b.ttl / RED_TTL));
+    ctx.strokeStyle = '#e63946'; ctx.lineWidth = 3; ctx.stroke();
+  }
+  // 烦恼词
+  ctx.fillStyle = b.type === 'frozen' ? '#023e8a' : '#ffffff';
+  ctx.font = 'bold ' + (b.word.length <= 2 ? 15 : (b.word.length === 3 ? 13 : 11)) + 'px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.shadowColor = b.type === 'frozen' ? 'transparent' : 'rgba(0,0,0,0.25)';
+  ctx.shadowBlur = b.type === 'frozen' ? 0 : 3;
+  ctx.fillText(b.word, b.x, b.y + 1);
+  ctx.restore();
+}
+function drawHUD() {
+  ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.fillRect(0, 0, W, HUD_H);
+  ctx.fillStyle = '#1d2b53'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 16px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText(cur.title + ' · ' + cur.tier, 12, 20);
+  ctx.textAlign = 'right';
+  if (cur.mode === 'timed') {
+    ctx.fillStyle = timeLeft <= 10 ? '#e63946' : '#1d2b53';
+    ctx.fillText('剩 ' + Math.ceil(timeLeft) + ' 秒', W - 12, 20);
+  } else if (cur.mode === 'heal') {
+    ctx.fillStyle = '#2a9d8f';
+    ctx.fillText('治愈关', W - 12, 20);
+  }
+  ctx.font = '13px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign = 'left'; ctx.fillStyle = '#40506b';
+  var prog = '已破 ' + pops + ' / ' + (cur.mode === 'clear' ? cur.total : cur.target);
+  if (cur.needBlast > 0) prog += ' · 清空 ' + blasts + '/' + cur.needBlast;
+  if ((cur.mix.red || 0) > 0) prog += ' · 漏红 ' + redMissed + '/' + ((cur.redLimit || 0) + 1);
+  ctx.fillText(prog, 12, 46);
+  ctx.textAlign = 'right'; ctx.fillStyle = '#e63946'; ctx.font = '14px sans-serif';
+  ctx.fillText('♥'.repeat(Math.max(0, lives)), W - 12, 46);
+  if (streak >= 2) {
+    ctx.textAlign = 'center'; ctx.fillStyle = '#5a189a';
+    ctx.font = 'bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText('连击 ×' + streak, W / 2, 46);
+  }
+  if (elapsed < slowUntil) {
+    ctx.textAlign = 'center'; ctx.fillStyle = '#0077b6';
+    ctx.font = 'bold 13px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText('慢放中', W / 2, 20);
+  }
+}
+function drawPropBar() {
+  ctx.fillStyle = 'rgba(255,255,255,0.94)'; ctx.fillRect(0, H - BAR_H, W, BAR_H);
+  var types = ['needle', 'shock', 'slow'], bw = 113, bh = 56, y = H - BAR_H + 10;
+  types.forEach(function (t, i) {
+    var x = 10 + i * (bw + 8), n = save.props[t] || 0;
+    var active = mode === t;
+    buttons.push({ x: x, y: y, w: bw, h: bh, act: function () { useProp(t); } });
+    ctx.fillStyle = active ? '#ffd166' : (n > 0 ? '#eaf4ff' : '#f1f1f1');
+    rr(x, y, bw, bh, 12); ctx.fill();
+    ctx.strokeStyle = active ? '#e0a800' : '#bcd3ea'; ctx.lineWidth = 1.5; rr(x, y, bw, bh, 12); ctx.stroke();
+    ctx.fillStyle = '#1d2b53'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = 'bold 17px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText(PROP_NAMES[t], x + bw / 2, y + 20);
+    ctx.font = '12px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = '#5a6b85';
+    ctx.fillText(n > 0 ? '还剩 ' + n + ' 个' : '点这里补一个', x + bw / 2, y + 42);
+  });
+  if (mode) {
+    ctx.fillStyle = '#7f4f00'; ctx.font = '13px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(mode === 'needle' ? '点一个顽固泡泡，针会把它戳破' : '点一个位置，震碎一小片', W / 2, H - BAR_H - 8);
+  }
+}
+function useProp(t) {
+  audio();
+  var n = save.props[t] || 0;
+  if (n <= 0) { mockAd(function () { grantProp(t, '模拟广告'); }); return; }
+  if (t === 'slow') {
+    if (elapsed < slowUntil) { showToast('慢放还没结束'); return; }
+    save.props.slow--; persist();
+    slowUntil = elapsed + 5;
+    showToast('慢放 5 秒！');
+    sfxClick();
+    return;
+  }
+  mode = (mode === t) ? null : t;
+  sfxClick();
+}
+function drawPlay() {
+  bgGrad();
+  drawHUD();
+  bubbles.forEach(drawBubble);
+  // 爆炸圈（粒子代替）与蓄力圈
+  particles.forEach(function (p) {
+    ctx.globalAlpha = Math.max(0, 1 - p.t / p.life);
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.color; ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+  floaters.forEach(function (f) {
+    ctx.globalAlpha = Math.max(0, 1 - f.t / f.life);
+    ctx.font = 'bold 15px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = f.color; ctx.fillText(f.text, f.x, f.y);
+  });
+  ctx.globalAlpha = 1;
+  if (charge) {
+    var held = performance.now() / 1000 - charge.start;
+    var pr = Math.min(1, held / 0.6);
+    ctx.beginPath(); ctx.arc(charge.x, charge.y, 30, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(0,119,182,0.35)'; ctx.lineWidth = 5; ctx.stroke();
+    ctx.beginPath(); ctx.arc(charge.x, charge.y, 30, -Math.PI / 2, -Math.PI / 2 + pr * Math.PI * 2);
+    ctx.strokeStyle = '#0077b6'; ctx.stroke();
+    ctx.fillStyle = '#0077b6'; ctx.font = 'bold 13px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(pr >= 1 ? '松手震碎！' : '蓄力中…', charge.x, charge.y - 44);
+  }
+  drawPropBar();
+}
+function panel(x, y, w, h) {
+  ctx.fillStyle = 'rgba(255,255,255,0.97)';
+  rr(x, y, w, h, 20); ctx.fill();
+  ctx.strokeStyle = '#ffd6e8'; ctx.lineWidth = 2; rr(x, y, w, h, 20); ctx.stroke();
+}
+function drawHome() {
+  bgGrad();
+  // 装饰泡泡
+  var deco = [[60, 120, 26, 0], [320, 100, 20, 1], [290, 210, 15, 3], [80, 230, 14, 2], [180, 84, 12, 4], [40, 330, 16, 1], [338, 320, 22, 0]];
+  deco.forEach(function (d) {
+    ctx.beginPath(); ctx.arc(d[0], d[1], d[2], 0, Math.PI * 2);
+    ctx.fillStyle = COLORS[d[3]]; ctx.globalAlpha = 0.35; ctx.fill(); ctx.globalAlpha = 1;
+  });
+  ctx.fillStyle = '#1d2b53'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 54px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('泡泡没烦恼', W / 2, 148);
+  ctx.font = '16px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = '#5a6b85';
+  ctx.fillText('戳破烦恼 · 一戳就没', W / 2, 190);
+  var hasProgress = save.unlocked > 1 || Object.keys(save.stars).length > 0;
+  drawBtn(87, 224, 200, 54, hasProgress ? '继续游戏' : '开始游戏', function () {
+    pendingLevel = Math.min(save.unlocked, 15); screen = 'intro'; sfxClick();
+  }, { fill: '#e63946', font: 20 });
+  ctx.fillStyle = '#1d2b53'; ctx.font = 'bold 15px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign = 'left'; ctx.fillText('选关', 22, 316);
+  for (var i = 0; i < 15; i++) {
+    (function (id) {
+      var col = i % 5, row = Math.floor(i / 5);
+      var x = 22 + col * 68, y = 336 + row * 62, locked = id > save.unlocked;
+      var st = save.stars[id] || 0;
+      buttons.push({ x: x, y: y, w: 60, h: 54, disabled: locked, act: function () { pendingLevel = id; screen = 'intro'; sfxClick(); } });
+      ctx.fillStyle = locked ? '#dbe4f0' : '#ffffff';
+      rr(x, y, 60, 54, 12); ctx.fill();
+      ctx.strokeStyle = '#ffd6e8'; ctx.lineWidth = 1.5; rr(x, y, 60, 54, 12); ctx.stroke();
+      ctx.fillStyle = locked ? '#93a5bd' : '#1d2b53';
+      ctx.font = 'bold 15px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(id + '', x + 30, y + 19);
+      ctx.font = '11px sans-serif'; ctx.fillStyle = '#f4a261';
+      ctx.fillText(locked ? '未解锁' : ('★'.repeat(st) + '☆'.repeat(3 - st)), x + 30, y + 40);
+    })(i + 1);
+  }
+  ctx.fillStyle = '#1d2b53'; ctx.font = 'bold 15px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign = 'left'; ctx.fillText('我的道具', 22, 548);
+  ['needle', 'shock', 'slow'].forEach(function (t, i) {
+    var x = 22 + i * 116;
+    ctx.fillStyle = '#ffffff'; rr(x, 566, 108, 40, 12); ctx.fill();
+    ctx.strokeStyle = '#bcd3ea'; ctx.lineWidth = 1.5; rr(x, 566, 108, 40, 12); ctx.stroke();
+    ctx.fillStyle = '#1d2b53'; ctx.font = '14px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(PROP_NAMES[t] + ' × ' + (save.props[t] || 0), x + 54, 586);
+  });
+  ctx.fillStyle = '#93a5bd'; ctx.font = '12px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('单机小游戏 · 进度保存在本机', W / 2, 636);
+}
+function drawIntro() {
+  bgGrad();
+  var lv = LEVELS[pendingLevel - 1];
+  panel(28, 110, W - 56, 470);
+  ctx.fillStyle = '#1d2b53'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 30px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText(lv.title, W / 2, 168);
+  ctx.font = '14px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = '#e63946';
+  ctx.fillText('难度 · ' + lv.tier, W / 2, 202);
+  var y = 236;
+  ctx.textAlign = 'left';
+  y += drawWrapped('目标：' + lv.intro, 52, y, W - 104, 26, '16px "PingFang SC","Microsoft YaHei",sans-serif', '#40506b') + 14;
+  if (lv.hint) {
+    ctx.font = 'bold 15px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = '#5a189a';
+    ctx.fillText('顿悟点', 52, y); y += 24;
+    y += drawWrapped(lv.hint, 52, y, W - 104, 24, '15px "PingFang SC","Microsoft YaHei",sans-serif', '#5a189a') + 10;
+  }
+  ctx.font = '14px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = '#5a6b85';
+  ctx.fillText('道具：针 ×' + (save.props.needle || 0) + ' · 震荡 ×' + (save.props.shock || 0) + ' · 慢放 ×' + (save.props.slow || 0), 52, y + 6);
+  drawBtn(72, 448, 232, 52, '开始挑战', function () { startLevel(pendingLevel - 1); sfxClick(); }, { fill: '#e63946', font: 19 });
+  drawBtn(72, 512, 232, 44, '回到首页', function () { screen = 'home'; sfxClick(); }, { fill: '#9db2ce', font: 15 });
+}
+function drawClear() {
+  bgGrad();
+  panel(28, 70, W - 56, 500);
+  ctx.fillStyle = '#1d2b53'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 32px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('过关啦！', W / 2, 140);
+  ctx.font = '40px sans-serif';
+  ctx.fillStyle = '#f4a261';
+  ctx.fillText('★'.repeat(clearInfo.stars) + '☆'.repeat(3 - clearInfo.stars), W / 2, 186);
+  ctx.font = '16px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = '#40506b';
+  var lines = ['戳破泡泡：' + pops + ' 个', '用时：' + Math.round(elapsed) + ' 秒'];
+  if (blasts > 0) lines.push('清空爆炸：' + blasts + ' 次');
+  if ((cur.mix.red || 0) > 0) lines.push('红泡漏破：' + redMissed + ' 个');
+  lines.push('过关补给：' + clearInfo.reward + ' +1');
+  lines.forEach(function (ln, i) { ctx.fillText(ln, W / 2, 232 + i * 28); });
+  var by = 232 + lines.length * 28 + 16;
+  if (cur.id === 15) {
+    drawBtn(72, by, 232, 44, '分享给朋友来挑战', function () { showToast('定名注册后开放'); }, { fill: '#5a189a', font: 15 });
+    drawBtn(72, by + 54, 232, 44, '添加到我的小程序', function () { showToast('上线后点右上角菜单即可添加'); }, { fill: '#2a9d8f', font: 15 });
+    by += 108;
+  }
+  if (cur.id < 15) {
+    drawBtn(72, by, 232, 48, '下一关', function () { pendingLevel = cur.id + 1; screen = 'intro'; sfxClick(); }, { fill: '#e63946', font: 18 });
+    by += 58;
+  } else {
+    ctx.font = 'bold 16px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = '#e63946';
+    ctx.fillText('全部通关，烦恼清零！', W / 2, by + 20); by += 48;
+  }
+  drawBtn(72, by, 110, 42, '重玩本关', function () { pendingLevel = cur.id; screen = 'intro'; sfxClick(); }, { fill: '#9db2ce', font: 14 });
+  drawBtn(194, by, 110, 42, '回到首页', function () { screen = 'home'; sfxClick(); }, { fill: '#9db2ce', font: 14 });
+  // 模拟 Banner 广告位（仅结算页）
+  ctx.fillStyle = '#d9d9d9'; ctx.fillRect(0, H - 44, W, 44);
+  ctx.fillStyle = '#8a8a8a'; ctx.font = '14px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('广告位', W / 2, H - 22);
+}
+function drawFail() {
+  bgGrad();
+  panel(28, 130, W - 56, 380);
+  ctx.fillStyle = '#1d2b53'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = 'bold 30px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('失败啦', W / 2, 178);
+  drawWrapped(failReason, 56, 214, W - 112, 26, '16px "PingFang SC","Microsoft YaHei",sans-serif', '#e63946', 'center');
+  ctx.font = '14px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = '#5a6b85';
+  ctx.fillText('已破 ' + pops + ' 个 · 用时 ' + Math.round(elapsed) + ' 秒', W / 2, 268);
+  if (revives < 2) {
+    drawBtn(72, 300, 232, 52, '看视频复活', function () { revive(); }, { fill: '#e63946', font: 18, badge: '模拟广告位' });
+  } else {
+    ctx.font = '14px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = '#93a5bd';
+    ctx.fillText('本局复活次数已用完', W / 2, 326);
+  }
+  drawBtn(72, 368, 232, 48, '重新开始', function () { startLevel(cur.id - 1); sfxClick(); }, { fill: '#5a189a', font: 17 });
+  drawBtn(72, 428, 232, 44, '回到首页', function () { screen = 'home'; sfxClick(); }, { fill: '#9db2ce', font: 15 });
+}
+function draw() {
+  buttons = [];
+  if (screen === 'home') drawHome();
+  else if (screen === 'intro') drawIntro();
+  else if (screen === 'play') drawPlay();
+  else if (screen === 'clear') drawClear();
+  else if (screen === 'fail') drawFail();
+  if (adOverlay) {
+    ctx.fillStyle = 'rgba(20,28,48,0.88)'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = 'bold 20px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText('模拟广告播放中…', W / 2, H / 2 - 14);
+    ctx.font = '13px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillStyle = '#bcd3ea';
+    ctx.fillText('这里将来是激励视频广告位', W / 2, H / 2 + 18);
+  }
+  if (toast && performance.now() / 1000 < toast.until) {
+    ctx.font = 'bold 14px "PingFang SC","Microsoft YaHei",sans-serif';
+    var tw = ctx.measureText(toast.text).width + 28;
+    ctx.fillStyle = 'rgba(29,43,83,0.92)';
+    rr((W - tw) / 2, H - BAR_H - 46, tw, 32, 16); ctx.fill();
+    ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(toast.text, W / 2, H - BAR_H - 29);
+  }
+}
+
+/* ================= 输入 ================= */
+function toLogic(e) {
+  var rect = cv.getBoundingClientRect();
+  return { x: (e.clientX - rect.left) * W / rect.width, y: (e.clientY - rect.top) * H / rect.height };
+}
+function hitButtons(p) {
+  for (var i = buttons.length - 1; i >= 0; i--) {
+    var b = buttons[i];
+    if (!b.disabled && p.x >= b.x && p.x <= b.x + b.w && p.y >= b.y && p.y <= b.y + b.h) { b.act(); return true; }
+  }
+  return false;
+}
+function topBubbleAt(p) {
+  for (var i = bubbles.length - 1; i >= 0; i--) {
+    var b = bubbles[i];
+    if (b.dead) continue;
+    var dx = b.x - p.x, dy = b.y - p.y;
+    if (dx * dx + dy * dy <= b.r * b.r) return b;
+  }
+  return null;
+}
+cv.addEventListener('pointerdown', function (e) {
+  e.preventDefault();
+  audio();
+  if (adOverlay) return;
+  var p = toLogic(e);
+  if (screen !== 'play') { hitButtons(p); return; }
+  if (p.y >= H - BAR_H) { hitButtons(p); return; }
+  if (mode === 'needle') {
+    var tb = topBubbleAt(p);
+    if (tb && tb.type === 'tough') {
+      save.props.needle--; persist();
+      tb.hp = 1; damageTough(tb, false);
+      addFloater(tb.x, tb.y - tb.r, '针戳破了！', '#7f5539');
+    } else showToast('针只能用在顽固泡泡上');
+    mode = null;
+    return;
+  }
+  if (mode === 'shock') {
+    save.props.shock--; persist();
+    mode = null;
+    sfxBlast();
+    bubbles.slice().forEach(function (b) {
+      if (b.dead) return;
+      var dx = b.x - p.x, dy = b.y - p.y;
+      if (Math.sqrt(dx * dx + dy * dy) > 90 + b.r) return;
+      if (b.type === 'normal' || b.type === 'red') { b.dead = true; pops++; addParticles(b.x, b.y, b.type === 'red' ? '#ef476f' : COLORS[b.color], 9, 120); }
+      else if (b.type === 'tough') damageTough(b, true);
+    });
+    addFloater(p.x, p.y, '震碎一片！', '#5a189a');
+    bubbles = bubbles.filter(function (b) { return !b.dead; });
+    return;
+  }
+  var b = topBubbleAt(p);
+  if (b && b.type !== 'frozen') {
+    if (b.type === 'tough') damageTough(b, false);
+    else popBubble(b);
+    bubbles = bubbles.filter(function (x) { return !x.dead; });
+    return;
+  }
+  // 冰冻泡或空地：开始蓄力
+  charge = { x: p.x, y: p.y, start: performance.now() / 1000, onIce: !!(b && b.type === 'frozen') };
+  if (b && b.type === 'frozen' && !hintFlags.ice) {
+    hintFlags.ice = true;
+    addFloater(p.x, p.y - 40, '冻住了！按住蓄力', '#0077b6');
+  }
+});
+function endCharge() {
+  if (!charge) return;
+  var held = performance.now() / 1000 - charge.start;
+  var wasIce = charge.onIce;
+  charge = null;
+  if (held >= 0.6) shatterIce();
+  else if (wasIce) addFloater(W / 2, FIELD_Y + 60, '按住 0.6 秒蓄力再松手', '#0077b6');
+}
+cv.addEventListener('pointerup', function (e) { e.preventDefault(); if (screen === 'play') endCharge(); });
+cv.addEventListener('pointercancel', function () { charge = null; });
+cv.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+
+/* ================= 主循环 ================= */
+var lastT = performance.now();
+function frame(now) {
+  requestAnimationFrame(frame);
+  var dt = Math.min(0.05, (now - lastT) / 1000);
+  lastT = now;
+  if (adOverlay && now / 1000 >= adOverlay.until) {
+    var cb = adOverlay.cb; adOverlay = null;
+    if (cb) cb();
+  }
+  if (screen === 'play' && !adOverlay) update(dt);
+  draw();
+}
+fit();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
