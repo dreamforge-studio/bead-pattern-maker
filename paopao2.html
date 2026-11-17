@@ -48,9 +48,10 @@
  */
 
 var WORDS = [
-  '加班', '催婚', '房贷', '脱发', '堵车', '失眠', '胖了', '掉发',
-  '熬夜', '被催', '账单', '开会', '早起', '排队', '堵心', '没钱',
-  '加班费', '相亲', '体检', '堵车费', '闹钟', '外卖凉', '没睡好', '被@'
+  '好运', '欧气', '锦鲤', '转运', '开挂', '躺赢', '暴富', '中奖', '好运来',
+  '被夸', '小确幸', '发糖', '美滋滋', '心花开', '笑出声', '乐开花', '甜甜的', '开心果', '笑哈哈', '乐呵呵', '美美哒',
+  '干饭', '摸鱼', '发工资', '睡到自然醒', '奶茶', '火锅', '追剧', '撸猫', '下班啦', '吃瓜', '嗑糖', '放假啦',
+  '嘿嘿', '哇塞', '绝绝子', '拿捏', '稳了', '冲鸭', '欧耶', '芜湖', '好耶', '真香', '哇哦'
 ];
 
 var COLOR_NAMES = ['粉', '蓝', '黄', '绿', '紫'];
@@ -404,7 +405,7 @@ var JINNANG = [
   { cat: '安慰人', text: '别拿别人的进度，催自己的路', scene: '朋友焦虑比较时', teaser: '专治焦虑内耗' },
   { cat: '鼓励人', text: '你的坚持，早晚会被看见', scene: '努力还没回报时', teaser: '给等待一个交代' },
   { cat: '哄人', text: '你一生气，我这心里就下雨，带伞来哄你了', scene: '异地哄人时', teaser: '隔着屏幕都暖' },
-  { cat: '夸人', text: '你说话总能说到点子上', scene: '开会发言被认可时', teaser: '夸表达，特别服气那种' },
+  { cat: '夸人', text: '你说话总能说到点子上', scene: '发言被大家认可时', teaser: '夸表达，特别服气那种' },
   { cat: '安慰人', text: '累了就歇，天塌不下来', scene: '家人连轴转时', teaser: '听完肩膀都松了' },
   { cat: '鼓励人', text: '去试试呗，最坏也就是回原地', scene: '朋友想尝试新事物时', teaser: '把恐惧说小的一句' },
   { cat: '哄人', text: '抱抱，不气了，气出皱纹我可赔不起', scene: '朋友受委屈时', teaser: '抱抱是最好的药' },
@@ -486,6 +487,12 @@ function radiusOf(level, type) {
   return level.radius + rnd(-3, 3);
 }
 var FACE_POOL = ['smile', 'smile', 'smile', 'wink', 'tongue', 'sleepy', 'look', 'silly'];
+/* 文字换新（2026-11-17 REN 定）：泡泡以表情为主——普通/顽固/冰冻泡约一半带字（新词池）、一半纯表情，逐局随机；红泡用紧迫但俏皮的短词 */
+var RED_WORDS = ['快戳我', '我先跑啦', '别让我溜啦', '我在这儿', '抓紧啦'];
+function bubbleWord(type) {
+  if (type === 'red') return pick(RED_WORDS);
+  return Math.random() < 0.5 ? nextWord() : '';
+}
 function spawnBubble(spec) {
   var r = radiusOf(cur, spec.type);
   var easy = easyLeft > 0 && spec.type === 'normal';
@@ -508,7 +515,7 @@ function spawnBubble(spec) {
     vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
     hp: spec.type === 'tough' ? 2 : 1,
     ttl: spec.type === 'red' ? RED_TTL : Infinity,
-    word: nextWord(), seed: rnd(0, 10), dead: false,
+    word: bubbleWord(spec.type), seed: rnd(0, 10), dead: false,
     face: pick(FACE_POOL), dodgeCd: 0
   });
 }
@@ -1302,7 +1309,7 @@ function drawBubble(b) {
   // 表情（类型脸优先，普通泡走搞怪表情池）
   var kind = b.type === 'normal' || isSurprise(b) ? b.face : b.type;
   drawFace(dx, dy - r * 0.14, r * 0.92, kind, b.seed, false);
-  // 烦恼词（脸下方）
+  // 泡泡词（脸下方；纯表情泡 word 为空不绘制）
   if (b.word) {
     ctx.fillStyle = b.type === 'frozen' ? '#2b6cb0' : 'rgba(255,255,255,0.96)';
     ctx.font = 'bold ' + (b.word.length <= 2 ? 13 : (b.word.length === 3 ? 12 : 10.5)) + 'px "PingFang SC","Microsoft YaHei",sans-serif';
