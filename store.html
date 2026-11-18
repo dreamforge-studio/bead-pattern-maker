@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skill Store — Dreamforge Studio</title>
+<meta name="description" content="Field-tested AI skill packs from Dreamforge Studio: buy once, download instantly, yours forever. The exact production workflows behind our client work — product selling videos, storyboards, audio QC and more.">
+<link rel="canonical" href="https://dreamforgestudio.xyz/store.html">
+<link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/store.html">
+<link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/store-zh.html">
+<link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/store.html">
+<meta name="theme-color" content="#0e4d2c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* --- store page --- */
+  .hero { padding: 34px 6px 8px; text-align: center; }
+  .eyebrow {
+    margin: 0 0 10px; font-size: .78rem; font-weight: 700;
+    letter-spacing: .22em; text-transform: uppercase; color: var(--green);
+  }
+  .hero h2 {
+    margin: 0 auto 12px; max-width: 680px;
+    font-size: 2rem; line-height: 1.2; font-weight: 700; color: var(--ink);
+  }
+  .hero .lead {
+    margin: 0 auto 18px; max-width: 620px;
+    color: var(--muted); font-size: 1.02rem; line-height: 1.6;
+  }
+  .trust-bar {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    margin: 6px auto 10px; max-width: 720px;
+  }
+  .trust-bar span {
+    background: #eef6f1; color: var(--green-dark); border: 1px solid #cfe3d6;
+    border-radius: 999px; padding: 7px 14px; font-size: .88rem; font-weight: 600;
+  }
+  .section-head { margin: 34px 0 14px; padding: 0 6px; }
+  .section-head h2 { margin: 0 0 6px; font-size: 1.45rem; color: var(--ink); }
+  .section-head p { margin: 0; color: var(--muted); line-height: 1.6; max-width: 680px; }
+
+  .pack-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .pack {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .pack:hover {
+    transform: translateY(-3px); border-color: #bcd8c6;
+    box-shadow: 0 10px 24px rgba(20, 102, 60, .10);
+  }
+  .pack .thumb { display: block; background: #101613; }
+  .pack .thumb img { width: 100%; height: 190px; object-fit: cover; display: block; }
+  .pack .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 7px; flex: 1; }
+  .pack h3 { margin: 0; font-size: 1.02rem; line-height: 1.4; }
+  .pack p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.55; flex: 1; }
+  .tag {
+    align-self: flex-start; font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--green-dark);
+    background: #eef6f1; border-radius: 999px; padding: 3px 10px;
+  }
+  .tag.soon { color: #7a5b12; background: #fdf3d7; }
+  .price-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .price-now { font-size: 1.45rem; font-weight: 700; color: var(--green-dark); }
+  .price-was { color: var(--muted); text-decoration: line-through; font-size: .98rem; }
+  .price-save { color: var(--green); font-weight: 700; font-size: .88rem; }
+  .buy-row { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+  .buy-row .btn { text-align: center; text-decoration: none; }
+  .secure-note { color: var(--muted); font-size: .8rem; text-align: center; }
+  .detail-link { color: var(--green); font-weight: 600; font-size: .9rem; text-decoration: none; }
+  .detail-link:hover { text-decoration: underline; }
+  .bundle-list { margin: 0; padding-left: 18px; color: var(--muted); font-size: .9rem; line-height: 1.65; }
+  .bundle-list li { margin-bottom: 3px; }
+  .status { font-size: .74rem; font-weight: 700; border-radius: 999px; padding: 1px 8px; margin-left: 6px; white-space: nowrap; }
+  .status.ok { color: var(--green-dark); background: #eef6f1; }
+  .status.soon { color: #7a5b12; background: #fdf3d7; }
+
+  .detail {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 20px; margin-bottom: 16px;
+  }
+  .detail h3 { margin: 0 0 4px; font-size: 1.15rem; }
+  .detail h4 {
+    margin: 16px 0 6px; font-size: .8rem; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--green);
+  }
+  .detail p, .detail li { color: var(--muted); line-height: 1.6; font-size: .94rem; }
+  .detail ul { margin: 0; padding-left: 18px; }
+  .detail li { margin-bottom: 4px; }
+  .detail .price-row { margin-top: 14px; }
+  .detail .buy-row { max-width: 340px; }
+  .sample-frame { width: 100%; border-radius: 10px; display: block; margin-top: 8px; }
+  .faq-item { margin-bottom: 14px; }
+  .faq-item h4 { margin: 0 0 4px; font-size: .98rem; color: var(--ink); }
+  .faq-item p { margin: 0; color: var(--muted); line-height: 1.6; font-size: .94rem; }
+  @media (max-width: 720px) {
+    .pack-grid { grid-template-columns: 1fr; }
+    .hero h2 { font-size: 1.55rem; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="icons/icon-192.png" alt="" width="40" height="40">
+    <div>
+      <h1>Dreamforge Studio</h1>
+      <p>AI Media &amp; Tools Studio</p>
+    </div>
+  </div>
+  <p class="privacy">Skill packs — buy once, download instantly, yours forever</p>
+  <select class="lang-select" id="langSelect" aria-label="Language / 语言" title="Language">
+      <option value="store.html" selected>English</option>
+      <option value="store-zh.html">中文（简体）</option>
+  </select>
+  <script>document.getElementById('langSelect').addEventListener('change',function(){location.href=this.value;});</script>
+</header>
+
+<main>
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <p class="eyebrow">Dreamforge Studio · Skill Store</p>
+    <h2>Pay for experience, not prompts.</h2>
+    <p class="lead">Field-tested AI skill packs — the exact production workflows behind
+    our client work, packaged so your AI assistant runs them the same way ours does.
+    Every pack is one-shot complete: the skill, an install guide, templates, real
+    case studies and finished sample films. No theory collections, no prompt dumps.</p>
+    <div class="trust-bar">
+      <span>⚡ Instant download after checkout</span>
+      <span>♾ Buy once — yours forever</span>
+      <span>🔒 Secure checkout via Creem · Gumroad · PromptBase</span>
+    </div>
+  </section>
+
+  <!-- ============ FREE ============ -->
+  <div class="section-head" id="free">
+    <p class="eyebrow">Start free</p>
+    <h2>Free sample pack</h2>
+    <p>Try the method first, on us. The Lite pack is a real, working excerpt of the
+    flagship — when you outgrow it, the full pack is the same workflow with nothing to re-learn.</p>
+  </div>
+  <div class="pack-grid">
+    <article class="pack">
+      <a class="thumb" href="#pack-lite"><img src="works/poster-bloodorange-30s.jpg" alt="Blood orange product film frame — Lite pack case study"></a>
+      <div class="body">
+        <span class="tag">Free · Sample</span>
+        <h3>AI Product Selling Video — Lite (Free Sample Pack)</h3>
+        <p>The core workflow and hook-first planning method, a storyboard template,
+        and one full case study in text form. See how a production-grade skill is
+        actually written — before paying for one.</p>
+        <div class="price-row"><span class="price-now">$0</span></div>
+        <div class="buy-row">
+          <a class="btn btn-primary" href="https://dreamforgestudioshop.gumroad.com/l/smvvgb">Get it free on Gumroad</a>
+          <a class="detail-link" href="#pack-lite">What's inside ↓</a>
+        </div>
+      </div>
+    </article>
+    <article class="pack">
+      <div class="body">
+        <span class="tag">Free · Subtitle check</span>
+        <h3>Subtitle Quick Check (Free Edition)</h3>
+        <p>A pre-flight health check for SRT subtitles: timeline format, line
+        length, reading speed, numbering, punctuation and a sensitive-word
+        sweep — scored out of 100, with a line-numbered fix list.</p>
+        <div class="price-row"><span class="price-now">$0</span></div>
+        <div class="buy-row">
+          <!-- TODO: 待 Creem 产品链接 — Subtitle Quick Check (free) -->
+          <a class="btn btn-primary" href="#store-creem-pending">Get it free</a>
+          <span class="secure-note">Free — checkout link being connected</span>
+          <a class="detail-link" href="#pack-subq">What's inside ↓</a>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- ============ BUNDLES ============ -->
+  <div class="section-head" id="bundles">
+    <p class="eyebrow">Bundles</p>
+    <h2>Buy the line, not the pieces</h2>
+    <p>Bundles collect the packs a single buyer actually needs together, at one
+    combined price. Contents are listed item by item — packs marked
+    <em>Coming soon</em> are in production and are delivered through the same
+    checkout as they release; everything marked <em>Available</em> is ready today.</p>
+  </div>
+  <div class="pack-grid">
+    <article class="pack">
+      <div class="body">
+        <span class="tag">Bundle · QC line</span>
+        <h3>Video QC Bundle — the full quality gate</h3>
+        <ul class="bundle-list">
+          <li>Audio QC Gate — machine listening checks <span class="status ok">Available</span></li>
+          <li>Film Sound Balance Check <span class="status ok">Available</span></li>
+          <li>Loudness Delivery Checker <span class="status ok">Available</span></li>
+          <li>Scene Soundscape Checklist <span class="status ok">Available</span></li>
+          <li>Subtitle QC &amp; Fix <span class="status ok">Available</span></li>
+        </ul>
+        <p>Every check our own delivery pipeline runs before a film ships — line
+        integrity, loudness, sound balance, soundscape, subtitles — as one gate.</p>
+        <div class="price-row">
+          <span class="price-now">$39.99</span>
+          <span class="price-was">$74.95 bought separately</span>
+          <span class="price-save">Save 47%</span>
+        </div>
+        <div class="buy-row">
+          <!-- Creem: https://www.creem.io/product/prod_2zAihPSXn5mgaQOl33aqe2 -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_2zAihPSXn5mgaQOl33aqe2">Buy the QC Bundle — $39.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="pack">
+      <div class="body">
+        <span class="tag">Bundle · Production line</span>
+        <h3>Video Production Bundle — from clips to finished films</h3>
+        <ul class="bundle-list">
+          <li>AI Product Selling Video — Skill Pack (flagship) <span class="status ok">Available</span></li>
+          <li>MG Animation — full pipeline <span class="status soon">Coming soon</span></li>
+          <li>Frame Animation <span class="status soon">Coming soon</span></li>
+          <li>Local Clipping — zero-cost ffmpeg workflow <span class="status soon">Coming soon</span></li>
+          <li>Sticker Pack production <span class="status soon">Coming soon</span></li>
+        </ul>
+        <p>One line from raw material to shippable video: clipping, animation,
+        product films and stickers, all running the same production discipline.</p>
+        <div class="price-row">
+          <span class="price-now">$49.99</span>
+          <span class="price-was">$84.95 bought separately</span>
+          <span class="price-save">Save 41%</span>
+        </div>
+        <div class="buy-row">
+          <!-- Creem 产品已建、交付文件待补，暂不接线 -->
+          <span class="btn btn-primary" style="opacity:.55;pointer-events:none" aria-disabled="true">Coming soon</span>
+          <span class="secure-note">Digital delivery file being prepared — available shortly</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="pack">
+      <div class="body">
+        <span class="tag">Bundle · Seller line</span>
+        <h3>Seller Bundle — turn skills into income</h3>
+        <ul class="bundle-list">
+          <li>Skill Store Playbook — package &amp; list skills end-to-end <span class="status ok">Available</span></li>
+          <li>Overseas Travel Guide production pack <span class="status ok">Available</span></li>
+          <li>Humanize Rewrite — scored de-AI rewriting (full edition) <span class="status soon">Coming soon</span></li>
+        </ul>
+        <p>For freelancers and one-person companies: how to package what you know,
+        plus two production packs that are themselves sellable services.</p>
+        <div class="price-row">
+          <span class="price-now">$29.99</span>
+          <span class="price-was">$39.98 bought separately</span>
+          <span class="price-save">Save 25%</span>
+        </div>
+        <div class="buy-row">
+          <!-- Creem: https://www.creem.io/product/prod_4THM4MImMFgNtPn48ytefM -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_4THM4MImMFgNtPn48ytefM">Buy the Seller Bundle — $29.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="pack">
+      <div class="body">
+        <span class="tag">Bundle · Everything</span>
+        <h3>Everything Bundle — the whole store</h3>
+        <ul class="bundle-list">
+          <li>Every pack on this page — singles and all three lines above</li>
+          <li>Packs marked <em>Coming soon</em> are delivered as they release</li>
+          <li>One purchase, one library, permanent access</li>
+        </ul>
+        <p>The price anchor of the store — and a genuine shortcut for studios that
+        want the complete production system in one download library.</p>
+        <div class="price-row">
+          <span class="price-now">$99</span>
+          <span class="price-was">$278.80 bought separately</span>
+          <span class="price-save">Save ≈ 64%</span>
+        </div>
+        <div class="buy-row">
+          <!-- Creem 产品已建、交付文件待补，暂不接线 -->
+          <span class="btn btn-primary" style="opacity:.55;pointer-events:none" aria-disabled="true">Coming soon</span>
+          <span class="secure-note">Digital delivery file being prepared — available shortly</span>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- ============ SINGLES ============ -->
+  <div class="section-head" id="singles">
+    <p class="eyebrow">Single packs</p>
+    <h2>Single packs</h2>
+    <p>Each pack is one-shot complete: skill, install guide, templates, real case
+    studies and finished samples. Prices match our other stores — the same pack
+    never costs less elsewhere.</p>
+  </div>
+  <div class="pack-grid">
+    <article class="pack">
+      <a class="thumb" href="#pack-flagship"><img src="works/poster-thermos-15s.jpg" alt="Insulated tumbler product film frame — flagship pack case study"></a>
+      <div class="body">
+        <span class="tag">Flagship · Video production</span>
+        <h3>AI Product Selling Video — Skill Pack for AI Assistants</h3>
+        <p>Turn real product photos into selling videos: hook-first openings,
+        three-reference colour calibration, self-review and measured QC gates —
+        with both case studies and all four finished films inside.</p>
+        <div class="price-row"><span class="price-now">$19.99</span></div>
+        <div class="buy-row">
+          <a class="btn btn-primary" href="https://dreamforgestudioshop.gumroad.com/l/alccbt">Buy on Gumroad — $19.99</a>
+          <a class="detail-link" href="#pack-flagship">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="pack">
+      <a class="thumb" href="#pack-zh"><img src="works/poster-bloodorange-15s.jpg" alt="Blood orange product film frame — Chinese edition case study"></a>
+      <div class="body">
+        <span class="tag">中文版 · Chinese edition</span>
+        <h3>AI 带货短视频技能包 · 中文版</h3>
+        <p>The Chinese edition of the flagship workflow: the full method, install
+        guide, 3 templates, both case studies （血橙 + 保温杯） and all four
+        finished films in Chinese.</p>
+        <div class="price-row"><span class="price-now">$9.99</span></div>
+        <div class="buy-row">
+          <!-- Creem 产品已建、交付文件待补，暂不接线 -->
+          <span class="btn btn-primary" style="opacity:.55;pointer-events:none" aria-disabled="true">Coming soon</span>
+          <span class="secure-note">Digital delivery file being prepared — available shortly</span>
+          <a class="detail-link" href="#pack-zh">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="pack">
+      <a class="thumb" href="#pack-pb1"><img src="works/poster-thermos-30s.jpg" alt="Tumbler film frame — storyboarded with the Hook-First kit"></a>
+      <div class="body">
+        <span class="tag">Mini pack · Planning</span>
+        <h3>Hook-First Storyboard Kit — Claude Skill</h3>
+        <p>Plan before you generate: pin the goal in four lines, design frame 1 as
+        the hook, and storyboard every shot with the six-element sheet. The
+        planning layer of the flagship method, on its own.</p>
+        <div class="price-row"><span class="price-now">$7.99</span></div>
+        <div class="buy-row">
+          <a class="btn btn-primary" href="https://promptbase.com/profile/aandthedigits">Buy on PromptBase — $7.99</a>
+          <a class="detail-link" href="#pack-pb1">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="pack">
+      <a class="thumb" href="#pack-pb4"><img src="works/poster-coldopen.jpg" alt="Short drama frame — the kind of finished cut the Audio QC kit gates"></a>
+      <div class="body">
+        <span class="tag">Mini pack · QC · Runnable script</span>
+        <h3>Audio QC for AI Video — Skill Kit</h3>
+        <p>The machine gate for dubbed AI video: a runnable checker transcribes
+        the finished cut and fails it unless every script line is heard exactly
+        once — plus leftover-voice detection and a −14 ± 2 LUFS loudness gate.</p>
+        <div class="price-row"><span class="price-now">$12.99</span></div>
+        <div class="buy-row">
+          <!-- Creem: https://www.creem.io/product/prod_2zL2msfc2wsuHwkJJqcatz -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_2zL2msfc2wsuHwkJJqcatz">Buy — $12.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-pb4">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+  </div>
+
+
+  <div class="section-head">
+    <p class="eyebrow">More packs</p>
+    <h2>The production &amp; QC lines</h2>
+    <p>The rest of the store, item by item — every pack below is packaged and
+    in checkout wiring (marked <em>Coming soon</em> until its Creem link goes
+    live). Full five-element details for each are in the Details section.</p>
+  </div>
+  <div class="pack-grid">
+    <article class="pack">
+      <div class="body">
+        <span class="tag soon">Coming soon · Clipping</span>
+        <h3>Local Clipping — Zero-Cost ffmpeg Workflow</h3>
+        <p>Batch-turn landscape long videos into 9:16 vertical shorts on your own machine: blurred-fill conversion, covers and a sortable manifest. No API, no key, no upload.</p>
+        <div class="price-row"><span class="price-now">$9.99</span></div>
+        <div class="buy-row">
+          <!-- TODO: 待 Creem 产品链接 — Local Clipping — Zero-Cost ffmpeg Workflow -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_7Uv4oO8oXMdhu4QYTF2KB1">Buy — $9.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-b1">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+    <article class="pack">
+      <div class="body">
+        <span class="tag soon">Coming soon · Production</span>
+        <h3>Sticker Pack Production</h3>
+        <p>Animated sticker sets whose character never drifts: character lock card, 16-line topic ratios, grid-to-GIF scripts and a machine spec check before listing.</p>
+        <div class="price-row"><span class="price-now">$12.99</span></div>
+        <div class="buy-row">
+          <!-- Creem: https://www.creem.io/product/prod_2BB86NALOoeOcx3BHkTcOo -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_2BB86NALOoeOcx3BHkTcOo">Buy — $12.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-b2">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+    <article class="pack">
+      <a class="thumb" href="#pack-b3"><img src="works/poster-frame.jpg" alt="Frame from the cat-and-butterfly frame-animation sample"></a>
+      <div class="body">
+        <span class="tag soon">Coming soon · Animation</span>
+        <h3>Frame Animation</h3>
+        <p>Real frame-by-frame feel — stepped timing plus line boil, not a filter. Three production routes with real costs and a 9-point acceptance checklist, with a finished sample film.</p>
+        <div class="price-row"><span class="price-now">$16.99</span></div>
+        <div class="buy-row">
+          <!-- Creem: https://www.creem.io/product/prod_1jcQhymeZBZcRF61I1IRl6 -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_1jcQhymeZBZcRF61I1IRl6">Buy — $16.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-b3">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+    <article class="pack">
+      <a class="thumb" href="#pack-b4"><img src="works/poster-mg.jpg" alt="Frame from the MG animation sample film"></a>
+      <div class="body">
+        <span class="tag soon">Coming soon · Animation</span>
+        <h3>MG Animation Pipeline</h3>
+        <p>MG as a pipeline, not a slideshow: seven steps, motion-curve rules and quantitative delivery gates (loudness, frame-difference, highlight alignment). Sample film inside.</p>
+        <div class="price-row"><span class="price-now">$24.99</span></div>
+        <div class="buy-row">
+          <!-- Creem: https://www.creem.io/product/prod_4IOQAoZY75RIPQCKv5VrXk -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_4IOQAoZY75RIPQCKv5VrXk">Buy — $24.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-b4">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+    <article class="pack">
+      <div class="body">
+        <span class="tag soon">Coming soon · QC · Runnable script</span>
+        <h3>Audio QC Gate</h3>
+        <p>The full delivery gate for AI-video audio: line-by-line transcript matching against the locked script, leftover-voice report, loudness reading, exit-code verdict.</p>
+        <div class="price-row"><span class="price-now">$19.99</span></div>
+        <div class="buy-row">
+          <!-- Creem: https://www.creem.io/product/prod_5z9pW3iZXmrnyEGbos0J9X -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_5z9pW3iZXmrnyEGbos0J9X">Buy — $19.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-b5">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+    <article class="pack">
+      <div class="body">
+        <span class="tag soon">Coming soon · QC</span>
+        <h3>Film Sound Balance Check</h3>
+        <p>Everything in the mix and it still sounds like mush? Five-layer level order, ducking lead time, word-head protection and two-yardstick separation measurement.</p>
+        <div class="price-row"><span class="price-now">$16.99</span></div>
+        <div class="buy-row">
+          <!-- Creem: https://www.creem.io/product/prod_4qCeWC2IDwIEQbNs8xyfXQ -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_4qCeWC2IDwIEQbNs8xyfXQ">Buy — $16.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-b6">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+    <article class="pack">
+      <div class="body">
+        <span class="tag soon">Coming soon · QC · Runnable script</span>
+        <h3>Loudness Delivery Checker</h3>
+        <p>Measure LUFS, true peak and LRA before you submit, get a pass/fail against the delivery band — and the two-pass fix when it fails.</p>
+        <div class="price-row"><span class="price-now">$9.99</span></div>
+        <div class="buy-row">
+          <!-- Creem: https://www.creem.io/product/prod_1v7jwCokHB33d7C8OOu7wY -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_1v7jwCokHB33d7C8OOu7wY">Buy — $9.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-b7">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+    <article class="pack">
+      <div class="body">
+        <span class="tag soon">Coming soon · QC</span>
+        <h3>Scene Soundscape Checklist</h3>
+        <p>Whatever is on screen gets a sound: a five-layer soundscape model, an 18-environment checklist library and a completeness acceptance sheet.</p>
+        <div class="price-row"><span class="price-now">$12.99</span></div>
+        <div class="buy-row">
+          <!-- Creem: https://www.creem.io/product/prod_6CipA8483GHd6TSELlF3vr -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_6CipA8483GHd6TSELlF3vr">Buy — $12.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-b8">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+    <article class="pack">
+      <div class="body">
+        <span class="tag soon">Coming soon · QC</span>
+        <h3>Subtitle QC & Fix</h3>
+        <p>Six subtitle checks in one pass — sync, typos, duplicates, missing lines, safe area, breaks — with hard acceptance lines and an itemized fix report.</p>
+        <div class="price-row"><span class="price-now">$14.99</span></div>
+        <div class="buy-row">
+          <!-- Creem: https://www.creem.io/product/prod_7TSPIE7pTogPLyCZrDmJMM -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_7TSPIE7pTogPLyCZrDmJMM">Buy — $14.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-b9">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+    <article class="pack">
+      <div class="body">
+        <span class="tag soon">Coming soon · Seller line</span>
+        <h3>Skill Store Playbook</h3>
+        <p>Turn a skill into a product that sells: selection by competitor teardown, packaging spec, the sanitization checklist, pricing with a recorded basis, launch sequence.</p>
+        <div class="price-row"><span class="price-now">$19.99</span></div>
+        <div class="buy-row">
+          <!-- Creem: https://www.creem.io/product/prod_2KHF5S1JeRq5YTzESCUo9s -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_2KHF5S1JeRq5YTzESCUo9s">Buy — $19.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-b10">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+    <article class="pack">
+      <div class="body">
+        <span class="tag soon">Coming soon · Education</span>
+        <h3>Teacher Quiz & Exam Builder</h3>
+        <p>Quiz papers teachers can trust: parameters first, every answer independently re-verified, print-ready student and teacher editions.</p>
+        <div class="price-row"><span class="price-now">$9.99</span></div>
+        <div class="buy-row">
+          <!-- Creem: https://www.creem.io/product/prod_2OGIquwkUZGDhcDGGyo04s -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_2OGIquwkUZGDhcDGGyo04s">Buy — $9.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-b11">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+    <article class="pack">
+      <div class="body">
+        <span class="tag soon">Coming soon · Mini pack</span>
+        <h3>Three-Reference Colour Calibration</h3>
+        <p>Keep the product the same product in every generated shot: a fixed three-reference set, the colour band in material words, and the prohibitions list.</p>
+        <div class="price-row"><span class="price-now">$7.99</span></div>
+        <div class="buy-row">
+          <!-- TODO: 待 Creem 产品链接 — Three-Reference Colour Calibration -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_z30J0bAvz93ACF7AH9frz">Buy — $7.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-b13">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+    <article class="pack">
+      <div class="body">
+        <span class="tag soon">Coming soon · Mini pack · QC</span>
+        <h3>QC Self-Review Kit</h3>
+        <p>An 8-point frame-by-frame self-review plus a measured delivery QC standard — with the three real defects it caught in production.</p>
+        <div class="price-row"><span class="price-now">$9.99</span></div>
+        <div class="buy-row">
+          <!-- TODO: 待 Creem 产品链接 — QC Self-Review Kit -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_3Do066N6dFaMLffqXKqlr">Buy — $9.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-b14">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+    <article class="pack">
+      <div class="body">
+        <span class="tag soon">Coming soon · Mini pack · QC</span>
+        <h3>Lip-Sync QC Kit</h3>
+        <p>Measure lip-sync instead of eyeballing it: mouth windows vs voice onsets, hard residual gates, and a PASS / REVIEW / FAIL verdict that refuses thin data.</p>
+        <div class="price-row"><span class="price-now">$9.99</span></div>
+        <div class="buy-row">
+          <!-- TODO: 待 Creem 产品链接 — Lip-Sync QC Kit -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_2kNAFbHE8iHed9MkWd4wmX">Buy — $9.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-b15">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+    <article class="pack">
+      <div class="body">
+        <span class="tag soon">Coming soon · Mini pack · Sound</span>
+        <h3>Scene Soundscape Kit</h3>
+        <p>The full soundscape system: five-layer model, a 56-entry verb-to-sound map, per-scene checklists and separation tests (ΔRMS ≥ +6 dB).</p>
+        <div class="price-row"><span class="price-now">$9.99</span></div>
+        <div class="buy-row">
+          <!-- Creem: https://www.creem.io/product/prod_71YQFTWPfoUhbPc2BaSDFa -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_71YQFTWPfoUhbPc2BaSDFa">Buy — $9.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-b16">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+    <article class="pack">
+      <a class="thumb" href="#pack-b17"><img src="works/poster-map.jpg" alt="Map frame from our travel content"></a>
+      <div class="body">
+        <span class="tag soon">Coming soon · Seller line</span>
+        <h3>Overseas Travel Guide Production Pack</h3>
+        <p>Sell custom itineraries that actually connect: verified day-by-day routes, route-side food, itemized budgets and a Plan B per fragile point. Full Beijing sample inside.</p>
+        <div class="price-row"><span class="price-now">$19.99</span></div>
+        <div class="buy-row">
+          <!-- Creem: https://www.creem.io/product/prod_7mawMo9zktI716Ruiu1z6C -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_7mawMo9zktI716Ruiu1z6C">Buy — $19.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-b17">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+    <article class="pack">
+      <div class="body">
+        <span class="tag soon">Coming soon · Production</span>
+        <h3>EN Comedy Shorts</h3>
+        <p>English comedy short drama + TikTok clipping playbook: four proven topic routes, a nine-type hook library, beat structure and word-by-word caption craft. Sample film in production.</p>
+        <div class="price-row"><span class="price-now">$19.99</span></div>
+        <div class="buy-row">
+          <!-- TODO: 待 Creem 产品链接 — EN Comedy Shorts -->
+          <a class="btn btn-primary" href="#store-creem-pending">Buy — $19.99</a>
+          <span class="secure-note">Secure checkout via Creem</span>
+          <a class="detail-link" href="#pack-b18">Full details ↓</a>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- ============ DETAILS ============ -->
+  <div class="section-head">
+    <p class="eyebrow">Details</p>
+    <h2>What's inside, pack by pack</h2>
+  </div>
+
+  <section class="detail" id="pack-flagship">
+    <span class="tag">Flagship</span>
+    <h3>AI Product Selling Video — Skill Pack for AI Assistants</h3>
+    <h4>Problem it solves</h4>
+    <p>Most AI product videos fail the same way: the colour drifts, the shape
+    quietly becomes a different product, and the first 3 seconds are wasted on
+    scene-setting. Sellers burn generation after generation re-rolling shots
+    that were never planned.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — the full method: 5-step workflow, hook-first opening tactic, the three-reference colour calibration set, batch material handling, stills-vs-video shot selection, an 8-point self-review checklist, and a delivery QC standard with real numbers</li>
+      <li><strong>START-HERE.md</strong> — install guide for every major assistant, plus a 15-minute first-run walkthrough</li>
+      <li><strong>3 templates</strong> — six-element storyboard sheet, self-review + QC sheet, delivery note</li>
+      <li><strong>Case studies</strong> — two complete field tests (a food product and a hard-surface product) with frames, measured QC tables, and the three real defects the checklist caught and fixed</li>
+      <li><strong>The finished films</strong> — English editions, 15s + 30s for both cases, included so you can watch the output before you run the method</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Sellers and freelancers making product videos for TikTok, Reels, Shorts and
+    marketplace listings — anyone who wants their AI assistant to run a proven
+    production system instead of improvising prompts.</p>
+    <h4>What you get</h4>
+    <p>One zip (about 77 MB): the skill, install guide, 3 templates, both case-study
+    documents with frames, and 4 finished films (MP4, 9:16). Plain Markdown —
+    works with Claude, ChatGPT, Codex, Cursor, WorkBuddy and any agent that reads
+    Markdown. No generation tool or subscription included (the method is
+    tool-agnostic). License: your own products and paid client work; the pack
+    files may not be resold or redistributed. Same-version updates are free.</p>
+    <h4>How to use it</h4>
+    <p>Install the skill (3 steps in START-HERE), give your assistant real product
+    photos and the selling point, confirm the storyboard it drafts, generate, and
+    let it run the self-review and QC gates before delivery. Both case products
+    shipped as 15s + 30s films that passed every gate: bitrate ≥ 6.4 Mbps,
+    loudness −13.8 to −14.8 LUFS, true peak ≤ −1.2 dBTP, every script line
+    exactly once.</p>
+    <h4>See the output</h4>
+    <p>The case films play on our <a href="works.html">Works page</a> (blood orange
+    and insulated tumbler product films).</p>
+    <img class="sample-frame" src="works/poster-thermos-15s.jpg" alt="Frame from the tumbler case-study film">
+    <div class="price-row"><span class="price-now">$19.99</span></div>
+    <div class="buy-row">
+      <a class="btn btn-primary" href="https://dreamforgestudioshop.gumroad.com/l/alccbt">Buy on Gumroad — $19.99</a>
+      <span class="secure-note">Instant download on Gumroad after checkout</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-zh">
+    <span class="tag">中文版 · Chinese edition</span>
+    <h3>AI 带货短视频技能包 · 中文版</h3>
+    <h4>Problem it solves</h4>
+    <p>You have product photos but no selling video, and outsourcing costs per
+    video, every day, forever. Most tutorials on the market are scraped material
+    collections that cannot be run. This is the Chinese edition of the same
+    field-tested production workflow as the flagship pack — a working system,
+    not a reading pile.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>技能正文 SKILL.md（中文）</strong> — hook tactics, three-reference colour calibration, shot selection, self-review flow, delivery QC standard</li>
+      <li><strong>安装指南 START-HERE.md（中文）</strong> — installed in 3 steps</li>
+      <li><strong>3 个模板</strong> — storyboard sheet, self-review + QC sheet, delivery note</li>
+      <li><strong>两个完整实测案例</strong> — 血橙 + 保温杯， with frames, QC tables, and the real defects the checklist caught and fixed</li>
+      <li><strong>4 条成片样片</strong> — both cases in 15s and 30s, Chinese editions</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Chinese-speaking e-commerce sellers shooting their own vertical product
+    videos, and freelancers delivering product-video work on a repeatable
+    pipeline. For the English edition, see the flagship pack above.</p>
+    <h4>What you get</h4>
+    <p>One zip (about 77 MB): skill, install guide, 3 templates, case-study
+    documents with frames, 4 finished films (MP4, 9:16). Plain Markdown, works
+    with any mainstream AI assistant. No generation tool or subscription
+    included. License: own products and paid client work; no resale or
+    redistribution of the pack files. Same-version updates are free.</p>
+    <h4>How to use it</h4>
+    <p>Install the skill following START-HERE, feed it your real product photos
+    and the selling point, confirm the storyboard it drafts, generate, then check
+    the output against the self-review list — out come the 15s and 30s 9:16 films.</p>
+    <h4>See the output</h4>
+    <p>The case films play on our <a href="works.html">Works page</a>.</p>
+    <img class="sample-frame" src="works/poster-bloodorange-15s.jpg" alt="Frame from the blood orange case-study film">
+    <div class="price-row"><span class="price-now">$9.99</span></div>
+    <div class="buy-row">
+      <!-- Creem 产品已建、交付文件待补，暂不接线 -->
+          <span class="btn btn-primary" style="opacity:.55;pointer-events:none" aria-disabled="true">Coming soon</span>
+          <span class="secure-note">Digital delivery file being prepared — available shortly</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-lite">
+    <span class="tag">Free · Sample</span>
+    <h3>AI Product Selling Video — Lite (Free Sample Pack)</h3>
+    <h4>Problem it solves</h4>
+    <p>You want to see how a production-grade AI video skill is actually written —
+    before paying for one. Lite is the free, working excerpt of the flagship
+    pack: real method, smaller scope.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>Trimmed SKILL.md</strong> — the core workflow and hook-first planning method</li>
+      <li><strong>START-HERE.md</strong> — the same install guide as the full pack</li>
+      <li><strong>Storyboard template</strong> — the six-element storyboard table</li>
+      <li><strong>One full case study in text form</strong> — the blood orange run (frames and films are in the full pack)</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Sellers and freelancers evaluating the method, and anyone who wants a
+    solid storyboard-first workflow for a single product video.</p>
+    <h4>What you get</h4>
+    <p>One small zip: skill excerpt, install guide, storyboard template, one text
+    case study. No films, no self-review/QC templates, no second case — the
+    differences from the full pack are listed inside, honestly. License: free
+    for your own products and client work; no redistribution.</p>
+    <h4>How to use it</h4>
+    <p>Install it like any skill (3 steps in START-HERE), give your assistant a
+    product and a selling point, and get a confirmed storyboard back. When you
+    need calibration, batch handling, self-review + QC and both filmed cases,
+    upgrade to the flagship — same workflow, nothing to re-learn.</p>
+    <div class="price-row"><span class="price-now">$0</span></div>
+    <div class="buy-row">
+      <a class="btn btn-primary" href="https://dreamforgestudioshop.gumroad.com/l/smvvgb">Get it free on Gumroad</a>
+      <span class="secure-note">Free checkout on Gumroad — email delivery</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-pb1">
+    <span class="tag">Mini pack · Planning</span>
+    <h3>Hook-First Storyboard Kit — Claude Skill</h3>
+    <h4>Problem it solves</h4>
+    <p>Most AI product videos fail before generation starts: no fixed goal, no
+    shot plan, and a slow opening that sets the scene while viewers swipe away.
+    Sellers burn generation after generation re-rolling shots that were never
+    planned.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — pin the goal down in four lines (product / one-sentence selling point / audience / feel), design frame 1 as the hook, storyboard every shot before generating</li>
+      <li><strong>The six-element storyboard method</strong> — shot size, angle, camera move, picture content, lighting, sound, with shot sources marked (real / AI fill / image-to-video)</li>
+      <li><strong>The hook rules from real production</strong> — show the difference in frame 1, land the sound effect on the action beat, push branding and scene-setting later</li>
+      <li><strong>Storyboard template</strong> — the fill-in table, including voiceover lines paced to the shots</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Sellers and freelancers planning product videos for TikTok, Reels, Shorts
+    and marketplace listings — anyone whose AI assistant improvises video
+    structure instead of following a production plan.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md, START-HERE.md (install for Claude, ChatGPT, Codex,
+    Cursor, WorkBuddy and any Markdown-reading agent), the storyboard template,
+    and the license. Plain Markdown — no tool or subscription required; works
+    with the generator you already use.</p>
+    <h4>How to use it</h4>
+    <p>Install SKILL.md into your assistant, paste your product and selling point,
+    and get back a confirmed storyboard — then generate. The first planned shoot
+    takes about 15 minutes. This kit is an excerpt of the flagship method,
+    verified on real runs: two products, four delivered films (15s + 30s), every
+    delivery QC gate measured and passed.</p>
+    <div class="price-row"><span class="price-now">$7.99</span></div>
+    <div class="buy-row">
+      <a class="btn btn-primary" href="https://promptbase.com/profile/aandthedigits">Buy on PromptBase — $7.99</a>
+      <span class="secure-note">Listed on our PromptBase seller page</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-pb4">
+    <span class="tag">Mini pack · QC · Runnable script</span>
+    <h3>Audio QC for AI Video — Skill Kit</h3>
+    <h4>Problem it solves</h4>
+    <p>AI generators leave their own scratch voice under your dub. Lines come out
+    twice, a line gets buried and never lands, or a sentence from an earlier
+    take survives the edit. Your ears miss it on the tenth listen; a client or
+    a platform reviewer won't. This kit is the machine gate that catches it
+    before delivery.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — the three checks (line integrity, leftover speech, loudness), how the transcript matching works, the workflow, the field record, and the known ASR pitfalls to check before condemning a cut</li>
+      <li><strong>tools/audio_qc.py</strong> — the runnable checker: transcribes the finished file locally (faster-whisper), matches every script line (coverage ≥ 0.75), flags unmatched speech ≥ 8 characters, measures integrated loudness, exits 0 on PASS / 1 on FAIL so it can gate a pipeline</li>
+      <li><strong>Report template</strong> — the line-table QC report format</li>
+      <li><strong>START-HERE.md</strong> — install + first-run guide, about 10 minutes</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>AI video makers and freelancers delivering anything with dubbed or
+    generated speech: series episodes, short dramas, talking-head cuts, client
+    deliverables. Run it on the finished file — not the project timeline —
+    whenever the script is locked and the mix is final.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md, the checker script, the report template, install guide,
+    license. On your machine you need ffmpeg and Python 3 with faster-whisper
+    and numpy (optional opencc for Chinese normalization). No subscription.
+    License: own productions and paid client work; no resale or redistribution.</p>
+    <h4>How to use it</h4>
+    <p>Install SKILL.md, save your locked script as one spoken line per line, then
+    run <code>python3 tools/audio_qc.py &lt;finished-cut.mp4&gt; &lt;script-lines.txt&gt;</code> —
+    read the PASS/FAIL report, fix, re-run. A cut ships only on a clean PASS.
+    Field record: on a finished 60-second episode that had already passed a
+    human listen, this gate found 6 lines heard twice — the generator's embedded
+    voice had survived under the re-dub. The episode was rebuilt from clean
+    elements and re-checked to PASS.</p>
+    <div class="price-row"><span class="price-now">$12.99</span></div>
+    <div class="buy-row">
+      <!-- Creem: https://www.creem.io/product/prod_2zL2msfc2wsuHwkJJqcatz -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_2zL2msfc2wsuHwkJJqcatz">Buy — $12.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-subq">
+    <span class="tag soon">Free · Subtitle check</span>
+    <h3>Subtitle Quick Check (Free Edition)</h3>
+    <h4>Problem it solves</h4>
+    <p>Subtitles ship unchecked and the beginner errors — broken timeline format, lines bursting the screen, reading speed nobody can follow — are discovered by the audience. This free check finds them before release.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — six check groups: timeline format, line length (landscape and vertical thresholds), reading speed with separate narration/dialogue standards, numbering and blank lines, punctuation, sensitive-word sweep</li>
+      <li><strong>Scoring</strong> — format −5 / readability −3 / style −1 per hit; health bands: 90–100 publish · 75–89 fix must-fixes first · 60–74 full pass · below 60 do not publish</li>
+      <li><strong>Report template</strong> — health score, must-fix / should-fix lists with cue numbers, timecodes, original lines and fixes</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Short-video, short-drama, talking-head and tutorial creators doing a final subtitle pass; anyone self-checking outsourced subtitles; batch producers sampling finished cuts.</p>
+    <h4>What you get</h4>
+    <p>One small zip: SKILL.md (Chinese), START-HERE.md (English), license. Free-edition boundaries, stated plainly: it checks and advises — it does not rewrite the file; up to 500 cues per run; typo spotting is high-frequency confusion words only. The paid Subtitle QC &amp; Fix pack (below) adds fix guidance, break optimization and the full six-check gate.</p>
+    <h4>How to use it</h4>
+    <p>Paste the SRT (or upload the file), say landscape or vertical + content type, and get the scored report. Fix, re-run, publish on a clean pass.</p>
+    <div class="price-row"><span class="price-now">$0</span></div>
+    <div class="buy-row">
+      <!-- TODO: 待 Creem 产品链接 — Subtitle Quick Check (Free Edition) -->
+      <a class="btn btn-primary" href="#store-creem-pending">Buy — $0</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-b1">
+    <span class="tag soon">Coming soon · Clipping</span>
+    <h3>Local Clipping — Zero-Cost ffmpeg Workflow</h3>
+    <h4>Problem it solves</h4>
+    <p>You have landscape long videos and need vertical shorts, but manual cutting is slow and online tools want your unreleased footage uploaded — plus a monthly subscription. This pack runs the whole batch on your own machine: one command, no API, no key, no upload, no per-call cost.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — clip-list format, candidate sorting fields, the post-clip QC tail, clipping standards and the sound gate</li>
+      <li><strong>scripts/clip_local.py</strong> — the runnable clipper: 9:16 conversion with blurred-background fill (no black bars, no hard crop), optional burned-in SRT subtitles, a cover frame per clip, and manifest.json with sortable fields (duration, silence ratio, speech density)</li>
+      <li><strong>samples/</strong> — a real run of the shipped script on our own product film: the input clips.json, two output clips (1080×1920), their covers and the manifest</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Short-drama and commentary clippers turning landscape material into vertical shorts; content teams with owned/licensed footage who want a low-cost in-house pipeline; creators who refuse to upload unreleased material to third parties.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md (Chinese), the clipper script, the worked sample run, install guide, license. You need Python 3 + ffmpeg (with ffprobe) locally. No ASR transcription is included — cut points are marked by a human, the script executes them precisely. License: own productions and paid client work; no resale or redistribution of the pack files.</p>
+    <h4>How to use it</h4>
+    <p>Mark cuts in clips.json, run <code>python3 scripts/clip_local.py --src video.mp4 --clips clips.json --out out/</code>, sort the manifest, run the QC tail, publish. Field record inside: a 12-second test source produced 2 vertical clips + covers + manifest, ffprobe-verified at 1080×1920 with matching durations.</p>
+    <div class="price-row"><span class="price-now">$9.99</span></div>
+    <div class="buy-row">
+      <!-- TODO: 待 Creem 产品链接 — Local Clipping — Zero-Cost ffmpeg Workflow -->
+      <a class="btn btn-primary" href="https://www.creem.io/product/prod_7Uv4oO8oXMdhu4QYTF2KB1">Buy — $9.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-b2">
+    <span class="tag soon">Coming soon · Production</span>
+    <h3>Sticker Pack Production</h3>
+    <h4>Problem it solves</h4>
+    <p>AI sticker sets fail on one thing: the character looks different in every sticker. Add topics picked by gut feel and nobody uses the set. This pack locks the character with one character sheet + lock card, plans 16 lines from real chat gaps, gets four frames from one grid image, and machine-checks the finished GIFs against platform specs before listing.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — the seven-step pipeline: character sheet + lock card, topic ratios (5 replies / 5 emotions / 3 closers / ≥3 refusals — the category most sets lack), the four-beat action pattern, grid prompt skeletons, the five-point AI quality check, single-cell repair, the whole-set consistency pass, GIF assembly and listing</li>
+      <li><strong>scripts/make_gif.py</strong> — grid → looping GIF at platform spec (240×240, ≤500 KB, 1-2-3-4-3-2 frame order)</li>
+      <li><strong>scripts/check_specs.py</strong> — machine spec check (size / weight / frames / white edges) with a PASS/FAIL report</li>
+      <li><strong>samples/</strong> — real production output: four 2×2 grid images and the four finished GIFs made from them</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Designers taking sticker-set commissions; creators making sets for their own IP, channel mascot or pet; media teams producing sticker sets in batches.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md (Chinese), both scripts, the sample grids + GIFs, install guide, license. Scripts need Python 3 + Pillow. No image generator or account is included — you generate grids with your own tool using the pack's prompt skeletons. License: own and client work; no resale or redistribution of the pack files.</p>
+    <h4>How to use it</h4>
+    <p>Build the character sheet, distil the lock card, plan the 16 lines, generate one grid per line, assemble with make_gif.py, and ship nothing until check_specs.py passes the whole set. Honest note inside: sticker tip income is weak — the money is in commissions and your own IP, and the pack says so plainly.</p>
+    <div class="price-row"><span class="price-now">$12.99</span></div>
+    <div class="buy-row">
+      <!-- Creem: https://www.creem.io/product/prod_2BB86NALOoeOcx3BHkTcOo -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_2BB86NALOoeOcx3BHkTcOo">Buy — $12.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-b3">
+    <span class="tag soon">Coming soon · Animation</span>
+    <h3>Frame Animation</h3>
+    <h4>Problem it solves</h4>
+    <p>A client asks for “hand-drawn frame-by-frame feel” and most of what the market delivers is an ordinary video with a filter on it — obvious at a glance, and a refund risk. This pack first writes down what real frame animation is (stepped timing on twos + line boil), then gives you three producible routes with their real costs, so you pick the right route before spending anything.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — the two hard indicators; Route A true hand-drawn, Route B AI keyframes + image-to-video + frame-by-frame post (the post step is the difference between real and fake), Route C programmatic code-drawn frames at near-zero cost; the shared seven-step pipeline; picture standards (background layers, projection, follow-through); the 9-point acceptance checklist; cost anchors and red lines</li>
+      <li><strong>samples/frame-cat-butterfly.mp4</strong> — a finished sample film made with this method (14 s, 168 independently drawn frames, effective 12 fps in a 24 fps container, zero AI-generated video segments)</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Freelancers and small teams taking frame-animation / hand-drawn / doodle-style explainer orders who are unsure which route to run or how to price it; creators building a simple-line IP animation from zero budget.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md (Chinese), the sample film, install guide, license. No software, drawing code or generation accounts included — Route C needs Python 3 + PIL/numpy locally, Route A a hand-drawing tool, Route B your own image-to-video service. License: own and client work; no resale or redistribution of the pack files.</p>
+    <h4>How to use it</h4>
+    <p>Pick the route with the cost table before producing, build the beat sheet (X-sheet), make a 3–5 second test segment, and pass it against the 9-point checklist before going full length. Standing red line inside: a filter without stepped timing and line boil may not be delivered as frame animation.</p>
+    <h4>See the output</h4>
+    <p>The sample film plays on our <a href="works.html">Works page</a> (cat &amp; butterfly frame animation).</p>
+    <img class="sample-frame" src="works/poster-frame.jpg" alt="Frame from the frame-animation sample film">
+    <div class="price-row"><span class="price-now">$16.99</span></div>
+    <div class="buy-row">
+      <!-- Creem: https://www.creem.io/product/prod_1jcQhymeZBZcRF61I1IRl6 -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_1jcQhymeZBZcRF61I1IRl6">Buy — $16.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-b4">
+    <span class="tag soon">Coming soon · Animation</span>
+    <h3>MG Animation Pipeline</h3>
+    <h4>Problem it solves</h4>
+    <p>MG animation work fails two ways: the result looks like a slideshow and the client calls it cheap, or every job is improvised so quoting and scheduling are guesswork. This pack turns MG into a pipeline with quantitative gates — picture standards, motion-curve rules, and numbers you can check at delivery.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — the seven-step pipeline (script → storyboard → graphic assets → motion → voice → composite), job triage and quoting, motion rules (three-stage entrance curves, ≥3 entrance types, staggered groups, ≥2 content-linked transitions, a sound-effect anchor table), quantitative gates (loudness −14 ± 2 LUFS, 2 fps frame-difference checks for near-still stretches, keyword highlights aligned within ±0.2 s of the spoken word), effort anchors, the acceptance checklist, red lines</li>
+      <li><strong>samples/mg-yiwangtongban.mp4</strong> — a finished MG explainer produced with this pipeline (government-services piece)</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Freelancers and studios taking government, corporate-explainer, product-demo and knowledge-video MG orders; creators who want MG production to stop being one-off improvisation.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md (Chinese), the sample film, install guide, license. No rendering code, TTS account or asset library included — Route A practice needs ffmpeg + Python 3/PIL and a commercial-use font; voice uses your own TTS service with the pack's voice-picking and locking method. Market price anchors inside are cited public listings, for reference, not a quote promise. License: own and client work; no resale or redistribution of the pack files.</p>
+    <h4>How to use it</h4>
+    <p>Storyboard first (second | line | visuals | motion), confirm one style frame, then produce, mix to the loudness gate, and tick the acceptance checklist before delivery. Anti-slideshow discipline: a visual event every 3–5 seconds, no full-page stillness over 2 seconds.</p>
+    <h4>See the output</h4>
+    <p>The sample film plays on our <a href="works.html">Works page</a> (MG explainer).</p>
+    <img class="sample-frame" src="works/poster-mg.jpg" alt="Frame from the MG animation sample film">
+    <div class="price-row"><span class="price-now">$24.99</span></div>
+    <div class="buy-row">
+      <!-- Creem: https://www.creem.io/product/prod_4IOQAoZY75RIPQCKv5VrXk -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_4IOQAoZY75RIPQCKv5VrXk">Buy — $24.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-b5">
+    <span class="tag soon">Coming soon · QC · Runnable script</span>
+    <h3>Audio QC Gate</h3>
+    <h4>Problem it solves</h4>
+    <p>The nastiest defect in AI video is invisible to spot-listening: your dub and the generator's leftover voice play stacked together, and nobody hears it until the audience points it out after release. This gate checks the finished audio against the locked script line by line, before anything ships.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — the full gate: every script line must be heard exactly once (0 = missing/buried, ≥2 = duplicated/leftover), stray speech reported separately, integrated-loudness report attached; the pre-flight self-check list; a 10-entry troubleshooting encyclopedia (ASR mishears, traditional/simplified mix-ups, chopped lines, slow runs — symptom → cause → fix → fallback)</li>
+      <li><strong>scripts/audio_qc.py</strong> — the runnable checker (faster-whisper); exit code 0 = pass / 1 = fail, so it can gate a batch pipeline</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>AI short-drama and short-video creators; teams running generated video + post-dub workflows; freelancers who need a definite QC verdict before delivering to a client.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md (Chinese), the checker script, install guide, license. Runs locally — no upload, no key, no per-call cost. You need Python 3 + ffmpeg + faster-whisper; CPU is fine. The gate locates problems (timecode + line); it does not remix. This is the full gate edition — a smaller excerpt is sold separately as the Audio QC mini kit above. License: own and client work; no resale or redistribution of the pack files.</p>
+    <h4>How to use it</h4>
+    <p>Lock the script (one spoken line per line, exactly as delivered), run the checker on the finished export, read the transcript + per-line count table + leftover-speech report, fix in the mix, re-run. Ship only on exit code 0.</p>
+    <div class="price-row"><span class="price-now">$19.99</span></div>
+    <div class="buy-row">
+      <!-- Creem: https://www.creem.io/product/prod_5z9pW3iZXmrnyEGbos0J9X -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_5z9pW3iZXmrnyEGbos0J9X">Buy — $19.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-b6">
+    <span class="tag soon">Coming soon · QC</span>
+    <h3>Film Sound Balance Check</h3>
+    <h4>Problem it solves</h4>
+    <p>Dialogue, music, ambience and action sound are all in the mix — and the result is still mush, with the audience hearing ambience instead of speech. The problem is not missing sound; it is level order and frequency fights. This pack gives you the order and the measurements to fix it, instead of pushing faders by feel.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — the five-layer level order with targets, ducking lead time, word-head protection, event-vs-dialogue layering, EQ carving points, stereo/distance placement, emotional-voice selection and density rhythm</li>
+      <li><strong>Separation acceptance sheet</strong> — two yardsticks: ΔRMS for sustained sounds, peak contrast for transients, so each sound is measured the right way</li>
+      <li><strong>Troubleshooting encyclopedia</strong> — 11 entries (word heads eaten by effects, pumping, invisible transients, the ffmpeg enable bypass trap…) plus a pre-flight self-check list</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Anyone mixing short drama, transferred/redrawn footage or talking-head video; creators and delivery teams who have been told “the sound is all mashed together”.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md (Chinese), install guide, license. No audio material is included — you apply the order and measurements to your own mix, and the acceptance sheet can travel with your delivery note. License: own and client work; no resale or redistribution of the pack files.</p>
+    <h4>How to use it</h4>
+    <p>Classify each problem sound (sustained or transient), measure separation with the matching yardstick, fix in order — level order, ducking lead time and word-head protection, EQ carving — then re-measure and tick the acceptance sheet.</p>
+    <div class="price-row"><span class="price-now">$16.99</span></div>
+    <div class="buy-row">
+      <!-- Creem: https://www.creem.io/product/prod_4qCeWC2IDwIEQbNs8xyfXQ -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_4qCeWC2IDwIEQbNs8xyfXQ">Buy — $16.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-b7">
+    <span class="tag soon">Coming soon · QC · Runnable script</span>
+    <h3>Loudness Delivery Checker</h3>
+    <h4>Problem it solves</h4>
+    <p>The film is fine, then the platform normalizes it into pumping loudness, or a client's acceptance check bounces it on loudness. This checker measures the three numbers before you submit and tells you pass/fail against the common delivery band — plus how to fix a fail properly.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — the delivery band, the correction parameters and the two-pass fix (never “drag the master up”), an 8-entry troubleshooting encyclopedia (inconsistent readings, true-peak overshoot, platform re-normalization) and a pre-flight self-check list</li>
+      <li><strong>scripts/loudness_check.py</strong> — one run returns integrated loudness (LUFS), true peak (dBTP) and loudness range (LRA) with a clear verdict</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Short-video and short-drama creators doing a final loudness pass before posting; teams batch-delivering to a unified loudness standard.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md (Chinese), the checker script, install guide, license. ffmpeg only — no key, no service, no cost. License: own and client work; no resale or redistribution of the pack files.</p>
+    <h4>How to use it</h4>
+    <p>Run the script on the finished export, read the three numbers, and on a fail apply the two-pass correction and re-measure. The classic trap it exists to catch: a common editor default export sits near −18 LUFS while platform normalization targets ≈ −14 LUFS.</p>
+    <div class="price-row"><span class="price-now">$9.99</span></div>
+    <div class="buy-row">
+      <!-- Creem: https://www.creem.io/product/prod_1v7jwCokHB33d7C8OOu7wY -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_1v7jwCokHB33d7C8OOu7wY">Buy — $9.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-b8">
+    <span class="tag soon">Coming soon · QC</span>
+    <h3>Scene Soundscape Checklist</h3>
+    <h4>Problem it solves</h4>
+    <p>The picture is busy and the film still gets called fake, soundless, like a silent movie: it is raining, cars are passing, a crowd is walking — and the track is one layer of background music. This pack writes the sound list per shot from a five-layer model: whatever is on screen gets a sound.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — the five-layer soundscape model with the master level table; an 18-environment checklist library (home / street / car / subway / hospital / ancient market / alchemy room…); the verb→sound mapping method; the three-layer rain construction</li>
+      <li><strong>Troubleshooting encyclopedia</strong> — 10 entries (one-bed-only mixes, rain that sounds like gunfire, silent TVs, wrong materials, cross-scene bleed) plus a pre-flight self-check list</li>
+      <li><strong>Completeness acceptance sheet</strong> — one missing item, not passed</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Short-drama, short-video, talking-head and showcase creators; anyone told their sound is thin, single-layered or unreal.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md (Chinese), install guide, license. No audio files are included — you source sounds legally via the routes named inside. You produce two things with it: a per-shot soundscape list (layer, sound, level) and a completed acceptance sheet. License: own and client work; no resale or redistribution of the pack files.</p>
+    <h4>How to use it</h4>
+    <p>Write the list before mixing — per shot, per layer — starting from the environment library where it fits, then mix to the list and tick the acceptance sheet.</p>
+    <div class="price-row"><span class="price-now">$12.99</span></div>
+    <div class="buy-row">
+      <!-- Creem: https://www.creem.io/product/prod_6CipA8483GHd6TSELlF3vr -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_6CipA8483GHd6TSELlF3vr">Buy — $12.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-b9">
+    <span class="tag soon">Coming soon · QC</span>
+    <h3>Subtitle QC & Fix</h3>
+    <h4>Problem it solves</h4>
+    <p>Subtitles are the one thing audiences read word by word: one typo, a half-second lag, a line hidden under platform UI, the same sentence three times — all of it gets screenshotted. This pack checks six things in one pass and reports every problem with its fix.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — the six checks (sync, typos, duplicated lines, missing lines, safe area, line breaks) with hard acceptance lines: typo rate ≤ 0.1%, sync error ≤ 0.2 s; the three beginner traps screened first (lyric misclicks, wrong language track, wrong subtitle track); production rules (small subtitles, safe-area margins, line-to-voice alignment, first-person voice, traditional/simplified normalization); an 11-entry troubleshooting encyclopedia and a pre-flight self-check list</li>
+      <li><strong>scripts/check_subtitles.py</strong> — the format pre-screen (standard library only): overlapping times, overlong lines, duplicated lines, traditional-character residue</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Short-drama, short-video and talking-head creators and delivery teams whose subtitles keep getting caught — wrong, blocked, or out of sync.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md (Chinese), the pre-screen script, install guide, license. You receive an itemized report format: timecode, problem type, the original line, and what it should become — fix from the report, then re-check only the changed segments. License: own and client work; no resale or redistribution of the pack files.</p>
+    <h4>How to use it</h4>
+    <p>Run the pre-screen, then the full six-check pass on the release file in the release aspect ratio; fix from the report; re-check the changed segments.</p>
+    <div class="price-row"><span class="price-now">$14.99</span></div>
+    <div class="buy-row">
+      <!-- Creem: https://www.creem.io/product/prod_7TSPIE7pTogPLyCZrDmJMM -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_7TSPIE7pTogPLyCZrDmJMM">Buy — $14.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-b10">
+    <span class="tag soon">Coming soon · Seller line</span>
+    <h3>Skill Store Playbook</h3>
+    <h4>Problem it solves</h4>
+    <p>Plenty of people can build a skill; the money path is where they stall — what to sell, a package format that gets rejected, internal information left in the upload, payment set up in the wrong order, pricing by gut feel, and silence after listing. We ran this whole chain once, end to end. This pack is that run, written as a method you can follow step by step.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — product selection by competitor teardown (what the selling product does right, where it falls short, how the gap becomes your improvement list); the package format spec; the item-by-item sanitization checklist (names / contacts / internal IDs / paths / keys / cross-references — zero hits before submission); pricing by comparison + demand with the basis recorded per item; launch sequencing and the listing page's four elements</li>
+      <li><strong>Troubleshooting encyclopedia</strong> — 10 entries (format errors, rejections, stuck payments, no sales, copycats) plus a pre-flight self-check list</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Creators and developers who want to sell skills in skill stores; anyone with a method or hard-won experience to productize; sellers whose listings are live but not moving, who need a review framework.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md (Chinese), install guide, license. The case study is the playbook itself — this store was packaged and listed by running it. Platform rules move: the pack marks which of its numbers are measured field data and which are public-rule references to re-check at listing time. It teaches method and field experience; it does not promise any individual sales result. License: own and client work; no resale or redistribution of the pack files.</p>
+    <h4>How to use it</h4>
+    <p>Run selection on your candidate, package to spec, sanitize to zero hits, price with the basis written down, then follow the launch sequence — first product first, observation window, then expand.</p>
+    <div class="price-row"><span class="price-now">$19.99</span></div>
+    <div class="buy-row">
+      <!-- Creem: https://www.creem.io/product/prod_2KHF5S1JeRq5YTzESCUo9s -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_2KHF5S1JeRq5YTzESCUo9s">Buy — $19.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-b11">
+    <span class="tag soon">Coming soon · Education</span>
+    <h3>Teacher Quiz & Exam Builder</h3>
+    <h4>Problem it solves</h4>
+    <p>Anyone can make an AI generate questions. What teachers actually fear is a wrong answer delivered with total confidence, questions that miss the grade level and the syllabus, and a paper that cannot be printed as-is. This pack is built for K12 teachers' daily work: parameters first, every answer double-verified, two print-ready editions out.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — paper parameters first (grade, knowledge points, difficulty ratio, question-type ratio); the dual-verification protocol — every question independently re-solved through a second path, mismatches flagged and kept out of the paper, the verification record travels with the teacher edition; distractors built from real student misconceptions; answer positions scattered; difficulty in three bands (recall / application / analysis, default 4:4:2); the error-point → spaced-repetition flashcard step (1/3/7/14-day schedule); an 11-entry troubleshooting encyclopedia and a pre-flight self-check list</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Primary and secondary school teachers (class quizzes, unit tests, homework sets), training-institution teachers, teaching-materials staff, and parents building practice sets for their own children.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md (Chinese), install guide, license. You produce two print-ready documents per run — a student paper (no answers, answer space kept) and a teacher paper (worked solutions, marking points, verification record) — plus the optional flashcard schedule. A worked sample paper is not yet bundled; the method and verification record format are complete. Boundary: for teaching and self-study — not live examination questions, not graded-homework completion. License: own and client work; no resale or redistribution of the pack files.</p>
+    <h4>How to use it</h4>
+    <p>Set the parameters, generate, dual-verify every answer and review the flagged questions, then export both editions.</p>
+    <div class="price-row"><span class="price-now">$9.99</span></div>
+    <div class="buy-row">
+      <!-- Creem: https://www.creem.io/product/prod_2OGIquwkUZGDhcDGGyo04s -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_2OGIquwkUZGDhcDGGyo04s">Buy — $9.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-b13">
+    <span class="tag soon">Coming soon · Mini pack</span>
+    <h3>Three-Reference Colour Calibration</h3>
+    <h4>Problem it solves</h4>
+    <p>AI generators drift: your product comes back too saturated, plastic-looking — or quietly becomes a different product between shots. Adjectives in the prompt do not control it. This skill gives your assistant the reference discipline that does.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — the three-reference calibration method: build a fixed reference set from real product photos (full view / cut surface / broken surface; for hard-surface products: full view / macro detail / in-use state)</li>
+      <li><strong>The two lines that actually calibrate</strong> — the colour band written in material words, and the prohibitions list (the specific failures to forbid)</li>
+      <li><strong>The demo-material rule</strong> — generate the full view first, derive every other reference from it: the field rule that resolved the recurring shape-drift failures in our production tests</li>
+      <li><strong>The shape-drift field record</strong> — a real catch from production (generated shots became a wider, different bottle) and the exact fix</li>
+      <li><strong>Batch handling</strong> — register a client's photo batch against the reference set and record real vs. AI-filled shots</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Sellers, freelancers and product photographers generating AI shots of real products — food, cosmetics, drinkware, apparel, gadgets — anywhere the on-screen product must be the product the customer receives.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md, START-HERE.md (install for any Markdown-reading agent), and the license. Plain Markdown; tool-agnostic, works with your own image/video generator. This store edition's wording was revised after a channel review flagged guarantee-style phrasing — the method and field record are unchanged; the copy describes what the method does, not a guaranteed outcome. License: own products and paid client work; no resale or redistribution of the pack files.</p>
+    <h4>How to use it</h4>
+    <p>Install SKILL.md, hand your assistant the product photos, and have it build the reference set plus the colour band and prohibitions — those two lines then go into every product-shot prompt. Excerpt of the flagship method, verified on the same production runs: two products, four delivered films, every delivery QC gate measured and passed.</p>
+    <div class="price-row"><span class="price-now">$7.99</span></div>
+    <div class="buy-row">
+      <!-- TODO: 待 Creem 产品链接 — Three-Reference Colour Calibration -->
+      <a class="btn btn-primary" href="https://www.creem.io/product/prod_z30J0bAvz93ACF7AH9frz">Buy — $7.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-b14">
+    <span class="tag soon">Coming soon · Mini pack · QC</span>
+    <h3>QC Self-Review Kit</h3>
+    <h4>Problem it solves</h4>
+    <p>AI product videos fail quietly: a lid grows an extra ridge, a close-up turns into a featureless block of colour, the loudness target was “hit” but the true peak clips. Clients and audiences see these before you do — unless a checklist catches them first.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — an 8-point frame-by-frame self-review (colour, prop continuity, part shapes, shot validity, hook, fill-shot consistency, sound, clean frame) plus the measured delivery QC standard</li>
+      <li><strong>Hard gates with real numbers</strong> — loudness −17 to −13 LUFS, true peak ≤ −1 dBTP (measured, never targeted), bitrate ≥ 5,500 kbps, zero frozen/black frames over 0.5 s, every script line spoken exactly once</li>
+      <li><strong>The field record</strong> — three real defects this checklist caught in production: an invalid close-up, a true-peak overshoot (+0.08 dBTP against a −1 gate), a reference shape drift — and their fixes</li>
+      <li><strong>templates/self-review-checklist.md</strong> — fill-in checklist + measurement table per cut</li>
+      <li><strong>templates/delivery-note.md</strong> — delivery note with shot composition (real vs AI) and SFX register</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Freelancers and sellers delivering AI product videos to clients or marketplaces — anyone who needs shipped work to pass a measurable standard instead of a vibe check.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md, START-HERE.md (install for any Markdown-reading agent), both templates, and the license. Plain Markdown; the QC measurements use standard tools (loudness/peak analysis, speech-to-text) you already have or can run locally. License: own products and paid client work; no resale or redistribution of the pack files.</p>
+    <h4>How to use it</h4>
+    <p>Install SKILL.md, hand your assistant a finished cut, and have it review item by item and fill in the QC table with measured values — anything it cannot verify from the file, it must flag, not assume. Field results from the source runs: final measured 6.49–6.74 Mbps, −13.8 to −14.8 LUFS, true peak −1.20 to −1.33 dBTP, zero frozen/black frames.</p>
+    <div class="price-row"><span class="price-now">$9.99</span></div>
+    <div class="buy-row">
+      <!-- TODO: 待 Creem 产品链接 — QC Self-Review Kit -->
+      <a class="btn btn-primary" href="https://www.creem.io/product/prod_3Do066N6dFaMLffqXKqlr">Buy — $9.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-b15">
+    <span class="tag soon">Coming soon · Mini pack · QC</span>
+    <h3>Lip-Sync QC Kit</h3>
+    <h4>Problem it solves</h4>
+    <p>Eyeballing lip-sync ships drift you cannot see. This kit measures it: mouth-movement windows against voice onsets, line by line, with hard gates and a scored verdict that refuses to pass on too little data.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — the measurement definitions, search windows and thresholds: green start residual ≤ 0.12 s, green end residual ≤ 0.15 s, the voice-while-mouth-closed ratio, judgeable-coverage rules (below 75% coverage the verdict is REVIEW — not a pass, not a fail), the pass line at 75 points, and the speaker-map convention {line: face track or “na”}</li>
+      <li><strong>The validation record</strong> — the four-sample expected-vs-actual verdict set the thresholds were calibrated on; the listing numbers are the source skill's calibrated values, unchanged</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>AI drama and talking-head creators; anyone pairing faces with dubbed or generated speech — series episodes, localized re-dubs, client deliverables.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md, START-HERE.md, license. The measurement pipeline the skill specifies runs on standard local tools: a MediaPipe-based mouth-window tracker, word-level ASR timestamps (faster-whisper), and an ffmpeg RMS envelope pass. Use it on a finished cut after assembly, before delivery or publishing — it is the last machine gate before human review. License: own and client work; no resale or redistribution of the pack files.</p>
+    <h4>How to use it</h4>
+    <p>Install SKILL.md, prepare the speaker map for edge cases, and ask: “Run the sync QC and tell me what to fix.” You get a per-line report — median offset across judgeable lines, red lines by name, and the fix stated as a number (e.g. shift the dub earlier by the median offset).</p>
+    <div class="price-row"><span class="price-now">$9.99</span></div>
+    <div class="buy-row">
+      <!-- TODO: 待 Creem 产品链接 — Lip-Sync QC Kit -->
+      <a class="btn btn-primary" href="https://www.creem.io/product/prod_2kNAFbHE8iHed9MkWd4wmX">Buy — $9.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-b16">
+    <span class="tag soon">Coming soon · Mini pack · Sound</span>
+    <h3>Scene Soundscape Kit</h3>
+    <h4>Problem it solves</h4>
+    <p>One music bed over near-silence makes AI videos feel fake — and every sound at one level makes mush. This kit fixes both: list every sound per scene, mix to stated bands, and prove separation with measurements.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md with appendices</strong> — the five-layer soundscape model; Appendix A: the 56-entry verb-to-sound map; Appendix B: the per-scene checklist library (18 environments); Appendix C: the completeness + separation acceptance sheet; the level master table; ducking and EQ carving</li>
+      <li><strong>Separation tests</strong> — ΔRMS ≥ +6 dB for sustained events, transients judged on peak contrast (the peak band inside is a single-project fitted value, stated as such in the skill, not a universal constant)</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>AI filmmakers and editors — drama, re-dubbed or transferred footage, talking-head and showcase videos, client films.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md (appendices are working assets, not reading material), START-HERE.md, license. No special tooling for the lists and checks; the measurement steps use ffmpeg. Use it twice per production: before mixing, to write the per-shot sound list, and after mixing, to run the acceptance checks. The case records inside (a rain scene rejected twice; a mix that collapsed into one wash) are real production records. License: own and client work; no resale or redistribution of the pack files.</p>
+    <h4>How to use it</h4>
+    <p>Hand the assistant a scene — get a five-layer list per shot, each entry with level band and source. Mix to the bands, then run the separation check: sustained events on ΔRMS, transients on peak contrast, anything out of band re-measured after the fix.</p>
+    <div class="price-row"><span class="price-now">$9.99</span></div>
+    <div class="buy-row">
+      <!-- Creem: https://www.creem.io/product/prod_71YQFTWPfoUhbPc2BaSDFa -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_71YQFTWPfoUhbPc2BaSDFa">Buy — $9.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-b17">
+    <span class="tag soon">Coming soon · Seller line</span>
+    <h3>Overseas Travel Guide Production Pack</h3>
+    <h4>Problem it solves</h4>
+    <p>Custom travel guides look easy and fail in the details: days that cannot physically connect, restaurants across town from the route, invented opening hours, budgets that do not add up. This pack is the production system behind a working itinerary service — the guides are the product, verified item by item before delivery.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — scope and boundaries (guides only: no booking, no escorting, no visa handling); the deliverables checklist (day-by-day itinerary, map list, food list, transport links, budget table, tips, alternatives); the client intake questionnaire; the feasibility-verification SOP; the route-writing SOP — daily structure and pacing, transport verification with hard transfer buffers (same-station ≥ 15 min, cross-station / airport ≥ 45 min), restaurant selection rules, budget presentation (ranges, source + query date, dual currency), the six-block tips + four-part Plan B; the hiking vertical add-on with its walked-it-yourself hard gate; the guide service's pricing tiers; the affiliate second-revenue layers with disclosure wording</li>
+      <li><strong>samples/sample-beijing-5day.md + .pdf</strong> — a complete delivered sample: a 5-day Beijing itinerary in English, in the exact format a client receives</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Freelancers and one-person companies selling custom itineraries on freelance platforms; travel content creators productizing their planning method. Strongest for China and Asia destinations (the author's information advantage); the verification SOP is destination-general.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md (Chinese; the sample guide is in English), the sample guide in Markdown + PDF, START-HERE.md (English), license. No booking accounts or tools included — verification uses official/reputable sources as the SOP specifies, and anything unverifiable is marked “re-check before departure”, never filled in. License: own and client work; no resale or redistribution of the pack files.</p>
+    <h4>How to use it</h4>
+    <p>Send the intake questionnaire, verify feasibility item by item, design the route (same-area sights same day, heavy day → light day), write to the deliverables checklist, and pass the pre-delivery QC list before sending.</p>
+    <h4>See the output</h4>
+    <p>A route-map film from our travel work plays on the <a href="works.html">Works page</a>.</p>
+    <img class="sample-frame" src="works/poster-map.jpg" alt="Frame from our travel route-map film">
+    <div class="price-row"><span class="price-now">$19.99</span></div>
+    <div class="buy-row">
+      <!-- Creem: https://www.creem.io/product/prod_7mawMo9zktI716Ruiu1z6C -->
+          <a class="btn btn-primary" href="https://www.creem.io/product/prod_7mawMo9zktI716Ruiu1z6C">Buy — $19.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <section class="detail" id="pack-b18">
+    <span class="tag soon">Coming soon · Production</span>
+    <h3>EN Comedy Shorts</h3>
+    <h4>Problem it solves</h4>
+    <p>English comedy shorts are not drama with jokes: the swipe decision lands faster, the hook must be funny or suspicious in frame 1, and the caption craft is different. This pack is the dedicated playbook for English comedy short drama and for cutting English long material into TikTok / Reels / Shorts clips that keep the suspense.</p>
+    <h4>What's inside</h4>
+    <ul>
+      <li><strong>SKILL.md</strong> — the two formats (21–45 s skits: one premise, 3–5 jokes, one reversal ending, loop-friendly / 60–120 s series episodes on a beat engine, full season planned first); four topic routes with proven formats (absurd premise played deadpan, vertical-drama parody, POV scenarios, accusation openers); the nine hook types with English templates and the three-channel frame-1 rule (visual / on-screen text / sound — at least two land on the same frame); series beat structure; word-by-word caption rules for English distribution; cover-frame craft (biggest expression in the piece, never a text card); the clipping workflow with suspense endings</li>
+    </ul>
+    <h4>Who it's for</h4>
+    <p>Creators making English comedy shorts for TikTok, Reels and Shorts; channels cutting English series or long material into distribution clips; freelancers offering English short-drama production as a service.</p>
+    <h4>What you get</h4>
+    <p>One zip: SKILL.md (Chinese), START-HERE.md (English), license. <strong>Sample film status — read before buying:</strong> the method is complete and in production use, but this pack's bundled sample film is still in production; it will be added as a free same-version update when it ships. Red lines inside: original or licensed material only, parody the tropes never a specific show's lines or plot chain, no compilation re-uploads of others' hits. License: own and client work; no resale or redistribution of the pack files.</p>
+    <h4>How to use it</h4>
+    <p>Pick the format, run the four topic routes against your niche, lock the hook first (muted, covered-caption test on frame 1), write to the beat structure, cut clips with the suspense-ending rule.</p>
+    <div class="price-row"><span class="price-now">$19.99</span></div>
+    <div class="buy-row">
+      <!-- TODO: 待 Creem 产品链接 — EN Comedy Shorts -->
+      <a class="btn btn-primary" href="#store-creem-pending">Buy — $19.99</a>
+      <span class="secure-note">Secure checkout via Creem</span>
+    </div>
+  </section>
+
+  <!-- ============ CHECKOUT NOTE / ASSURANCE ============ -->
+  <section class="detail" id="store-creem-pending">
+    <span class="tag">Checkout</span>
+    <h3>Creem checkout is being connected</h3>
+    <p>Buttons marked “Secure checkout via Creem” are being wired to our Creem
+    store now — Creem is our main checkout: it hosts the payment page, delivers
+    the download the moment payment completes, and keeps your library available
+    for permanent re-download. Until a pack's Creem link goes live, the packs
+    that are already on sale can be bought today on
+    <a href="https://dreamforgestudioshop.gumroad.com/l/alccbt">Gumroad</a> and
+    <a href="https://promptbase.com/profile/aandthedigits">PromptBase</a>, or
+    order any pack directly by email:
+    <a href="mailto:a13259605261@163.com">a13259605261@163.com</a> ·
+    <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>.</p>
+    <h4>License &amp; updates, in one paragraph</h4>
+    <p>Use every pack for your own products and paid client work; outputs you
+    produce are yours to sell. The pack files themselves may not be resold,
+    shared or redistributed. Same-version updates are free — re-download from
+    the same checkout library.</p>
+    <h4>Refunds</h4>
+    <p>All sales are final — digital downloads are not refundable. One
+    exception: if a file is corrupted, will not open, or does not materially
+    match its description, contact us and we will repair or re-issue the file
+    (no refund). Same policy as our <a href="terms.html">Terms of
+    Service</a>.</p>
+    <h4>Prefer done-for-you?</h4>
+    <p>Every pack in this store is a workflow our studio runs for clients. If you
+    would rather hand us the product and get finished films back, see
+    <a href="studio.html#services">our services</a>.</p>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <div class="section-head" id="faq">
+    <p class="eyebrow">FAQ</p>
+    <h2>Questions, answered</h2>
+  </div>
+  <section class="detail">
+    <div class="faq-item">
+      <h4>How do I receive my pack?</h4>
+      <p>Instantly. Checkout is hosted by Creem, Gumroad or PromptBase depending
+      on the pack; the moment payment completes, the download is on screen and in
+      your email, and the same library keeps it available for permanent
+      re-download. Buy once — yours forever.</p>
+    </div>
+    <div class="faq-item">
+      <h4>What do I need to run a pack?</h4>
+      <p>An AI assistant that reads Markdown (Claude, ChatGPT, Codex, Cursor,
+      WorkBuddy…). The skills are tool-agnostic — generation uses your own tools
+      and subscriptions. Packs with runnable scripts state their local
+      requirements (for example ffmpeg + Python) in their details above.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Can I use a pack for paid client work?</h4>
+      <p>Yes. The license covers your own products and paid client work, and
+      outputs you produce are yours commercially. What you may not do is resell,
+      share or redistribute the pack files themselves.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Can I get a refund?</h4>
+      <p>All sales are final — digital downloads are not refundable. If a file
+      is corrupted, will not open, or does not materially match its description,
+      contact us and we will repair or re-issue it (no refund). See our
+      <a href="terms.html">Terms of Service</a>.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Do packs get updated?</h4>
+      <p>Yes — the methods keep improving with our production work. Same-version
+      updates are free: re-download from your checkout library. Bundles marked
+      with coming-soon contents deliver those packs as they release.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Why not just prompt an AI myself?</h4>
+      <p>That is exactly the gap these packs close. A bare prompt improvises; a
+      field-tested skill carries the checklists, thresholds and failure records
+      of real deliveries — the 6 duplicated lines a human listen missed, the
+      three defects the self-review caught. Pay for experience, not prompts.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <nav class="footer-nav" aria-label="Site links">
+    <a href="index.html">Bead Pattern Maker</a> · <a href="studio.html">All Services</a> · <a href="works.html">Works</a> · <a href="store.html">Store</a> ·
+    <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Service</a> ·
+    <a href="index.html#pricing">Pricing</a> ·
+    <a href="mailto:a13259605261@163.com">Support: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+  </nav>
+  <p>Business enquiries by email: <a href="mailto:a13259605261@163.com">a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a></p>
+  <p>© 2026 Dreamforge Studio</p>
+  <div class="footer-cols">
+    <div class="fcol"><h4>Services</h4>
+      <a href="studio.html#services">AI Short Videos</a>
+      <a href="studio.html#services">Vertical Short Dramas</a>
+      <a href="studio.html#services">Corporate Films</a>
+      <a href="studio.html#services">Logo &amp; Gift Card Design</a>
+      <a href="index.html">Bead Pattern Maker (tool)</a>
+    </div>
+    <div class="fcol"><h4>Studio</h4>
+      <a href="studio.html#about">About the studio</a>
+      <a href="studio.html#work">Selected work</a>
+      <a href="works.html">All works</a>
+      <a href="store.html">Skill Store</a>
+      <a href="studio.html#process">How we work</a>
+      <a href="studio.html#faq">FAQ</a>
+      <a href="guide.html">User Guide</a>
+    </div>
+    <div class="fcol"><h4>Support</h4>
+      <a href="mailto:a13259605261@163.com">a13259605261@163.com</a>
+      <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="index.html#pricing">Tool pricing</a>
+    </div>
+  </div>
+  <nav class="lang-switch footer-lang" aria-label="Language">
+    <a href="store.html" class="active" hreflang="en">EN</a><span class="sep">|</span><a href="store-zh.html" hreflang="zh-CN">中文</a>
+  </nav>
+</footer>
+</body>
+</html>

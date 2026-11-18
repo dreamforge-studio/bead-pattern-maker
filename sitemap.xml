@@ -201,6 +201,20 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/works.html"/>
   </url>
   <url>
+    <loc>https://dreamforgestudio.xyz/store.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/store.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/store-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/store.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/store-zh.html</loc>
+    <lastmod>2026-11-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/store.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/store-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/store.html"/>
+  </url>
+  <url>
     <loc>https://dreamforgestudio.xyz/privacy.html</loc>
     <lastmod>2026-11-16</lastmod>
   </url>
