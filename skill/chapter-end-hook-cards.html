@@ -116,6 +116,15 @@
   .rel-list { margin: 0; padding-left: 18px; line-height: 1.7; }
   .rel-list a { color: var(--green); font-weight: 600; text-decoration: none; }
   .rel-list a:hover { text-decoration: underline; }
+  .score-table { width: 100%; border-collapse: collapse; font-size: .92rem; margin-top: 6px; }
+  .score-table th, .score-table td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; line-height: 1.5; }
+  .score-table th { background: #eef6f1; color: var(--green-dark); }
+  .score-table td.dim { font-weight: 700; color: var(--ink); width: 34%; }
+  .score-table td.pts { text-align: right; font-weight: 700; color: var(--ink); width: 12%; }
+  .score-note { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+  .faq-item { margin: 0 0 14px; }
+  .faq-item h5 { margin: 0 0 4px; font-size: 1rem; color: var(--ink); }
+  .faq-item p { margin: 0; color: var(--muted); line-height: 1.65; }
 </style>
 </head>
 <body>
@@ -144,7 +153,24 @@
       <span class="tag">Free Cards</span>
       <span class="tag">F1</span>
       <span class="tag">Free</span>
+      <span class="tag">C · 40/100</span>
     </div>
+  </section>
+  <section class="detail">
+    <h4>Completeness score: C · 40/100 — and the badge</h4>
+    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/chapter-end-hook-cards.svg" alt="Cliffhanger Hook Cards — Dreamforge Skill Library" width="264" height="48"></div>
+    <table class="score-table">
+      <tr><th>Dimension</th><th>In the package</th><th>Points</th></tr>
+      <tr><td class="dim">Method text</td><td>✓ Included</td><td class="pts">20</td></tr><tr><td class="dim">Install guide</td><td>✓ Included</td><td class="pts">20</td></tr><tr><td class="dim">Templates</td><td>— Not included</td><td class="pts">0</td></tr><tr><td class="dim">Case studies</td><td>— Not included</td><td class="pts">0</td></tr><tr><td class="dim">Finished samples</td><td>— Not included</td><td class="pts">0</td></tr>
+      <tr><td class="dim">Total</td><td>C grade</td><td class="pts">40/100</td></tr>
+    </table>
+    <p class="score-note">How this score works (public algorithm): five dimensions, 20 points each — method text, install guide, templates, case studies, finished samples. A dimension scores only when the package actually contains it; the count above is taken from the real package contents, never rounded up.</p>
+    <p class="score-note">Lite pack inspected: START-HERE plus the 36-card set and self-check sheet. The cards are the method text; no templates, cases or samples.</p>
+    <p>Add this badge to your README or article — it links back to this page.</p>
+    <p><strong>Markdown</strong></p>
+    <textarea class="code-box" rows="2" readonly>[![Cliffhanger Hook Cards](https://dreamforgestudio.xyz/badges/chapter-end-hook-cards.svg)](https://dreamforgestudio.xyz/skill/chapter-end-hook-cards.html)</textarea>
+    <p><strong>HTML</strong></p>
+    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/chapter-end-hook-cards.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/chapter-end-hook-cards.svg&quot; alt=&quot;Cliffhanger Hook Cards — Dreamforge Skill Library&quot; width=&quot;264&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
   </section>
 
   <section class="detail">
@@ -175,13 +201,10 @@
   </section>
 
   <section class="detail">
-    <h4>Embed the badge</h4>
-    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/chapter-end-hook-cards.svg" alt="Cliffhanger Hook Cards — Dreamforge Skill Library" width="240" height="48"></div>
-    <p>Add this badge to your README or article — it links back to this page.</p>
-    <p><strong>Markdown</strong></p>
-    <textarea class="code-box" rows="2" readonly>[![Cliffhanger Hook Cards](https://dreamforgestudio.xyz/badges/chapter-end-hook-cards.svg)](https://dreamforgestudio.xyz/skill/chapter-end-hook-cards.html)</textarea>
-    <p><strong>HTML</strong></p>
-    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/chapter-end-hook-cards.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/chapter-end-hook-cards.svg&quot; alt=&quot;Cliffhanger Hook Cards — Dreamforge Skill Library&quot; width=&quot;240&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
+    <h4>FAQ</h4>
+    <div class="faq-item"><h5>Who is it for — and who is it not for?</h5><p><strong>For:</strong> Serial-story and short-drama writers whose episode endings feel flat and don't pull the next click.<br><strong>Not for:</strong> Not a plot generator — it fixes the ending beat and its payoff; the story itself is still yours to write.</p></div>
+    <div class="faq-item"><h5>How do I use it — and what do I need first?</h5><p>Get it free on Creem, open START-HERE: pick a card by conflict type, write the next episode&#x27;s payoff beat at the same time, then pass the four-point check.</p></div>
+    <div class="faq-item"><h5>How does it relate to the paid full version?</h5><p>This is the free lite: 36 cards plus self-checks. The full system — hook chains, long-arc foreshadowing and the whole production pipeline — is in the P1 trio.</p></div>
   </section>
 
   <section class="detail">
