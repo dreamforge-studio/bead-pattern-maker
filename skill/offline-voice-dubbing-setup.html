@@ -116,6 +116,15 @@
   .rel-list { margin: 0; padding-left: 18px; line-height: 1.7; }
   .rel-list a { color: var(--green); font-weight: 600; text-decoration: none; }
   .rel-list a:hover { text-decoration: underline; }
+  .score-table { width: 100%; border-collapse: collapse; font-size: .92rem; margin-top: 6px; }
+  .score-table th, .score-table td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; line-height: 1.5; }
+  .score-table th { background: #eef6f1; color: var(--green-dark); }
+  .score-table td.dim { font-weight: 700; color: var(--ink); width: 34%; }
+  .score-table td.pts { text-align: right; font-weight: 700; color: var(--ink); width: 12%; }
+  .score-note { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+  .faq-item { margin: 0 0 14px; }
+  .faq-item h5 { margin: 0 0 4px; font-size: 1rem; color: var(--ink); }
+  .faq-item p { margin: 0; color: var(--muted); line-height: 1.65; }
 </style>
 </head>
 <body>
@@ -144,7 +153,24 @@
       <span class="tag">Voice &amp; Audio</span>
       <span class="tag">H1</span>
       <span class="tag">$19.99</span>
+      <span class="tag">B · 60/100</span>
     </div>
+  </section>
+  <section class="detail">
+    <h4>Completeness score: B · 60/100 — and the badge</h4>
+    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/offline-voice-dubbing-setup.svg" alt="Offline Voiceover Setup — Dreamforge Skill Library" width="264" height="48"></div>
+    <table class="score-table">
+      <tr><th>Dimension</th><th>In the package</th><th>Points</th></tr>
+      <tr><td class="dim">Method text</td><td>✓ Included</td><td class="pts">20</td></tr><tr><td class="dim">Install guide</td><td>✓ Included</td><td class="pts">20</td></tr><tr><td class="dim">Templates</td><td>✓ Included</td><td class="pts">20</td></tr><tr><td class="dim">Case studies</td><td>— Not included</td><td class="pts">0</td></tr><tr><td class="dim">Finished samples</td><td>— Not included</td><td class="pts">0</td></tr>
+      <tr><td class="dim">Total</td><td>B grade</td><td class="pts">60/100</td></tr>
+    </table>
+    <p class="score-note">How this score works (public algorithm): five dimensions, 20 points each — method text, install guide, templates, case studies, finished samples. A dimension scores only when the package actually contains it; the count above is taken from the real package contents, never rounded up.</p>
+    <p class="score-note">Pack inspected: method texts, START-HERE, templates/ (setup checklist + update notes). No case studies or sample audio — it is a configuration pack.</p>
+    <p>Add this badge to your README or article — it links back to this page.</p>
+    <p><strong>Markdown</strong></p>
+    <textarea class="code-box" rows="2" readonly>[![Offline Voiceover Setup](https://dreamforgestudio.xyz/badges/offline-voice-dubbing-setup.svg)](https://dreamforgestudio.xyz/skill/offline-voice-dubbing-setup.html)</textarea>
+    <p><strong>HTML</strong></p>
+    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/offline-voice-dubbing-setup.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/offline-voice-dubbing-setup.svg&quot; alt=&quot;Offline Voiceover Setup — Dreamforge Skill Library&quot; width=&quot;264&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
   </section>
 
   <section class="detail">
@@ -175,13 +201,10 @@
   </section>
 
   <section class="detail">
-    <h4>Embed the badge</h4>
-    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/offline-voice-dubbing-setup.svg" alt="Offline Voiceover Setup — Dreamforge Skill Library" width="240" height="48"></div>
-    <p>Add this badge to your README or article — it links back to this page.</p>
-    <p><strong>Markdown</strong></p>
-    <textarea class="code-box" rows="2" readonly>[![Offline Voiceover Setup](https://dreamforgestudio.xyz/badges/offline-voice-dubbing-setup.svg)](https://dreamforgestudio.xyz/skill/offline-voice-dubbing-setup.html)</textarea>
-    <p><strong>HTML</strong></p>
-    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/offline-voice-dubbing-setup.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/offline-voice-dubbing-setup.svg&quot; alt=&quot;Offline Voiceover Setup — Dreamforge Skill Library&quot; width=&quot;240&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
+    <h4>FAQ</h4>
+    <div class="faq-item"><h5>Who is it for — and who is it not for?</h5><p><strong>For:</strong> Creators who dub regularly and want to stop paying monthly cloud TTS subscriptions.<br><strong>Not for:</strong> The software itself is not included — you download the free open-source tool from its official repository; and if you take paid client work, the AGPL license route must be settled first, which the pack makes you do up front.</p></div>
+    <div class="faq-item"><h5>How do I use it after buying — and what do I need first?</h5><p>Buy once, follow the configuration route in order, and clear every item on the one-pass setup checklist (each has a verification action) before your first production run.</p></div>
+    <div class="faq-item"><h5>How is it different from the free lite?</h5><p>No free lite exists for this setup; the free cards are unrelated single-step tools. This pack is the full configuration route plus license red lines.</p></div>
   </section>
 
   <section class="detail">
