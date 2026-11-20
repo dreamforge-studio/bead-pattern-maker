@@ -116,6 +116,15 @@
   .rel-list { margin: 0; padding-left: 18px; line-height: 1.7; }
   .rel-list a { color: var(--green); font-weight: 600; text-decoration: none; }
   .rel-list a:hover { text-decoration: underline; }
+  .score-table { width: 100%; border-collapse: collapse; font-size: .92rem; margin-top: 6px; }
+  .score-table th, .score-table td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; line-height: 1.5; }
+  .score-table th { background: #eef6f1; color: var(--green-dark); }
+  .score-table td.dim { font-weight: 700; color: var(--ink); width: 34%; }
+  .score-table td.pts { text-align: right; font-weight: 700; color: var(--ink); width: 12%; }
+  .score-note { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+  .faq-item { margin: 0 0 14px; }
+  .faq-item h5 { margin: 0 0 4px; font-size: 1rem; color: var(--ink); }
+  .faq-item p { margin: 0; color: var(--muted); line-height: 1.65; }
 </style>
 </head>
 <body>
@@ -144,7 +153,24 @@
       <span class="tag">工具与体系介绍</span>
       <span class="tag">INTRO</span>
       <span class="tag">介绍页</span>
+      <span class="tag">D · 20/100</span>
     </div>
+  </section>
+  <section class="detail">
+    <h4>完整度评分：D 级 · 20/100 —— 与徽章</h4>
+    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/cinematic-skills.svg" alt="Cinematic Camera Moves — Dreamforge Skill Library" width="264" height="48"></div>
+    <table class="score-table">
+      <tr><th>维度</th><th>包内实际</th><th>分值</th></tr>
+      <tr><td class="dim">方法正文</td><td>✓ 含</td><td class="pts">20</td></tr><tr><td class="dim">安装指南</td><td>— 无</td><td class="pts">0</td></tr><tr><td class="dim">模板</td><td>— 无</td><td class="pts">0</td></tr><tr><td class="dim">案例</td><td>— 无</td><td class="pts">0</td></tr><tr><td class="dim">样片</td><td>— 无</td><td class="pts">0</td></tr>
+      <tr><td class="dim">总分</td><td>D 级</td><td class="pts">20/100</td></tr>
+    </table>
+    <p class="score-note">评分算法（公开）：五维各 20 分——方法正文、安装指南、模板、案例、样片；包里实际有才计分，上表按真实包内容逐项数，不凑分、不四舍五入。</p>
+    <p class="score-note">介绍页：方法-only 件——只有正文；无安装指南、模板、案例、样片，且未经我方实测。</p>
+    <p>把这枚徽章嵌进你的 README 或文章，会链回本页。</p>
+    <p><strong>Markdown</strong></p>
+    <textarea class="code-box" rows="2" readonly>[![Cinematic Camera Moves](https://dreamforgestudio.xyz/badges/cinematic-skills.svg)](https://dreamforgestudio.xyz/skill/cinematic-skills-zh.html)</textarea>
+    <p><strong>HTML</strong></p>
+    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/cinematic-skills-zh.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/cinematic-skills.svg&quot; alt=&quot;Cinematic Camera Moves — Dreamforge Skill Library&quot; width=&quot;264&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
   </section>
 
   <section class="detail">
@@ -175,13 +201,10 @@
   </section>
 
   <section class="detail">
-    <h4>嵌入徽章</h4>
-    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/cinematic-skills.svg" alt="Cinematic Camera Moves — Dreamforge Skill Library" width="240" height="48"></div>
-    <p>把这枚徽章嵌进你的 README 或文章，会链回本页。</p>
-    <p><strong>Markdown</strong></p>
-    <textarea class="code-box" rows="2" readonly>[![Cinematic Camera Moves](https://dreamforgestudio.xyz/badges/cinematic-skills.svg)](https://dreamforgestudio.xyz/skill/cinematic-skills-zh.html)</textarea>
-    <p><strong>HTML</strong></p>
-    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/cinematic-skills-zh.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/cinematic-skills.svg&quot; alt=&quot;Cinematic Camera Moves — Dreamforge Skill Library&quot; width=&quot;240&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
+    <h4>常见问题</h4>
+    <div class="faq-item"><h5>适合谁、不适合谁？</h5><p><strong>适合：</strong>用「电影感」「史诗感」这类形容词写镜头、生成端回给随机运镜的 AI 创作者。<br><strong>不适合：</strong>方法-only 且未经我方实测——实测前不进生产 SOP、不对客户报价，本页如实写明。</p></div>
+    <div class="faq-item"><h5>怎么用、需要什么前提？</h5><p>不用买：在本页读方法（先按任务选运镜、再写摄影机指令）。运镜语言在打戏里的实测应用见 P4 完整版。</p></div>
+    <div class="faq-item"><h5>与免费 lite、付费包的关系？</h5><p>免费 F2 速查卡是这套运镜语言在打戏里的一张切片；P4 是它的完整生产法。</p></div>
   </section>
 
   <section class="detail">
