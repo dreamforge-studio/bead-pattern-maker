@@ -116,6 +116,15 @@
   .rel-list { margin: 0; padding-left: 18px; line-height: 1.7; }
   .rel-list a { color: var(--green); font-weight: 600; text-decoration: none; }
   .rel-list a:hover { text-decoration: underline; }
+  .score-table { width: 100%; border-collapse: collapse; font-size: .92rem; margin-top: 6px; }
+  .score-table th, .score-table td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; line-height: 1.5; }
+  .score-table th { background: #eef6f1; color: var(--green-dark); }
+  .score-table td.dim { font-weight: 700; color: var(--ink); width: 34%; }
+  .score-table td.pts { text-align: right; font-weight: 700; color: var(--ink); width: 12%; }
+  .score-note { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+  .faq-item { margin: 0 0 14px; }
+  .faq-item h5 { margin: 0 0 4px; font-size: 1rem; color: var(--ink); }
+  .faq-item p { margin: 0; color: var(--muted); line-height: 1.65; }
 </style>
 </head>
 <body>
@@ -144,7 +153,24 @@
       <span class="tag">声音与配音</span>
       <span class="tag">P7</span>
       <span class="tag">$19.99</span>
+      <span class="tag">A · 80/100</span>
     </div>
+  </section>
+  <section class="detail">
+    <h4>完整度评分：A 级 · 80/100 —— 与徽章</h4>
+    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/voice-qc-mixing-pack.svg" alt="Video Audio QC &amp; Mixing — Dreamforge Skill Library" width="264" height="48"></div>
+    <table class="score-table">
+      <tr><th>维度</th><th>包内实际</th><th>分值</th></tr>
+      <tr><td class="dim">方法正文</td><td>✓ 含</td><td class="pts">20</td></tr><tr><td class="dim">安装指南</td><td>✓ 含</td><td class="pts">20</td></tr><tr><td class="dim">模板</td><td>✓ 含</td><td class="pts">20</td></tr><tr><td class="dim">案例</td><td>✓ 含</td><td class="pts">20</td></tr><tr><td class="dim">样片</td><td>— 无</td><td class="pts">0</td></tr>
+      <tr><td class="dim">总分</td><td>A 级</td><td class="pts">80/100</td></tr>
+    </table>
+    <p class="score-note">评分算法（公开）：五维各 20 分——方法正文、安装指南、模板、案例、样片；包里实际有才计分，上表按真实包内容逐项数，不凑分、不四舍五入。</p>
+    <p class="score-note">已验包内：正文、START-HERE、templates/（三件工作表）、case-studies/（两个真实质检案例）；无样片媒体文件。</p>
+    <p>把这枚徽章嵌进你的 README 或文章，会链回本页。</p>
+    <p><strong>Markdown</strong></p>
+    <textarea class="code-box" rows="2" readonly>[![Video Audio QC &amp; Mixing](https://dreamforgestudio.xyz/badges/voice-qc-mixing-pack.svg)](https://dreamforgestudio.xyz/skill/voice-qc-mixing-pack-zh.html)</textarea>
+    <p><strong>HTML</strong></p>
+    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/voice-qc-mixing-pack-zh.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/voice-qc-mixing-pack.svg&quot; alt=&quot;Video Audio QC &amp;amp; Mixing — Dreamforge Skill Library&quot; width=&quot;264&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
   </section>
 
   <section class="detail">
@@ -175,13 +201,10 @@
   </section>
 
   <section class="detail">
-    <h4>嵌入徽章</h4>
-    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/voice-qc-mixing-pack.svg" alt="Video Audio QC &amp; Mixing — Dreamforge Skill Library" width="240" height="48"></div>
-    <p>把这枚徽章嵌进你的 README 或文章，会链回本页。</p>
-    <p><strong>Markdown</strong></p>
-    <textarea class="code-box" rows="2" readonly>[![Video Audio QC &amp; Mixing](https://dreamforgestudio.xyz/badges/voice-qc-mixing-pack.svg)](https://dreamforgestudio.xyz/skill/voice-qc-mixing-pack-zh.html)</textarea>
-    <p><strong>HTML</strong></p>
-    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/voice-qc-mixing-pack-zh.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/voice-qc-mixing-pack.svg&quot; alt=&quot;Video Audio QC &amp;amp; Mixing — Dreamforge Skill Library&quot; width=&quot;240&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
+    <h4>常见问题</h4>
+    <div class="faq-item"><h5>适合谁、不适合谁？</h5><p><strong>适合：</strong>交付成片的视频制作与剪辑者，需要一套能抓出「数值全过、听感不过」的声音质检。<br><strong>不适合：</strong>不是音乐母带课；包内数值是我方交付自检标准，非平台规范。</p></div>
+    <div class="faq-item"><h5>买后怎么用、需要什么前提？</h5><p>买断后，制作时用 A 节标准、交付前用 B 节质检：六项问卷带时间点听判，听→改→再听最多 3 轮，最终听感归真人耳朵。</p></div>
+    <div class="faq-item"><h5>与免费 lite 的区别？</h5><p>本包暂无同款免费 lite；雷达上的免费卡是其他单步工具。本包是完整标准＋质检回路＋三件工作表。</p></div>
   </section>
 
   <section class="detail">
