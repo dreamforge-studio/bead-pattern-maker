@@ -116,6 +116,15 @@
   .rel-list { margin: 0; padding-left: 18px; line-height: 1.7; }
   .rel-list a { color: var(--green); font-weight: 600; text-decoration: none; }
   .rel-list a:hover { text-decoration: underline; }
+  .score-table { width: 100%; border-collapse: collapse; font-size: .92rem; margin-top: 6px; }
+  .score-table th, .score-table td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; line-height: 1.5; }
+  .score-table th { background: #eef6f1; color: var(--green-dark); }
+  .score-table td.dim { font-weight: 700; color: var(--ink); width: 34%; }
+  .score-table td.pts { text-align: right; font-weight: 700; color: var(--ink); width: 12%; }
+  .score-note { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+  .faq-item { margin: 0 0 14px; }
+  .faq-item h5 { margin: 0 0 4px; font-size: 1rem; color: var(--ink); }
+  .faq-item p { margin: 0; color: var(--muted); line-height: 1.65; }
 </style>
 </head>
 <body>
@@ -144,7 +153,24 @@
       <span class="tag">工具与体系介绍</span>
       <span class="tag">INTRO</span>
       <span class="tag">介绍页</span>
+      <span class="tag">C · 40/100</span>
     </div>
+  </section>
+  <section class="detail">
+    <h4>完整度评分：C 级 · 40/100 —— 与徽章</h4>
+    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/autoclip.svg" alt="autoclip — Auto Clipper — Dreamforge Skill Library" width="264" height="48"></div>
+    <table class="score-table">
+      <tr><th>维度</th><th>包内实际</th><th>分值</th></tr>
+      <tr><td class="dim">方法正文</td><td>✓ 含</td><td class="pts">20</td></tr><tr><td class="dim">安装指南</td><td>✓ 含</td><td class="pts">20</td></tr><tr><td class="dim">模板</td><td>— 无</td><td class="pts">0</td></tr><tr><td class="dim">案例</td><td>— 无</td><td class="pts">0</td></tr><tr><td class="dim">样片</td><td>— 无</td><td class="pts">0</td></tr>
+      <tr><td class="dim">总分</td><td>C 级</td><td class="pts">40/100</td></tr>
+    </table>
+    <p class="score-note">评分算法（公开）：五维各 20 分——方法正文、安装指南、模板、案例、样片；包里实际有才计分，上表按真实包内容逐项数，不凑分、不四舍五入。</p>
+    <p class="score-note">介绍页：上游文档与正文已装机、基础配置已在装机注记中验过（计入「安装指南」）；上游 README 数据不计案例。</p>
+    <p>把这枚徽章嵌进你的 README 或文章，会链回本页。</p>
+    <p><strong>Markdown</strong></p>
+    <textarea class="code-box" rows="2" readonly>[![autoclip — Auto Clipper](https://dreamforgestudio.xyz/badges/autoclip.svg)](https://dreamforgestudio.xyz/skill/autoclip-zh.html)</textarea>
+    <p><strong>HTML</strong></p>
+    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/autoclip-zh.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/autoclip.svg&quot; alt=&quot;autoclip — Auto Clipper — Dreamforge Skill Library&quot; width=&quot;264&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
   </section>
 
   <section class="detail">
@@ -175,13 +201,10 @@
   </section>
 
   <section class="detail">
-    <h4>嵌入徽章</h4>
-    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/autoclip.svg" alt="autoclip — Auto Clipper — Dreamforge Skill Library" width="240" height="48"></div>
-    <p>把这枚徽章嵌进你的 README 或文章，会链回本页。</p>
-    <p><strong>Markdown</strong></p>
-    <textarea class="code-box" rows="2" readonly>[![autoclip — Auto Clipper](https://dreamforgestudio.xyz/badges/autoclip.svg)](https://dreamforgestudio.xyz/skill/autoclip-zh.html)</textarea>
-    <p><strong>HTML</strong></p>
-    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/autoclip-zh.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/autoclip.svg&quot; alt=&quot;autoclip — Auto Clipper — Dreamforge Skill Library&quot; width=&quot;240&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
+    <h4>常见问题</h4>
+    <div class="faq-item"><h5>适合谁、不适合谁？</h5><p><strong>适合：</strong>手里有长视频素材、想要开源可本地跑、带平台版式的切片路线的创作者。<br><strong>不适合：</strong>仅介绍——工具本体开源（MIT）免费、不在此出售；在咱线里它是升级路候选，不是现行主力。</p></div>
+    <div class="faq-item"><h5>怎么用、需要什么前提？</h5><p>去上游项目取工具本地跑（有零 Key 本地模式）；它在完整生产工作流里的位置见 H3 工作流包。</p></div>
+    <div class="faq-item"><h5>与免费 lite、付费包的关系？</h5><p>免费 F6 信号卡是与工具无关的选段法；本工具用自己的方式自动选段——全链路打法见 H3 包。</p></div>
   </section>
 
   <section class="detail">
