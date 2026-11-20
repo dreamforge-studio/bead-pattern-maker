@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>海外旅游攻略生产包 — 技能雷达 | Dreamforge Studio 造梦工厂</title>
+<meta name="description" content="逐日行程＋美食交通预算一张图：可接单交付的旅游攻略生产 SOP，附北京 5 日英文成品样品。">
+<link rel="canonical" href="https://dreamforgestudio.xyz/skill/travel-itinerary-production-sop-zh.html">
+<link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/travel-itinerary-production-sop.html">
+<link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/travel-itinerary-production-sop-zh.html">
+<link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/travel-itinerary-production-sop.html">
+<meta name="theme-color" content="#0e4d2c">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="../icons/icon-192.png">
+<link rel="apple-touch-icon" href="../icons/icon-192.png">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  /* --- store page --- */
+  .hero { padding: 34px 6px 8px; text-align: center; }
+  .eyebrow {
+    margin: 0 0 10px; font-size: .78rem; font-weight: 700;
+    letter-spacing: .22em; text-transform: uppercase; color: var(--green);
+  }
+  .hero h2 {
+    margin: 0 auto 12px; max-width: 680px;
+    font-size: 2rem; line-height: 1.2; font-weight: 700; color: var(--ink);
+  }
+  .hero .lead {
+    margin: 0 auto 18px; max-width: 620px;
+    color: var(--muted); font-size: 1.02rem; line-height: 1.6;
+  }
+  .trust-bar {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    margin: 6px auto 10px; max-width: 720px;
+  }
+  .trust-bar span {
+    background: #eef6f1; color: var(--green-dark); border: 1px solid #cfe3d6;
+    border-radius: 999px; padding: 7px 14px; font-size: .88rem; font-weight: 600;
+  }
+  .section-head { margin: 34px 0 14px; padding: 0 6px; }
+  .section-head h2 { margin: 0 0 6px; font-size: 1.45rem; color: var(--ink); }
+  .section-head p { margin: 0; color: var(--muted); line-height: 1.6; max-width: 680px; }
+
+  .pack-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .pack {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .pack:hover {
+    transform: translateY(-3px); border-color: #bcd8c6;
+    box-shadow: 0 10px 24px rgba(20, 102, 60, .10);
+  }
+  .pack .thumb { display: block; background: #101613; }
+  .pack .thumb img { width: 100%; height: 190px; object-fit: cover; display: block; }
+  .pack .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 7px; flex: 1; }
+  .pack h3 { margin: 0; font-size: 1.02rem; line-height: 1.4; }
+  .pack p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.55; flex: 1; }
+  .tag {
+    align-self: flex-start; font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--green-dark);
+    background: #eef6f1; border-radius: 999px; padding: 3px 10px;
+  }
+  .tag.soon { color: #7a5b12; background: #fdf3d7; }
+  .price-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .price-now { font-size: 1.45rem; font-weight: 700; color: var(--green-dark); }
+  .price-was { color: var(--muted); text-decoration: line-through; font-size: .98rem; }
+  .price-save { color: var(--green); font-weight: 700; font-size: .88rem; }
+  .buy-row { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+  .buy-row .btn { text-align: center; text-decoration: none; }
+  .secure-note { color: var(--muted); font-size: .8rem; text-align: center; }
+  .detail-link { color: var(--green); font-weight: 600; font-size: .9rem; text-decoration: none; }
+  .detail-link:hover { text-decoration: underline; }
+  .bundle-list { margin: 0; padding-left: 18px; color: var(--muted); font-size: .9rem; line-height: 1.65; }
+  .bundle-list li { margin-bottom: 3px; }
+  .status { font-size: .74rem; font-weight: 700; border-radius: 999px; padding: 1px 8px; margin-left: 6px; white-space: nowrap; }
+  .status.ok { color: var(--green-dark); background: #eef6f1; }
+  .status.soon { color: #7a5b12; background: #fdf3d7; }
+
+  .detail {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 20px; margin-bottom: 16px;
+  }
+  .detail h3 { margin: 0 0 4px; font-size: 1.15rem; }
+  .detail h4 {
+    margin: 16px 0 6px; font-size: .8rem; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--green);
+  }
+  .detail p, .detail li { color: var(--muted); line-height: 1.6; font-size: .94rem; }
+  .detail ul { margin: 0; padding-left: 18px; }
+  .detail li { margin-bottom: 4px; }
+  .detail .price-row { margin-top: 14px; }
+  .detail .buy-row { max-width: 340px; }
+  .sample-frame { width: 100%; border-radius: 10px; display: block; margin-top: 8px; }
+  .faq-item { margin-bottom: 14px; }
+  .faq-item h4 { margin: 0 0 4px; font-size: .98rem; color: var(--ink); }
+  .faq-item p { margin: 0; color: var(--muted); line-height: 1.6; font-size: .94rem; }
+  @media (max-width: 720px) {
+    .pack-grid { grid-template-columns: 1fr; }
+    .hero h2 { font-size: 1.55rem; }
+  }
+
+  /* --- skill radar --- */
+  .crumbs { padding: 10px 6px 0; color: var(--muted); font-size: .88rem; }
+  .crumbs a { color: var(--green); text-decoration: none; font-weight: 600; }
+  .skill-hero { padding: 10px 6px 4px; }
+  .skill-hero h1 { margin: 6px 0 8px; font-size: 1.7rem; line-height: 1.25; color: var(--ink); }
+  .skill-hero .tagline { color: var(--muted); font-size: 1.02rem; line-height: 1.6; margin: 0 0 10px; }
+  .meta-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 4px; }
+  .vs-table { width: 100%; border-collapse: collapse; font-size: .92rem; margin-top: 6px; }
+  .vs-table th, .vs-table td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; line-height: 1.55; }
+  .vs-table th { background: #eef6f1; color: var(--green-dark); }
+  .vs-table td:first-child { font-weight: 700; color: var(--ink); width: 18%; }
+  .badge-box { background: #14231b; border-radius: 10px; padding: 14px; text-align: center; margin: 8px 0; }
+  .code-box { width: 100%; box-sizing: border-box; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .8rem; padding: 9px; border: 1px solid var(--line); border-radius: 8px; background: #fbfcfb; color: var(--ink); margin: 4px 0 10px; }
+  .rel-list { margin: 0; padding-left: 18px; line-height: 1.7; }
+  .rel-list a { color: var(--green); font-weight: 600; text-decoration: none; }
+  .rel-list a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="../icons/icon-192.png" alt="" width="40" height="40">
+    <div>
+      <h1>Dreamforge Studio</h1>
+      <p>AI Media &amp; Tools Studio</p>
+    </div>
+  </div>
+  <p class="privacy">技能包 — 一次购买、即时下载、永久有效</p>
+  <select class="lang-select" id="langSelect" aria-label="Language / 语言" title="Language">
+      <option value="travel-itinerary-production-sop.html">English</option>
+      <option value="travel-itinerary-production-sop-zh.html" selected>中文（简体）</option>
+  </select>
+  <script>document.getElementById('langSelect').addEventListener('change',function(){location.href=this.value;});</script>
+</header>
+<main>
+  <p class="crumbs"><a href="../skills-zh.html">技能雷达</a> / 旅游攻略 / 海外旅游攻略生产包</p>
+  <section class="skill-hero">
+    <p class="eyebrow">Dreamforge Studio · 技能雷达</p>
+    <h1>海外旅游攻略生产包</h1>
+    <p class="tagline">逐日行程＋美食交通预算一张图：可接单交付的旅游攻略生产 SOP，附北京 5 日英文成品样品。</p>
+    <div class="meta-tags">
+      <span class="tag">旅游攻略</span>
+      <span class="tag">P8</span>
+      <span class="tag">$19.99</span>
+    </div>
+  </section>
+
+  <section class="detail">
+    <h4>解决什么活、省多少事</h4>
+    <p>攻略写得像游记卖不出去——本包是生产法不是模板：路线写法 SOP＋预算表＋地图贴士成套，照着做就能交付一份能卖的攻略；只做攻略，不代订、不陪游、不办签证。</p>
+  </section>
+
+  <section class="detail">
+    <h4>功能 / 方法清单</h4>
+    <ul>
+      <li>逐日行程写法 SOP：节奏、衔接、备选方案的标准结构</li><li>美食/交通/预算成套模板：填数即成稿</li><li>地图与实用贴士的编排法</li><li>北京 5 日英文成品样品：照着对照验收</li><li>接单口径：徒步类只卖亲自走过的路线，不编轨迹与安全数据</li>
+    </ul>
+  </section>
+
+  <section class="detail">
+    <h4>同类对比</h4>
+    <table class="vs-table">
+      <tr><th></th><th>手动 / 通用做法</th><th>本技能</th></tr>
+      <tr><td>做法</td><td>市面同类模板是自用规划向</td><td>咱的是可接单的生产 SOP＋英文成品样品，交付标准按买家验收口径写。</td></tr><tr><td>交付形态</td><td>碎片内容：散帖、单次教程，或租来的工具里的一个功能</td><td>一整包买断、永久有效——内容逐项列在上方功能清单</td></tr><tr><td>数字口径</td><td>常见效果承诺与无出处数字</td><td>数字只用自有实测或标注出处；不承诺效果</td></tr>
+    </table>
+  </section>
+
+  <section class="detail">
+    <h4>相关技能</h4>
+    <ul class="rel-list">
+      <li><a href="business-negotiation-playbook-zh.html">接单谈判与报价实战手册</a> — 不靠低价抢单：开谈前四查、两层选项报价、压价应对三段、反白嫖红线的接单成交系统（v1.4）。</li><li><a href="deai-writing-full-system-zh.html">去 AI 味组合打法完整版</a> — 四层检测＋场景选件的去 AI 味系统：叙事→篇章→句式→词表逐层查，中英双语各有对口打法。</li><li><a href="ai-product-listing-service-pack-zh.html">电商商品上架服务包</a> — 商品图＋标题＋详情页的 AI 上架代做完整打法：咱闲鱼/Gumroad 实卖过的生产与上架文案体系。</li>
+    </ul>
+  </section>
+
+  <section class="detail">
+    <h4>嵌入徽章</h4>
+    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/travel-itinerary-production-sop.svg" alt="Travel Guide Pack — Dreamforge Skill Library" width="240" height="48"></div>
+    <p>把这枚徽章嵌进你的 README 或文章，会链回本页。</p>
+    <p><strong>Markdown</strong></p>
+    <textarea class="code-box" rows="2" readonly>[![Travel Guide Pack](https://dreamforgestudio.xyz/badges/travel-itinerary-production-sop.svg)](https://dreamforgestudio.xyz/skill/travel-itinerary-production-sop-zh.html)</textarea>
+    <p><strong>HTML</strong></p>
+    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/travel-itinerary-production-sop-zh.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/travel-itinerary-production-sop.svg&quot; alt=&quot;Travel Guide Pack — Dreamforge Skill Library&quot; width=&quot;240&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
+  </section>
+
+  <section class="detail">
+    <h4>获取</h4>
+    <div class="buy-row">
+      <a class="btn btn-primary" href="https://www.creem.io/product/prod_7mawMo9zktI716Ruiu1z6C">在 Creem 购买 — $19.99</a>
+          <a class="btn" href="../store-zh.html">逛官网技能商店</a>
+    </div>
+  </section>
+</main>
+<footer>
+  <nav class="footer-nav" aria-label="Site links">
+    <a href="../index-zh.html">Bead Pattern Maker</a> · <a href="../studio-zh.html">全部服务</a> · <a href="../works-zh.html">作品</a> · <a href="../store-zh.html">技能商店</a> · <a href="../skills-zh.html">技能雷达</a> ·
+    <a href="../privacy.html">隐私政策</a> · <a href="../terms.html">服务条款</a> ·
+    <a href="../index-zh.html#pricing">价格</a> ·
+    <a href="mailto:a13259605261@163.com">Support: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+  </nav>
+  <p>商务咨询邮箱：<a href="mailto:a13259605261@163.com">a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a></p>
+  <p>© 2026 Dreamforge Studio</p>
+  <div class="footer-cols">
+    <div class="fcol"><h4>服务</h4>
+      <a href="../studio-zh.html#services">AI 短视频</a>
+      <a href="../studio-zh.html#services">竖屏短剧</a>
+      <a href="../studio-zh.html#services">企业宣传片</a>
+      <a href="../studio-zh.html#services">Logo 与礼品卡设计</a>
+      <a href="../index-zh.html">拼豆图纸生成器（工具）</a>
+    </div>
+    <div class="fcol"><h4>工作室</h4>
+      <a href="../studio-zh.html#about">关于工作室</a>
+      <a href="../studio-zh.html#work">精选作品</a>
+      <a href="../works-zh.html">全部作品</a>
+      <a href="../store-zh.html">技能商店</a>
+      <a href="../studio-zh.html#process">合作流程</a>
+      <a href="../studio-zh.html#faq">常见问题</a>
+      <a href="../guide-zh.html">使用指南</a>
+    </div>
+    <div class="fcol"><h4>支持</h4>
+      <a href="mailto:a13259605261@163.com">a13259605261@163.com</a>
+      <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+      <a href="../privacy.html">隐私政策</a>
+      <a href="../terms.html">服务条款</a>
+      <a href="../index-zh.html#pricing">工具价格</a>
+    </div>
+  </div>
+  <nav class="lang-switch footer-lang" aria-label="Language">
+    <a href="travel-itinerary-production-sop-zh.html" hreflang="en">EN</a><span class="sep">|</span><a href="travel-itinerary-production-sop.html" class="active" hreflang="zh-CN">中文</a>
+  </nav>
+</footer>
+</body>
+</html>
