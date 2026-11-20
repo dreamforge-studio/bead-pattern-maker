@@ -116,6 +116,15 @@
   .rel-list { margin: 0; padding-left: 18px; line-height: 1.7; }
   .rel-list a { color: var(--green); font-weight: 600; text-decoration: none; }
   .rel-list a:hover { text-decoration: underline; }
+  .score-table { width: 100%; border-collapse: collapse; font-size: .92rem; margin-top: 6px; }
+  .score-table th, .score-table td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; line-height: 1.5; }
+  .score-table th { background: #eef6f1; color: var(--green-dark); }
+  .score-table td.dim { font-weight: 700; color: var(--ink); width: 34%; }
+  .score-table td.pts { text-align: right; font-weight: 700; color: var(--ink); width: 12%; }
+  .score-note { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+  .faq-item { margin: 0 0 14px; }
+  .faq-item h5 { margin: 0 0 4px; font-size: 1rem; color: var(--ink); }
+  .faq-item p { margin: 0; color: var(--muted); line-height: 1.65; }
 </style>
 </head>
 <body>
@@ -144,7 +153,24 @@
       <span class="tag">免费卡片</span>
       <span class="tag">F5</span>
       <span class="tag">免费</span>
+      <span class="tag">C · 40/100</span>
     </div>
+  </section>
+  <section class="detail">
+    <h4>完整度评分：C 级 · 40/100 —— 与徽章</h4>
+    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/short-drama-cost-tier-card.svg" alt="Drama Cost Tier Card — Dreamforge Skill Library" width="264" height="48"></div>
+    <table class="score-table">
+      <tr><th>维度</th><th>包内实际</th><th>分值</th></tr>
+      <tr><td class="dim">方法正文</td><td>✓ 含</td><td class="pts">20</td></tr><tr><td class="dim">安装指南</td><td>✓ 含</td><td class="pts">20</td></tr><tr><td class="dim">模板</td><td>— 无</td><td class="pts">0</td></tr><tr><td class="dim">案例</td><td>— 无</td><td class="pts">0</td></tr><tr><td class="dim">样片</td><td>— 无</td><td class="pts">0</td></tr>
+      <tr><td class="dim">总分</td><td>C 级</td><td class="pts">40/100</td></tr>
+    </table>
+    <p class="score-note">评分算法（公开）：五维各 20 分——方法正文、安装指南、模板、案例、样片；包里实际有才计分，上表按真实包内容逐项数，不凑分、不四舍五入。</p>
+    <p class="score-note">已验 lite 包：START-HERE＋成本分层速查卡；无模板、案例、样片。</p>
+    <p>把这枚徽章嵌进你的 README 或文章，会链回本页。</p>
+    <p><strong>Markdown</strong></p>
+    <textarea class="code-box" rows="2" readonly>[![Drama Cost Tier Card](https://dreamforgestudio.xyz/badges/short-drama-cost-tier-card.svg)](https://dreamforgestudio.xyz/skill/short-drama-cost-tier-card-zh.html)</textarea>
+    <p><strong>HTML</strong></p>
+    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/short-drama-cost-tier-card-zh.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/short-drama-cost-tier-card.svg&quot; alt=&quot;Drama Cost Tier Card — Dreamforge Skill Library&quot; width=&quot;264&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
   </section>
 
   <section class="detail">
@@ -175,13 +201,10 @@
   </section>
 
   <section class="detail">
-    <h4>嵌入徽章</h4>
-    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/short-drama-cost-tier-card.svg" alt="Drama Cost Tier Card — Dreamforge Skill Library" width="240" height="48"></div>
-    <p>把这枚徽章嵌进你的 README 或文章，会链回本页。</p>
-    <p><strong>Markdown</strong></p>
-    <textarea class="code-box" rows="2" readonly>[![Drama Cost Tier Card](https://dreamforgestudio.xyz/badges/short-drama-cost-tier-card.svg)](https://dreamforgestudio.xyz/skill/short-drama-cost-tier-card-zh.html)</textarea>
-    <p><strong>HTML</strong></p>
-    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/short-drama-cost-tier-card-zh.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/short-drama-cost-tier-card.svg&quot; alt=&quot;Drama Cost Tier Card — Dreamforge Skill Library&quot; width=&quot;240&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
+    <h4>常见问题</h4>
+    <div class="faq-item"><h5>适合谁、不适合谁？</h5><p><strong>适合：</strong>AI 短剧制作者，生成预算大半烧在打磨期废片上的人。<br><strong>不适合：</strong>不是价目表——租卡价随平台、区域、活动浮动；卡内唯一价格已标注为公开文章作者口径、非我方实测，其余一律以当日价为准。</p></div>
+    <div class="faq-item"><h5>怎么用、需要什么前提？</h5><p>免费领取后：每段先标打磨/定稿，打磨走租卡、定稿走商业模型，按射程表对显存档位，先小样再批量租。</p></div>
+    <div class="faq-item"><h5>与付费完整版的区别？</h5><p>本卡是免费 lite（一张卡做分层决策）；花这笔预算的完整生产流水线在 P1 三件套里。</p></div>
   </section>
 
   <section class="detail">
