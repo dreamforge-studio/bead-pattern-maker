@@ -116,6 +116,15 @@
   .rel-list { margin: 0; padding-left: 18px; line-height: 1.7; }
   .rel-list a { color: var(--green); font-weight: 600; text-decoration: none; }
   .rel-list a:hover { text-decoration: underline; }
+  .score-table { width: 100%; border-collapse: collapse; font-size: .92rem; margin-top: 6px; }
+  .score-table th, .score-table td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; line-height: 1.5; }
+  .score-table th { background: #eef6f1; color: var(--green-dark); }
+  .score-table td.dim { font-weight: 700; color: var(--ink); width: 34%; }
+  .score-table td.pts { text-align: right; font-weight: 700; color: var(--ink); width: 12%; }
+  .score-note { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+  .faq-item { margin: 0 0 14px; }
+  .faq-item h5 { margin: 0 0 4px; font-size: 1rem; color: var(--ink); }
+  .faq-item p { margin: 0; color: var(--muted); line-height: 1.65; }
 </style>
 </head>
 <body>
@@ -144,7 +153,24 @@
       <span class="tag">电商</span>
       <span class="tag">H5</span>
       <span class="tag">$24.99</span>
+      <span class="tag">A · 80/100</span>
     </div>
+  </section>
+  <section class="detail">
+    <h4>完整度评分：A 级 · 80/100 —— 与徽章</h4>
+    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/ai-product-listing-service-pack.svg" alt="E-Commerce Listing Pack — Dreamforge Skill Library" width="264" height="48"></div>
+    <table class="score-table">
+      <tr><th>维度</th><th>包内实际</th><th>分值</th></tr>
+      <tr><td class="dim">方法正文</td><td>✓ 含</td><td class="pts">20</td></tr><tr><td class="dim">安装指南</td><td>✓ 含</td><td class="pts">20</td></tr><tr><td class="dim">模板</td><td>✓ 含</td><td class="pts">20</td></tr><tr><td class="dim">案例</td><td>✓ 含</td><td class="pts">20</td></tr><tr><td class="dim">样片</td><td>— 无</td><td class="pts">0</td></tr>
+      <tr><td class="dim">总分</td><td>A 级</td><td class="pts">80/100</td></tr>
+    </table>
+    <p class="score-note">评分算法（公开）：五维各 20 分——方法正文、安装指南、模板、案例、样片；包里实际有才计分，上表按真实包内容逐项数，不凑分、不四舍五入。</p>
+    <p class="score-note">已验包内：正文、START-HERE、templates/ 齐全；自家在售商品的实卖拆解在正文内（计入「案例」）；无样片媒体文件。</p>
+    <p>把这枚徽章嵌进你的 README 或文章，会链回本页。</p>
+    <p><strong>Markdown</strong></p>
+    <textarea class="code-box" rows="2" readonly>[![E-Commerce Listing Pack](https://dreamforgestudio.xyz/badges/ai-product-listing-service-pack.svg)](https://dreamforgestudio.xyz/skill/ai-product-listing-service-pack-zh.html)</textarea>
+    <p><strong>HTML</strong></p>
+    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/ai-product-listing-service-pack-zh.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/ai-product-listing-service-pack.svg&quot; alt=&quot;E-Commerce Listing Pack — Dreamforge Skill Library&quot; width=&quot;264&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
   </section>
 
   <section class="detail">
@@ -175,13 +201,10 @@
   </section>
 
   <section class="detail">
-    <h4>嵌入徽章</h4>
-    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/ai-product-listing-service-pack.svg" alt="E-Commerce Listing Pack — Dreamforge Skill Library" width="240" height="48"></div>
-    <p>把这枚徽章嵌进你的 README 或文章，会链回本页。</p>
-    <p><strong>Markdown</strong></p>
-    <textarea class="code-box" rows="2" readonly>[![E-Commerce Listing Pack](https://dreamforgestudio.xyz/badges/ai-product-listing-service-pack.svg)](https://dreamforgestudio.xyz/skill/ai-product-listing-service-pack-zh.html)</textarea>
-    <p><strong>HTML</strong></p>
-    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/ai-product-listing-service-pack-zh.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/ai-product-listing-service-pack.svg&quot; alt=&quot;E-Commerce Listing Pack — Dreamforge Skill Library&quot; width=&quot;240&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
+    <h4>常见问题</h4>
+    <div class="faq-item"><h5>适合谁、不适合谁？</h5><p><strong>适合：</strong>做商品上架代做的卖家与接单者，想把「一次接单」变成「一整页交付」的人。<br><strong>不适合：</strong>方法与模板包——作图在你自己的工具里按其条款跑；且本包绝不替你编产品参数。</p></div>
+    <div class="faq-item"><h5>买后怎么用、需要什么前提？</h5><p>买断后每单走六步＋质量门：先过接单清单（缺参数只问不猜），五件套齐了才算交付完成。</p></div>
+    <div class="faq-item"><h5>与免费 lite 的区别？</h5><p>上架方向暂无免费 lite；免费卡是内容生产工具。本包是带红线速查表的完整服务打法。</p></div>
   </section>
 
   <section class="detail">
