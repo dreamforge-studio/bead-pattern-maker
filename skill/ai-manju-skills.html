@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Comic-Drama Pipeline Templates — AI Skill Radar | Dreamforge Studio</title>
+<meta name="description" content="A comic-drama template library covering the whole arc — idea → project plan → asset library → episode scripts → director&#x27;s handbook → release pack (upstream open source, MIT).">
+<link rel="canonical" href="https://dreamforgestudio.xyz/skill/ai-manju-skills.html">
+<link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-manju-skills.html">
+<link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-manju-skills-zh.html">
+<link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-manju-skills.html">
+<meta name="theme-color" content="#0e4d2c">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="../icons/icon-192.png">
+<link rel="apple-touch-icon" href="../icons/icon-192.png">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  /* --- store page --- */
+  .hero { padding: 34px 6px 8px; text-align: center; }
+  .eyebrow {
+    margin: 0 0 10px; font-size: .78rem; font-weight: 700;
+    letter-spacing: .22em; text-transform: uppercase; color: var(--green);
+  }
+  .hero h2 {
+    margin: 0 auto 12px; max-width: 680px;
+    font-size: 2rem; line-height: 1.2; font-weight: 700; color: var(--ink);
+  }
+  .hero .lead {
+    margin: 0 auto 18px; max-width: 620px;
+    color: var(--muted); font-size: 1.02rem; line-height: 1.6;
+  }
+  .trust-bar {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    margin: 6px auto 10px; max-width: 720px;
+  }
+  .trust-bar span {
+    background: #eef6f1; color: var(--green-dark); border: 1px solid #cfe3d6;
+    border-radius: 999px; padding: 7px 14px; font-size: .88rem; font-weight: 600;
+  }
+  .section-head { margin: 34px 0 14px; padding: 0 6px; }
+  .section-head h2 { margin: 0 0 6px; font-size: 1.45rem; color: var(--ink); }
+  .section-head p { margin: 0; color: var(--muted); line-height: 1.6; max-width: 680px; }
+
+  .pack-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .pack {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; display: flex; flex-direction: column;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .pack:hover {
+    transform: translateY(-3px); border-color: #bcd8c6;
+    box-shadow: 0 10px 24px rgba(20, 102, 60, .10);
+  }
+  .pack .thumb { display: block; background: #101613; }
+  .pack .thumb img { width: 100%; height: 190px; object-fit: cover; display: block; }
+  .pack .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 7px; flex: 1; }
+  .pack h3 { margin: 0; font-size: 1.02rem; line-height: 1.4; }
+  .pack p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.55; flex: 1; }
+  .tag {
+    align-self: flex-start; font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--green-dark);
+    background: #eef6f1; border-radius: 999px; padding: 3px 10px;
+  }
+  .tag.soon { color: #7a5b12; background: #fdf3d7; }
+  .price-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .price-now { font-size: 1.45rem; font-weight: 700; color: var(--green-dark); }
+  .price-was { color: var(--muted); text-decoration: line-through; font-size: .98rem; }
+  .price-save { color: var(--green); font-weight: 700; font-size: .88rem; }
+  .buy-row { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+  .buy-row .btn { text-align: center; text-decoration: none; }
+  .secure-note { color: var(--muted); font-size: .8rem; text-align: center; }
+  .detail-link { color: var(--green); font-weight: 600; font-size: .9rem; text-decoration: none; }
+  .detail-link:hover { text-decoration: underline; }
+  .bundle-list { margin: 0; padding-left: 18px; color: var(--muted); font-size: .9rem; line-height: 1.65; }
+  .bundle-list li { margin-bottom: 3px; }
+  .status { font-size: .74rem; font-weight: 700; border-radius: 999px; padding: 1px 8px; margin-left: 6px; white-space: nowrap; }
+  .status.ok { color: var(--green-dark); background: #eef6f1; }
+  .status.soon { color: #7a5b12; background: #fdf3d7; }
+
+  .detail {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 20px; margin-bottom: 16px;
+  }
+  .detail h3 { margin: 0 0 4px; font-size: 1.15rem; }
+  .detail h4 {
+    margin: 16px 0 6px; font-size: .8rem; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--green);
+  }
+  .detail p, .detail li { color: var(--muted); line-height: 1.6; font-size: .94rem; }
+  .detail ul { margin: 0; padding-left: 18px; }
+  .detail li { margin-bottom: 4px; }
+  .detail .price-row { margin-top: 14px; }
+  .detail .buy-row { max-width: 340px; }
+  .sample-frame { width: 100%; border-radius: 10px; display: block; margin-top: 8px; }
+  .faq-item { margin-bottom: 14px; }
+  .faq-item h4 { margin: 0 0 4px; font-size: .98rem; color: var(--ink); }
+  .faq-item p { margin: 0; color: var(--muted); line-height: 1.6; font-size: .94rem; }
+  @media (max-width: 720px) {
+    .pack-grid { grid-template-columns: 1fr; }
+    .hero h2 { font-size: 1.55rem; }
+  }
+
+  /* --- skill radar --- */
+  .crumbs { padding: 10px 6px 0; color: var(--muted); font-size: .88rem; }
+  .crumbs a { color: var(--green); text-decoration: none; font-weight: 600; }
+  .skill-hero { padding: 10px 6px 4px; }
+  .skill-hero h1 { margin: 6px 0 8px; font-size: 1.7rem; line-height: 1.25; color: var(--ink); }
+  .skill-hero .tagline { color: var(--muted); font-size: 1.02rem; line-height: 1.6; margin: 0 0 10px; }
+  .meta-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 4px; }
+  .vs-table { width: 100%; border-collapse: collapse; font-size: .92rem; margin-top: 6px; }
+  .vs-table th, .vs-table td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; line-height: 1.55; }
+  .vs-table th { background: #eef6f1; color: var(--green-dark); }
+  .vs-table td:first-child { font-weight: 700; color: var(--ink); width: 18%; }
+  .badge-box { background: #14231b; border-radius: 10px; padding: 14px; text-align: center; margin: 8px 0; }
+  .code-box { width: 100%; box-sizing: border-box; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .8rem; padding: 9px; border: 1px solid var(--line); border-radius: 8px; background: #fbfcfb; color: var(--ink); margin: 4px 0 10px; }
+  .rel-list { margin: 0; padding-left: 18px; line-height: 1.7; }
+  .rel-list a { color: var(--green); font-weight: 600; text-decoration: none; }
+  .rel-list a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <img src="../icons/icon-192.png" alt="" width="40" height="40">
+    <div>
+      <h1>Dreamforge Studio</h1>
+      <p>AI Media &amp; Tools Studio</p>
+    </div>
+  </div>
+  <p class="privacy">Skill packs — buy once, download instantly, yours forever</p>
+  <select class="lang-select" id="langSelect" aria-label="Language / 语言" title="Language">
+      <option value="ai-manju-skills.html" selected>English</option>
+      <option value="ai-manju-skills-zh.html">中文（简体）</option>
+  </select>
+  <script>document.getElementById('langSelect').addEventListener('change',function(){location.href=this.value;});</script>
+</header>
+<main>
+  <p class="crumbs"><a href="../skills.html">Skill Radar</a> / Tools Intro / AI Comic-Drama Pipeline Templates</p>
+  <section class="skill-hero">
+    <p class="eyebrow">Dreamforge Studio · Skill Radar</p>
+    <h1>AI Comic-Drama Pipeline Templates</h1>
+    <p class="tagline">A comic-drama template library covering the whole arc — idea → project plan → asset library → episode scripts → director&#x27;s handbook → release pack (upstream open source, MIT).</p>
+    <div class="meta-tags">
+      <span class="tag">Tools Intro</span>
+      <span class="tag">INTRO</span>
+      <span class="tag">Intro</span>
+    </div>
+  </section>
+
+  <section class="detail">
+    <h4>What job it does, what it saves</h4>
+    <p>Intro page — the underlying library is a third-party open-source template set (894 stars at our install audit, an upstream public figure). We installed only the xuanhuan (cultivation fantasy) template its author tested end to end; the other 20 genre templates are registered, not installed. Untested genres don&#x27;t go into production here — that selection stance is what this page documents.</p>
+  </section>
+
+  <section class="detail">
+    <h4>What's inside / the method</h4>
+    <ul>
+      <li>Six-stage template set: idea, plan, assets, scripts, handbook, release pack</li><li>Plan-first confirmation: the project card is approved before batch work starts</li><li>Foreshadowing recovery schedule, plus a contradiction check before changing any setting (both folded into our drama line&#x27;s playbook)</li><li>Tested-weight tiers: xuanhuan fully tested / seven genres at half weight / the rest registration only</li><li>Local install: exactly one template (xuanhuan); 20 more genres registered but not installed</li>
+    </ul>
+  </section>
+
+  <section class="detail">
+    <h4>How it compares</h4>
+    <table class="vs-table">
+      <tr><th></th><th>Manual / generic route</th><th>This skill</th></tr>
+      <tr><td>Approach</td><td>Template bundles usually sell the whole library at once</td><td>our stance is tested-weight selection — what hasn&#x27;t been run end to end is labeled as such, on this page and in production. The tool itself is open source and free; what we publish is our selection and measured-weight stance.</td></tr><tr><td>What you get</td><td>Fragments: a post here, a video there, or one feature inside a rented tool</td><td>Intro page only — nothing is sold here; the production version lives in the linked pack</td></tr><tr><td>Numbers policy</td><td>Effect promises and unsourced numbers are common</td><td>Numbers only from our own measured runs or labeled sources; no effect guarantees</td></tr>
+    </table>
+  </section>
+
+  <section class="detail">
+    <h4>Related skills</h4>
+    <ul class="rel-list">
+      <li><a href="ai-short-drama-full-pipeline.html">AI Short Drama Full Pipeline Trio</a> — The short-drama production pipeline our own line runs on: direction &amp; script → storyboard, assets &amp; prompts → clip generation with a fixed continuity-repair order.</li><li><a href="duanju-zongbianju.html">Short Drama Head Writer</a> — Develops novels, articles, character webs or a few lines of inspiration into 1–3 minute vertical short dramas: story master plan first and confirmed, then episode outlines and single-episode deepening.</li><li><a href="chapter-end-hook-cards.html">Chapter-End Hook Cards</a> — 36 cliffhanger hook cards in six types for serial stories and short dramas — each card states what to withhold, how the next episode pays it off on its first beat, and an example line.</li><li><a href="ai-media-production.html">AI Media Production System — Overview</a> — The public overview of our house production system: one unified method covering short video and promos, explainer content, AI short-drama film, image production and order-taking workflows (current v5.93, continuously revised).</li>
+    </ul>
+  </section>
+
+  <section class="detail">
+    <h4>Embed the badge</h4>
+    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/ai-manju-skills.svg" alt="AI Comic-Drama Templates — Dreamforge Skill Library" width="240" height="48"></div>
+    <p>Add this badge to your README or article — it links back to this page.</p>
+    <p><strong>Markdown</strong></p>
+    <textarea class="code-box" rows="2" readonly>[![AI Comic-Drama Templates](https://dreamforgestudio.xyz/badges/ai-manju-skills.svg)](https://dreamforgestudio.xyz/skill/ai-manju-skills.html)</textarea>
+    <p><strong>HTML</strong></p>
+    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/ai-manju-skills.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/ai-manju-skills.svg&quot; alt=&quot;AI Comic-Drama Templates — Dreamforge Skill Library&quot; width=&quot;240&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
+  </section>
+
+  <section class="detail">
+    <h4>Get it</h4>
+    <div class="buy-row">
+      <a class="btn btn-primary" href="ai-short-drama-full-pipeline.html">Production version: AI Short Drama Full Pipeline Trio — $49</a>
+          <a class="btn" href="../store.html">Browse the Skill Store</a>
+    </div>
+  </section>
+</main>
+<footer>
+  <nav class="footer-nav" aria-label="Site links">
+    <a href="../index.html">Bead Pattern Maker</a> · <a href="../studio.html">All Services</a> · <a href="../works.html">Works</a> · <a href="../store.html">Store</a> · <a href="../skills.html">Skill Radar</a> ·
+    <a href="../privacy.html">Privacy Policy</a> · <a href="../terms.html">Terms of Service</a> ·
+    <a href="../index.html#pricing">Pricing</a> ·
+    <a href="mailto:a13259605261@163.com">Support: a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+  </nav>
+  <p>Business enquiries by email: <a href="mailto:a13259605261@163.com">a13259605261@163.com</a> · <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a></p>
+  <p>© 2026 Dreamforge Studio</p>
+  <div class="footer-cols">
+    <div class="fcol"><h4>Services</h4>
+      <a href="../studio.html#services">AI Short Videos</a>
+      <a href="../studio.html#services">Vertical Short Dramas</a>
+      <a href="../studio.html#services">Corporate Films</a>
+      <a href="../studio.html#services">Logo &amp; Gift Card Design</a>
+      <a href="../index.html">Bead Pattern Maker (tool)</a>
+    </div>
+    <div class="fcol"><h4>Studio</h4>
+      <a href="../studio.html#about">About the studio</a>
+      <a href="../studio.html#work">Selected work</a>
+      <a href="../works.html">All works</a>
+      <a href="../store.html">Skill Store</a>
+      <a href="../studio.html#process">How we work</a>
+      <a href="../studio.html#faq">FAQ</a>
+      <a href="../guide.html">User Guide</a>
+    </div>
+    <div class="fcol"><h4>Support</h4>
+      <a href="mailto:a13259605261@163.com">a13259605261@163.com</a>
+      <a href="mailto:sirlin367@gmail.com">sirlin367@gmail.com</a>
+      <a href="../privacy.html">Privacy Policy</a>
+      <a href="../terms.html">Terms of Service</a>
+      <a href="../index.html#pricing">Tool pricing</a>
+    </div>
+  </div>
+  <nav class="lang-switch footer-lang" aria-label="Language">
+    <a href="ai-manju-skills.html" class="active" hreflang="en">EN</a><span class="sep">|</span><a href="ai-manju-skills-zh.html" hreflang="zh-CN">中文</a>
+  </nav>
+</footer>
+</body>
+</html>
