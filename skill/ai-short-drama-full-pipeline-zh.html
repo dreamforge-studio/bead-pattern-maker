@@ -116,6 +116,15 @@
   .rel-list { margin: 0; padding-left: 18px; line-height: 1.7; }
   .rel-list a { color: var(--green); font-weight: 600; text-decoration: none; }
   .rel-list a:hover { text-decoration: underline; }
+  .score-table { width: 100%; border-collapse: collapse; font-size: .92rem; margin-top: 6px; }
+  .score-table th, .score-table td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; line-height: 1.5; }
+  .score-table th { background: #eef6f1; color: var(--green-dark); }
+  .score-table td.dim { font-weight: 700; color: var(--ink); width: 34%; }
+  .score-table td.pts { text-align: right; font-weight: 700; color: var(--ink); width: 12%; }
+  .score-note { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+  .faq-item { margin: 0 0 14px; }
+  .faq-item h5 { margin: 0 0 4px; font-size: 1rem; color: var(--ink); }
+  .faq-item p { margin: 0; color: var(--muted); line-height: 1.65; }
 </style>
 </head>
 <body>
@@ -144,7 +153,24 @@
       <span class="tag">短剧生产</span>
       <span class="tag">P1</span>
       <span class="tag">$49</span>
+      <span class="tag">S · 100/100</span>
     </div>
+  </section>
+  <section class="detail">
+    <h4>完整度评分：S 级 · 100/100 —— 与徽章</h4>
+    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/ai-short-drama-full-pipeline.svg" alt="AI Short Drama Pipeline — Dreamforge Skill Library" width="264" height="48"></div>
+    <table class="score-table">
+      <tr><th>维度</th><th>包内实际</th><th>分值</th></tr>
+      <tr><td class="dim">方法正文</td><td>✓ 含</td><td class="pts">20</td></tr><tr><td class="dim">安装指南</td><td>✓ 含</td><td class="pts">20</td></tr><tr><td class="dim">模板</td><td>✓ 含</td><td class="pts">20</td></tr><tr><td class="dim">案例</td><td>✓ 含</td><td class="pts">20</td></tr><tr><td class="dim">样片</td><td>✓ 含</td><td class="pts">20</td></tr>
+      <tr><td class="dim">总分</td><td>S 级</td><td class="pts">100/100</td></tr>
+    </table>
+    <p class="score-note">评分算法（公开）：五维各 20 分——方法正文、安装指南、模板、案例、样片；包里实际有才计分，上表按真实包内容逐项数，不凑分、不四舍五入。</p>
+    <p class="score-note">已验包内：三步正文、START-HERE、templates/、case-studies/、WALKTHROUGH 与样片链接齐全。</p>
+    <p>把这枚徽章嵌进你的 README 或文章，会链回本页。</p>
+    <p><strong>Markdown</strong></p>
+    <textarea class="code-box" rows="2" readonly>[![AI Short Drama Pipeline](https://dreamforgestudio.xyz/badges/ai-short-drama-full-pipeline.svg)](https://dreamforgestudio.xyz/skill/ai-short-drama-full-pipeline-zh.html)</textarea>
+    <p><strong>HTML</strong></p>
+    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/ai-short-drama-full-pipeline-zh.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/ai-short-drama-full-pipeline.svg&quot; alt=&quot;AI Short Drama Pipeline — Dreamforge Skill Library&quot; width=&quot;264&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
   </section>
 
   <section class="detail">
@@ -175,13 +201,10 @@
   </section>
 
   <section class="detail">
-    <h4>嵌入徽章</h4>
-    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/ai-short-drama-full-pipeline.svg" alt="AI Short Drama Pipeline — Dreamforge Skill Library" width="240" height="48"></div>
-    <p>把这枚徽章嵌进你的 README 或文章，会链回本页。</p>
-    <p><strong>Markdown</strong></p>
-    <textarea class="code-box" rows="2" readonly>[![AI Short Drama Pipeline](https://dreamforgestudio.xyz/badges/ai-short-drama-full-pipeline.svg)](https://dreamforgestudio.xyz/skill/ai-short-drama-full-pipeline-zh.html)</textarea>
-    <p><strong>HTML</strong></p>
-    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/ai-short-drama-full-pipeline-zh.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/ai-short-drama-full-pipeline.svg&quot; alt=&quot;AI Short Drama Pipeline — Dreamforge Skill Library&quot; width=&quot;240&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
+    <h4>常见问题</h4>
+    <div class="faq-item"><h5>适合谁、不适合谁？</h5><p><strong>适合：</strong>做竖屏 AI 短剧、连载故事的创作者与小团队，想要一条从创意到成片的完整流水线的人。<br><strong>不适合：</strong>不适合只想看剧的观众；也不是一键出片机——生成仍在你自己的视频管线里逐步跑。</p></div>
+    <div class="faq-item"><h5>买后怎么用、需要什么前提？</h5><p>在 Creem（或支付宝 Skill Pay 货架）买断后，把三个技能装进你的 AI 助手，打开 START-HERE，先按新手路线跑通 10 秒，再扩到完整一集。</p></div>
+    <div class="faq-item"><h5>与免费 lite 的区别？</h5><p>免费的 F1 断点卡、F4 人物卡包、F5 成本卡是这条流水线的单步摘录；三件套是带质量门、6 件模板与走查案例的完整三步体系。</p></div>
   </section>
 
   <section class="detail">
