@@ -116,6 +116,15 @@
   .rel-list { margin: 0; padding-left: 18px; line-height: 1.7; }
   .rel-list a { color: var(--green); font-weight: 600; text-decoration: none; }
   .rel-list a:hover { text-decoration: underline; }
+  .score-table { width: 100%; border-collapse: collapse; font-size: .92rem; margin-top: 6px; }
+  .score-table th, .score-table td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; line-height: 1.5; }
+  .score-table th { background: #eef6f1; color: var(--green-dark); }
+  .score-table td.dim { font-weight: 700; color: var(--ink); width: 34%; }
+  .score-table td.pts { text-align: right; font-weight: 700; color: var(--ink); width: 12%; }
+  .score-note { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+  .faq-item { margin: 0 0 14px; }
+  .faq-item h5 { margin: 0 0 4px; font-size: 1rem; color: var(--ink); }
+  .faq-item p { margin: 0; color: var(--muted); line-height: 1.65; }
 </style>
 </head>
 <body>
@@ -144,7 +153,24 @@
       <span class="tag">Tools Intro</span>
       <span class="tag">INTRO</span>
       <span class="tag">Intro</span>
+      <span class="tag">D · 20/100</span>
     </div>
+  </section>
+  <section class="detail">
+    <h4>Completeness score: D · 20/100 — and the badge</h4>
+    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/duanju-3-h3-chupian.svg" alt="Storyboard &amp; H3 Production — Dreamforge Skill Library" width="264" height="48"></div>
+    <table class="score-table">
+      <tr><th>Dimension</th><th>In the package</th><th>Points</th></tr>
+      <tr><td class="dim">Method text</td><td>✓ Included</td><td class="pts">20</td></tr><tr><td class="dim">Install guide</td><td>— Not included</td><td class="pts">0</td></tr><tr><td class="dim">Templates</td><td>— Not included</td><td class="pts">0</td></tr><tr><td class="dim">Case studies</td><td>— Not included</td><td class="pts">0</td></tr><tr><td class="dim">Finished samples</td><td>— Not included</td><td class="pts">0</td></tr>
+      <tr><td class="dim">Total</td><td>D grade</td><td class="pts">20/100</td></tr>
+    </table>
+    <p class="score-note">How this score works (public algorithm): five dimensions, 20 points each — method text, install guide, templates, case studies, finished samples. A dimension scores only when the package actually contains it; the count above is taken from the real package contents, never rounded up.</p>
+    <p class="score-note">Intro page: scored on the skill as installed — method text only; its templates and cases live in the P1 production pack, not in this intro skill.</p>
+    <p>Add this badge to your README or article — it links back to this page.</p>
+    <p><strong>Markdown</strong></p>
+    <textarea class="code-box" rows="2" readonly>[![Storyboard &amp; H3 Production](https://dreamforgestudio.xyz/badges/duanju-3-h3-chupian.svg)](https://dreamforgestudio.xyz/skill/duanju-3-h3-chupian.html)</textarea>
+    <p><strong>HTML</strong></p>
+    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/duanju-3-h3-chupian.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/duanju-3-h3-chupian.svg&quot; alt=&quot;Storyboard &amp;amp; H3 Production — Dreamforge Skill Library&quot; width=&quot;264&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
   </section>
 
   <section class="detail">
@@ -175,13 +201,10 @@
   </section>
 
   <section class="detail">
-    <h4>Embed the badge</h4>
-    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/duanju-3-h3-chupian.svg" alt="Storyboard &amp; H3 Production — Dreamforge Skill Library" width="240" height="48"></div>
-    <p>Add this badge to your README or article — it links back to this page.</p>
-    <p><strong>Markdown</strong></p>
-    <textarea class="code-box" rows="2" readonly>[![Storyboard &amp; H3 Production](https://dreamforgestudio.xyz/badges/duanju-3-h3-chupian.svg)](https://dreamforgestudio.xyz/skill/duanju-3-h3-chupian.html)</textarea>
-    <p><strong>HTML</strong></p>
-    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/duanju-3-h3-chupian.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/duanju-3-h3-chupian.svg&quot; alt=&quot;Storyboard &amp;amp; H3 Production — Dreamforge Skill Library&quot; width=&quot;240&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
+    <h4>FAQ</h4>
+    <div class="faq-item"><h5>Who is it for — and who is it not for?</h5><p><strong>For:</strong> Producers already generating AI drama clips who lose money to sloppy run discipline.<br><strong>Not for:</strong> Intro only — not sold here; and it assumes your script and assets are already prepared upstream.</p></div>
+    <div class="faq-item"><h5>How do I use it — and what do I need first?</h5><p>Nothing to buy here. The production version of this step lives in the P1 trio (Step 3), with the templates and cases this intro skill scores without.</p></div>
+    <div class="faq-item"><h5>How does it relate to the free lites and the paid packs?</h5><p>Upstream of it sit the free F5 cost card (how to route the spend) and the F1 hook cards (what each episode must end on).</p></div>
   </section>
 
   <section class="detail">
