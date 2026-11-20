@@ -116,6 +116,15 @@
   .rel-list { margin: 0; padding-left: 18px; line-height: 1.7; }
   .rel-list a { color: var(--green); font-weight: 600; text-decoration: none; }
   .rel-list a:hover { text-decoration: underline; }
+  .score-table { width: 100%; border-collapse: collapse; font-size: .92rem; margin-top: 6px; }
+  .score-table th, .score-table td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; line-height: 1.5; }
+  .score-table th { background: #eef6f1; color: var(--green-dark); }
+  .score-table td.dim { font-weight: 700; color: var(--ink); width: 34%; }
+  .score-table td.pts { text-align: right; font-weight: 700; color: var(--ink); width: 12%; }
+  .score-note { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+  .faq-item { margin: 0 0 14px; }
+  .faq-item h5 { margin: 0 0 4px; font-size: 1rem; color: var(--ink); }
+  .faq-item p { margin: 0; color: var(--muted); line-height: 1.65; }
 </style>
 </head>
 <body>
@@ -144,7 +153,24 @@
       <span class="tag">Subtitles &amp; Clipping</span>
       <span class="tag">H4</span>
       <span class="tag">$19.99</span>
+      <span class="tag">B · 60/100</span>
     </div>
+  </section>
+  <section class="detail">
+    <h4>Completeness score: B · 60/100 — and the badge</h4>
+    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/word-by-word-animated-captions.svg" alt="Word-by-Word Captions — Dreamforge Skill Library" width="264" height="48"></div>
+    <table class="score-table">
+      <tr><th>Dimension</th><th>In the package</th><th>Points</th></tr>
+      <tr><td class="dim">Method text</td><td>✓ Included</td><td class="pts">20</td></tr><tr><td class="dim">Install guide</td><td>✓ Included</td><td class="pts">20</td></tr><tr><td class="dim">Templates</td><td>✓ Included</td><td class="pts">20</td></tr><tr><td class="dim">Case studies</td><td>— Not included</td><td class="pts">0</td></tr><tr><td class="dim">Finished samples</td><td>— Not included</td><td class="pts">0</td></tr>
+      <tr><td class="dim">Total</td><td>B grade</td><td class="pts">60/100</td></tr>
+    </table>
+    <p class="score-note">How this score works (public algorithm): five dimensions, 20 points each — method text, install guide, templates, case studies, finished samples. A dimension scores only when the package actually contains it; the count above is taken from the real package contents, never rounded up.</p>
+    <p class="score-note">Pack inspected: config/tuning text, START-HERE, presets/ (27 tuned preset files — counted as Templates). No case files or sample videos.</p>
+    <p>Add this badge to your README or article — it links back to this page.</p>
+    <p><strong>Markdown</strong></p>
+    <textarea class="code-box" rows="2" readonly>[![Word-by-Word Captions](https://dreamforgestudio.xyz/badges/word-by-word-animated-captions.svg)](https://dreamforgestudio.xyz/skill/word-by-word-animated-captions.html)</textarea>
+    <p><strong>HTML</strong></p>
+    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/word-by-word-animated-captions.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/word-by-word-animated-captions.svg&quot; alt=&quot;Word-by-Word Captions — Dreamforge Skill Library&quot; width=&quot;264&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
   </section>
 
   <section class="detail">
@@ -175,13 +201,10 @@
   </section>
 
   <section class="detail">
-    <h4>Embed the badge</h4>
-    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/word-by-word-animated-captions.svg" alt="Word-by-Word Captions — Dreamforge Skill Library" width="240" height="48"></div>
-    <p>Add this badge to your README or article — it links back to this page.</p>
-    <p><strong>Markdown</strong></p>
-    <textarea class="code-box" rows="2" readonly>[![Word-by-Word Captions](https://dreamforgestudio.xyz/badges/word-by-word-animated-captions.svg)](https://dreamforgestudio.xyz/skill/word-by-word-animated-captions.html)</textarea>
-    <p><strong>HTML</strong></p>
-    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/word-by-word-animated-captions.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/word-by-word-animated-captions.svg&quot; alt=&quot;Word-by-Word Captions — Dreamforge Skill Library&quot; width=&quot;240&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
+    <h4>FAQ</h4>
+    <div class="faq-item"><h5>Who is it for — and who is it not for?</h5><p><strong>For:</strong> Short-video creators who need word-by-word highlight captions in volume, without hand-typing timings or renting an editing subscription.<br><strong>Not for:</strong> For your own or licensed footage only; and when a client spec sheet governs a delivery, the client's spec wins over these presets.</p></div>
+    <div class="faq-item"><h5>How do I use it after buying — and what do I need first?</h5><p>Buy once, set up the minimal self-hosted chain (backend core only), drop the 27 presets into the style configuration, pick one main preset per video using the selection table, and run the frame-check acceptance pass.</p></div>
+    <div class="faq-item"><h5>How is it different from the free lite?</h5><p>No free lite exists for captions; the free F6 card helps you choose which moments to cut before captioning. This pack is the presets plus the setup route.</p></div>
   </section>
 
   <section class="detail">
