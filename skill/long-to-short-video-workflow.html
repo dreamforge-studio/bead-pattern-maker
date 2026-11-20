@@ -116,6 +116,15 @@
   .rel-list { margin: 0; padding-left: 18px; line-height: 1.7; }
   .rel-list a { color: var(--green); font-weight: 600; text-decoration: none; }
   .rel-list a:hover { text-decoration: underline; }
+  .score-table { width: 100%; border-collapse: collapse; font-size: .92rem; margin-top: 6px; }
+  .score-table th, .score-table td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; line-height: 1.5; }
+  .score-table th { background: #eef6f1; color: var(--green-dark); }
+  .score-table td.dim { font-weight: 700; color: var(--ink); width: 34%; }
+  .score-table td.pts { text-align: right; font-weight: 700; color: var(--ink); width: 12%; }
+  .score-note { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+  .faq-item { margin: 0 0 14px; }
+  .faq-item h5 { margin: 0 0 4px; font-size: 1rem; color: var(--ink); }
+  .faq-item p { margin: 0; color: var(--muted); line-height: 1.65; }
 </style>
 </head>
 <body>
@@ -144,7 +153,24 @@
       <span class="tag">Subtitles &amp; Clipping</span>
       <span class="tag">H3</span>
       <span class="tag">$19.99</span>
+      <span class="tag">B · 60/100</span>
     </div>
+  </section>
+  <section class="detail">
+    <h4>Completeness score: B · 60/100 — and the badge</h4>
+    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/long-to-short-video-workflow.svg" alt="Long-to-Short Clipping — Dreamforge Skill Library" width="264" height="48"></div>
+    <table class="score-table">
+      <tr><th>Dimension</th><th>In the package</th><th>Points</th></tr>
+      <tr><td class="dim">Method text</td><td>✓ Included</td><td class="pts">20</td></tr><tr><td class="dim">Install guide</td><td>✓ Included</td><td class="pts">20</td></tr><tr><td class="dim">Templates</td><td>✓ Included</td><td class="pts">20</td></tr><tr><td class="dim">Case studies</td><td>— Not included</td><td class="pts">0</td></tr><tr><td class="dim">Finished samples</td><td>— Not included</td><td class="pts">0</td></tr>
+      <tr><td class="dim">Total</td><td>B grade</td><td class="pts">60/100</td></tr>
+    </table>
+    <p class="score-note">How this score works (public algorithm): five dimensions, 20 points each — method text, install guide, templates, case studies, finished samples. A dimension scores only when the package actually contains it; the count above is taken from the real package contents, never rounded up.</p>
+    <p class="score-note">Pack inspected: full-workflow config text, parameter sheet, START-HERE, templates/ (cut-list + scoring sheet). No case files or sample clips.</p>
+    <p>Add this badge to your README or article — it links back to this page.</p>
+    <p><strong>Markdown</strong></p>
+    <textarea class="code-box" rows="2" readonly>[![Long-to-Short Clipping](https://dreamforgestudio.xyz/badges/long-to-short-video-workflow.svg)](https://dreamforgestudio.xyz/skill/long-to-short-video-workflow.html)</textarea>
+    <p><strong>HTML</strong></p>
+    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/long-to-short-video-workflow.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/long-to-short-video-workflow.svg&quot; alt=&quot;Long-to-Short Clipping — Dreamforge Skill Library&quot; width=&quot;264&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
   </section>
 
   <section class="detail">
@@ -175,13 +201,10 @@
   </section>
 
   <section class="detail">
-    <h4>Embed the badge</h4>
-    <div class="badge-box"><img src="https://dreamforgestudio.xyz/badges/long-to-short-video-workflow.svg" alt="Long-to-Short Clipping — Dreamforge Skill Library" width="240" height="48"></div>
-    <p>Add this badge to your README or article — it links back to this page.</p>
-    <p><strong>Markdown</strong></p>
-    <textarea class="code-box" rows="2" readonly>[![Long-to-Short Clipping](https://dreamforgestudio.xyz/badges/long-to-short-video-workflow.svg)](https://dreamforgestudio.xyz/skill/long-to-short-video-workflow.html)</textarea>
-    <p><strong>HTML</strong></p>
-    <textarea class="code-box" rows="2" readonly>&lt;a href=&quot;https://dreamforgestudio.xyz/skill/long-to-short-video-workflow.html&quot;&gt;&lt;img src=&quot;https://dreamforgestudio.xyz/badges/long-to-short-video-workflow.svg&quot; alt=&quot;Long-to-Short Clipping — Dreamforge Skill Library&quot; width=&quot;240&quot; height=&quot;48&quot;&gt;&lt;/a&gt;</textarea>
+    <h4>FAQ</h4>
+    <div class="faq-item"><h5>Who is it for — and who is it not for?</h5><p><strong>For:</strong> Channels and editors turning long videos into daily vertical shorts who need a workflow that survives daily output.<br><strong>Not for:</strong> Only for material you own or are licensed to use — the red-line chapter comes first in the pack, on purpose.</p></div>
+    <div class="faq-item"><h5>How do I use it after buying — and what do I need first?</h5><p>Buy once, set the chain up once (transcription → cut list → reframe → captions → hook copy), then run every source video through the same route; start with the human cut-list main route at zero per-clip cost.</p></div>
+    <div class="faq-item"><h5>How is it different from the free lite?</h5><p>The free F6 signal card covers only the selection step (three-signal method); this pack is the full chain — transcription, reframing, captions, hook copy, parameters and templates.</p></div>
   </section>
 
   <section class="detail">
