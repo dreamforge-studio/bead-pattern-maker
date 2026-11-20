@@ -222,4 +222,438 @@
     <loc>https://dreamforgestudio.xyz/terms.html</loc>
     <lastmod>2026-11-16</lastmod>
   </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skills.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skills.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skills-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skills.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skills-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skills.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skills-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skills.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-short-drama-full-pipeline.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-short-drama-full-pipeline.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-short-drama-full-pipeline-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-short-drama-full-pipeline.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-short-drama-full-pipeline-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-short-drama-full-pipeline.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-short-drama-full-pipeline-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-short-drama-full-pipeline.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/deai-writing-full-system.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/deai-writing-full-system.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/deai-writing-full-system-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/deai-writing-full-system.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/deai-writing-full-system-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/deai-writing-full-system.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/deai-writing-full-system-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/deai-writing-full-system.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/voice-qc-mixing-pack.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/voice-qc-mixing-pack.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/voice-qc-mixing-pack-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/voice-qc-mixing-pack.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/voice-qc-mixing-pack-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/voice-qc-mixing-pack.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/voice-qc-mixing-pack-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/voice-qc-mixing-pack.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-fight-scene-prompt-design.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-fight-scene-prompt-design.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-fight-scene-prompt-design-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-fight-scene-prompt-design.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-fight-scene-prompt-design-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-fight-scene-prompt-design.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-fight-scene-prompt-design-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-fight-scene-prompt-design.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-emotion-performance-library.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-emotion-performance-library.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-emotion-performance-library-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-emotion-performance-library.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-emotion-performance-library-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-emotion-performance-library.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-emotion-performance-library-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-emotion-performance-library.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/science-explainer-video-pipeline.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/science-explainer-video-pipeline.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/science-explainer-video-pipeline-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/science-explainer-video-pipeline.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/science-explainer-video-pipeline-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/science-explainer-video-pipeline.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/science-explainer-video-pipeline-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/science-explainer-video-pipeline.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/business-negotiation-playbook.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/business-negotiation-playbook.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/business-negotiation-playbook-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/business-negotiation-playbook.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/business-negotiation-playbook-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/business-negotiation-playbook.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/business-negotiation-playbook-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/business-negotiation-playbook.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/offline-voice-dubbing-setup.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/offline-voice-dubbing-setup.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/offline-voice-dubbing-setup-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/offline-voice-dubbing-setup.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/offline-voice-dubbing-setup-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/offline-voice-dubbing-setup.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/offline-voice-dubbing-setup-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/offline-voice-dubbing-setup.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-digital-human-presenter-pack.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-digital-human-presenter-pack.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-digital-human-presenter-pack-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-digital-human-presenter-pack.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-digital-human-presenter-pack-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-digital-human-presenter-pack.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-digital-human-presenter-pack-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-digital-human-presenter-pack.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/long-to-short-video-workflow.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/long-to-short-video-workflow.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/long-to-short-video-workflow-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/long-to-short-video-workflow.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/long-to-short-video-workflow-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/long-to-short-video-workflow.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/long-to-short-video-workflow-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/long-to-short-video-workflow.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/word-by-word-animated-captions.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/word-by-word-animated-captions.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/word-by-word-animated-captions-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/word-by-word-animated-captions.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/word-by-word-animated-captions-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/word-by-word-animated-captions.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/word-by-word-animated-captions-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/word-by-word-animated-captions.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-product-listing-service-pack.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-product-listing-service-pack.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-product-listing-service-pack-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-product-listing-service-pack.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-product-listing-service-pack-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-product-listing-service-pack.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-product-listing-service-pack-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-product-listing-service-pack.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/chapter-end-hook-cards.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/chapter-end-hook-cards.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/chapter-end-hook-cards-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/chapter-end-hook-cards.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/chapter-end-hook-cards-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/chapter-end-hook-cards.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/chapter-end-hook-cards-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/chapter-end-hook-cards.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/fight-scene-shot-checklist-card.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/fight-scene-shot-checklist-card.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/fight-scene-shot-checklist-card-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/fight-scene-shot-checklist-card.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/fight-scene-shot-checklist-card-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/fight-scene-shot-checklist-card.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/fight-scene-shot-checklist-card-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/fight-scene-shot-checklist-card.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/deai-self-check-card.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/deai-self-check-card.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/deai-self-check-card-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/deai-self-check-card.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/deai-self-check-card-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/deai-self-check-card.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/deai-self-check-card-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/deai-self-check-card.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/character-consistency-card-kit.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/character-consistency-card-kit.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/character-consistency-card-kit-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/character-consistency-card-kit.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/character-consistency-card-kit-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/character-consistency-card-kit.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/character-consistency-card-kit-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/character-consistency-card-kit.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/short-drama-cost-tier-card.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/short-drama-cost-tier-card.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/short-drama-cost-tier-card-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/short-drama-cost-tier-card.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/short-drama-cost-tier-card-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/short-drama-cost-tier-card.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/short-drama-cost-tier-card-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/short-drama-cost-tier-card.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/clip-highlight-signal-card.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/clip-highlight-signal-card.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/clip-highlight-signal-card-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/clip-highlight-signal-card.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/clip-highlight-signal-card-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/clip-highlight-signal-card.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/clip-highlight-signal-card-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/clip-highlight-signal-card.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-product-video-skill-pack.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-product-video-skill-pack.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-product-video-skill-pack-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-product-video-skill-pack.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-product-video-skill-pack-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-product-video-skill-pack.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-product-video-skill-pack-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-product-video-skill-pack.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/travel-itinerary-production-sop.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/travel-itinerary-production-sop.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/travel-itinerary-production-sop-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/travel-itinerary-production-sop.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/travel-itinerary-production-sop-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/travel-itinerary-production-sop.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/travel-itinerary-production-sop-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/travel-itinerary-production-sop.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/duanju-zongbianju.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/duanju-zongbianju.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/duanju-zongbianju-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/duanju-zongbianju.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/duanju-zongbianju-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/duanju-zongbianju.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/duanju-zongbianju-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/duanju-zongbianju.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/duanju-3-h3-chupian.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/duanju-3-h3-chupian.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/duanju-3-h3-chupian-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/duanju-3-h3-chupian.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/duanju-3-h3-chupian-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/duanju-3-h3-chupian.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/duanju-3-h3-chupian-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/duanju-3-h3-chupian.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-manju-skills.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-manju-skills.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-manju-skills-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-manju-skills.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-manju-skills-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-manju-skills.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-manju-skills-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-manju-skills.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-avatar-presenter.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-avatar-presenter.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-avatar-presenter-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-avatar-presenter.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-avatar-presenter-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-avatar-presenter.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-avatar-presenter-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-avatar-presenter.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/autoclip.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/autoclip.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/autoclip-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/autoclip.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/autoclip-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/autoclip.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/autoclip-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/autoclip.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/funclip.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/funclip.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/funclip-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/funclip.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/funclip-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/funclip.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/funclip-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/funclip.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/cinematic-skills.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/cinematic-skills.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/cinematic-skills-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/cinematic-skills.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/cinematic-skills-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/cinematic-skills.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/cinematic-skills-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/cinematic-skills.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/bead-pattern-maker.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/bead-pattern-maker.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/bead-pattern-maker-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/bead-pattern-maker.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/bead-pattern-maker-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/bead-pattern-maker.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/bead-pattern-maker-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/bead-pattern-maker.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/bili-cli.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/bili-cli.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/bili-cli-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/bili-cli.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/bili-cli-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/bili-cli.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/bili-cli-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/bili-cli.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-media-production.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-media-production.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-media-production-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-media-production.html"/>
+  </url>
+  <url>
+    <loc>https://dreamforgestudio.xyz/skill/ai-media-production-zh.html</loc>
+    <lastmod>2026-11-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dreamforgestudio.xyz/skill/ai-media-production.html"/>
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://dreamforgestudio.xyz/skill/ai-media-production-zh.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dreamforgestudio.xyz/skill/ai-media-production.html"/>
+  </url>
 </urlset>
